@@ -2,9 +2,28 @@
 %html
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %title PayrollAtm
+    %title PayrollATM
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    %link{:href => "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic", :rel => "stylesheet"}/
+    / Tell the browser to be responsive to screen width
+    %meta{:content => "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no", :name => "viewport"}/
+    / Font Awesome
+    %link{:href => "/assets/bower_components/font-awesome/css/font-awesome.min.css", :rel => "stylesheet"}/
+    / Ionicons
+    %link{:href => "/assets/bower_components/Ionicons/css/ionicons.min.css", :rel => "stylesheet"}/
+
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-  %body
-    = yield
+  %body.hold-transition{class: "#{user_signed_in? ? 'skin-blue layout-top-nav' : 'login-page' }"}
+    .wrapper
+      - unless user_signed_in?
+        = render 'shared/no_user_navbar'
+      - else
+        = render 'shared/admin_user_navbar'
+      - flash.each do |name, msg|
+        - if msg.is_a?(String)
+          %p
+            %div{:class => "alert alert-dismissible alert-#{name.to_s == 'notice' ? 'success' : 'danger'}"}
+              %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} &times;
+              = content_tag :div, msg, :id => "flash_#{name}"
+      = yield

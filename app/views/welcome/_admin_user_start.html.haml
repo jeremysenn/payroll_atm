@@ -1,0 +1,87 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      %h1
+        = current_user.company.name
+        %small Recent payrolls
+    / Main content
+    %section.content
+      / Default box
+      .box
+        .box-header.with-border
+          %h3.box-title 
+            = "March 1, 2018"
+          .box-tools.pull-right
+            %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+              %i.fa.fa-minus
+            %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+              %i.fa.fa-times
+        .box-body
+          Lots of details go here. And more stuff.
+          %table.table
+            %thead
+              %tr
+                %th{:scope => "col"} #
+                %th{:scope => "col"} First
+                %th{:scope => "col"} Last
+                %th{:scope => "col"} Amount
+            %tbody
+              %tr
+                %th{:scope => "row"} 1
+                %td Mark
+                %td Otto
+                %td $10,432
+              %tr
+                %th{:scope => "row"} 2
+                %td Jacob
+                %td Thornton
+                %td $8759
+              %tr
+                %th{:scope => "row"} 3
+                %td Larry
+                %td Jacobs
+                %td $16,890
+
+        .box-footer
+          $23,782
+
+      .box
+        .box-header.with-border
+          %h3.box-title 
+            = "February 1, 2018"
+          .box-tools.pull-right
+            %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+              %i.fa.fa-minus
+            %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+              %i.fa.fa-times
+        .box-body
+          Lots of details go here. And more stuff.
+          %table.table
+            %thead
+              %tr
+                %th{:scope => "col"} #
+                %th{:scope => "col"} First
+                %th{:scope => "col"} Last
+                %th{:scope => "col"} Amount
+            %tbody
+              %tr
+                %th{:scope => "row"} 1
+                %td Mark
+                %td Otto
+                %td $5632
+              %tr
+                %th{:scope => "row"} 2
+                %td Jacob
+                %td Thornton
+                %td $18,234
+              %tr
+                %th{:scope => "row"} 3
+                %td Larry
+                %td Jacobs
+                %td $16,200
+          .box-footer
+            $23,782
+
+    / /.content
+  / /.content-wrapper

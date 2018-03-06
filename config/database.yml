@@ -23,3 +23,10 @@ test:
 production:
   <<: *default
   database: db/production.sqlite3
+  
+ez_cash:
+  adapter: sqlserver
+  host: <%= ENV['EZCASH_HOST'] %>
+  database: <%= ENV['EZCASH_DATABASE'] %>
+  username: <%= ENV['EZCASH_USERNAME'] %>
+  password: <%= ENV['EZCASH_PASSWORD'] %>

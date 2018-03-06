@@ -1,0 +1,93 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      %h1
+        %i.fa.fa-male
+        %i.fa.fa-female
+        Employee Profile
+    / Main content
+    %section.content
+      / Default box
+      .row
+        .col-md-3
+          / Profile Image
+          .box.box-primary
+            .box-body.box-profile
+              -#
+                %img.profile-user-img.img-responsive.img-circle{:alt => "User profile picture", :src => "../../dist/img/user4-128x128.jpg"}/
+              %h3.profile-username.text-center= @employee.full_name
+              %p.text-muted.text-center= "Created #{@employee.CreateDate.strftime('%-m/%-d/%Y')}"
+              %ul.list-group.list-group-unbordered
+                %li.list-group-item
+                  %b Payments
+                  %a.pull-right 1,322
+                %li.list-group-item
+                  %b Withdrawals
+                  %a.pull-right 543
+                %li.list-group-item
+                  %b Messages
+                  %a.pull-right 13,287
+              %a.btn.btn-primary.btn-block{:href => "#"}
+                %b Send Message
+            / /.box-body
+          / /.box
+          / Details Box
+          .box.box-primary
+            .box-header.with-border
+              %h3.box-title Details
+            / /.box-header
+            .box-body
+              %strong
+                %i.fa.fa-envelope.margin-r-5
+                Email
+              %p.text-muted= "#{@employee.email.blank? ? 'None' : @employee.email}"
+              %hr/
+              %strong
+                %i.fa.fa-mobile.margin-r-5
+                Phone
+              %p.text-muted= "#{@employee.phone.blank? ? 'None' : @employee.phone}"
+              %hr/
+              %strong
+                %i.fa.fa-file-text-o.margin-r-5
+                Notes
+              %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.
+            / /.box-body
+          / /.box
+        .col-md-9
+          .box.box-primary
+            %br
+            %ul#myTab.nav.nav-tabs{:role => "tablist"}
+              %li.nav-item
+                %a#payments-tab.nav-link.active{"aria-controls" => "payments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#payments", :role => "tab"} Payments
+              %li.nav-item
+                %a#withdrawals-tab.nav-link{"aria-controls" => "withdrawals", "aria-selected" => "false", "data-toggle" => "tab", :href => "#withdrawals", :role => "tab"} Withdrawals
+              %li.nav-item
+                %a#messages-tab.nav-link{"aria-controls" => "messages", "aria-selected" => "false", "data-toggle" => "tab", :href => "#messages", :role => "tab"} Messages
+              %li.nav-item
+                %a#accounts-tab.nav-link{"aria-controls" => "accounts", "aria-selected" => "false", "data-toggle" => "tab", :href => "#accounts", :role => "tab"} Accounts
+            #myTabContent.tab-content
+              #payments.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"} 1
+              #withdrawals.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"} 2
+              #messages.tab-pane.fade{"aria-labelledby" => "contact-tab", :role => "tabpanel"} 3
+              #accounts.tab-pane.fade{"aria-labelledby" => "contact-tab", :role => "tabpanel"}
+                .container
+                  - @employee.accounts.each do |account|
+                    = account.id
+                    = number_to_currency(account.balance)
+          -#
+            %div.nav-tabs-custom
+              %ul.nav.nav-tabs
+                %li.active
+                  %a{"data-toggle" => "tab", :href => "#activity"} Activity
+                %li
+                  %a{"data-toggle" => "tab", :href => "#timeline"} Timeline
+                %li
+                  %a{"data-toggle" => "tab", :href => "#settings"} Settings
+              .tab-content
+                #activity.active.tab-pane
+                  Hey there
+                #timeline.tab-pane
+                  Timeline
+                #settings.tab-pane
+                  Settings

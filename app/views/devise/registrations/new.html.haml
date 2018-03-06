@@ -1,21 +1,33 @@
-%h2 Sign up
-= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-  = devise_error_messages!
-  .field
-    = f.label :email
-    %br/
-    = f.email_field :email, autofocus: true, autocomplete: "email"
-  .field
-    = f.label :password
-    - if @minimum_password_length
-      %em
-        (#{@minimum_password_length} characters minimum)
-    %br/
-    = f.password_field :password, autocomplete: "off"
-  .field
-    = f.label :password_confirmation
-    %br/
-    = f.password_field :password_confirmation, autocomplete: "off"
-  .actions
-    = f.submit "Sign up"
-= render "devise/shared/links"
+.login-box
+  .login-logo
+    %a{:href => root_path}
+      <strong>Payroll</strong>ATM
+  .login-box-body
+    %p.login-box-msg Sign up
+    = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+      = devise_error_messages!
+      = f.hidden_field :company_id, value: current_user.blank? ? 6 : current_user.company_id
+      .form-group
+        = f.text_field :first_name, autofocus: true, autocomplete: "first_name", class: 'form-control', :placeholder => "First Name", required: true
+      .form-group
+        = f.text_field :last_name, autocomplete: "last_name", class: 'form-control', :placeholder => "Last Name", required: true
+      .form-group
+        = f.email_field :email, autocomplete: "email", class: 'form-control', :placeholder => "Email", :type => "email", required: true
+      .form-group
+        = f.phone_field :phone, autocomplete: "phone", class: 'form-control', :placeholder => "Phone", :type => "phone", required: true
+      .form-group
+        = f.password_field :password, autocomplete: "off",  class: 'form-control', :placeholder => "Password", required: true
+        - if @minimum_password_length
+          %small#passwordHelpBlock.form-text.text-muted
+            = "Your password must be at least #{@minimum_password_length} characters long."
+      .form-group
+        = f.password_field :password_confirmation, autocomplete: "off",  class: 'form-control', :placeholder => "Retype password", required: true
+      .form-group
+        .checkbox.icheck
+          %label
+            %input{:type => "checkbox"}/
+            I agree to the
+            %a{:href => "#"} terms
+      .actions
+        = f.submit "Sign up", class: 'btn btn-primary'
+    = render "devise/shared/links"

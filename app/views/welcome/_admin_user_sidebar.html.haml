@@ -1,0 +1,43 @@
+/ Left side column. contains the sidebar
+%aside.main-sidebar
+  / sidebar: style can be found in sidebar.less
+  %section.sidebar
+    / Sidebar user panel
+    .user-panel
+      .pull-left.image
+        %i.fa.fa-user.fa-lg.text-success
+      .pull-left.info
+        = current_user.full_name
+        %br
+        %small= current_user.role
+      %br
+      %br
+      / search form
+      %form.sidebar-form{:action => "#", :method => "get"}
+        .input-group
+          %input.form-control{:name => "q", :placeholder => "Search...", :type => "text"}/
+          %span.input-group-btn
+            %button#search-btn.btn.btn-flat{:name => "search", :type => "submit"}
+              %i.fa.fa-search
+      / /.search form
+    / sidebar menu: : style can be found in sidebar.less
+    %ul.sidebar-menu{"data-widget" => "tree"}
+      %li.header QUICK LINKS
+      %li.treeview
+        %a{:href => "#"}
+          %i.fa.fa-dashboard
+          %span Dashboard
+      %li.treeview
+        %a{:href => "#"}
+          %i.fa.fa-male
+          %span Employees
+      %li
+        %a{:href => "#"}
+          %i.fa.fa-dollar
+          %span Payrolls
+      %li.treeview
+        %a{:href => "#"}
+          %i.fa.fa-pie-chart
+          %span Charts
+  / /.sidebar
+  %div.control-sidebar-bg
