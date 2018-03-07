@@ -4,8 +4,9 @@
     %section.content-header
       %h1
         %i.fa.fa-male
-        %i.fa.fa-female
         Employees
+        %small= link_to 'New', new_customer_path
+        
     / Main content
     %section.content
       / Default box
@@ -36,4 +37,4 @@
                   %td= employee.phone
                   %td= link_to 'More', employee, class: 'btn btn-primary btn-sm'
         .box-footer
-          .pull-right Pagination goes here>
+          .pull-right Pagination goes here>>

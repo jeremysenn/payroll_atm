@@ -22,8 +22,8 @@ class Customer < ActiveRecord::Base
   
 #  validates :NameF, :NameL, :user_name, :PhoneMobile, :Answer1, :Answer2, :Answer3, presence: true
   validates :NameF, :NameL, presence: true
-#  validates :Email, :PhoneMobile, presence: true
-  validates :PhoneMobile, presence: true
+  validates :Email, :PhoneMobile, presence: true
+#  validates :PhoneMobile, presence: true
 #  validates_uniqueness_of :Email
 #  validates_uniqueness_of :PhoneMobile
 #  validates :Email, uniqueness: {allow_blank: true}
@@ -448,6 +448,22 @@ class Customer < ActiveRecord::Base
   
   def vendor_payables_with_balance
     vendor_payables.where("Balance > ?", 0)
+  end
+  
+  def withdrawals
+    unless accounts.blank?
+      accounts.first.withdrawals 
+    else
+      return []
+    end
+  end
+  
+  def payments
+    unless accounts.blank?
+      accounts.first.wire_transactions 
+    else
+      return []
+    end
   end
   
   #############################

@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
        
+  ROLES = %w[admin employee].freeze
+       
   belongs_to :company
   belongs_to :customer, optional: true
        
@@ -13,6 +15,10 @@ class User < ApplicationRecord
   
   def full_name
     "#{first_name} #{last_name}"
+  end
+  
+  def admin?
+    role == "admin"
   end
   
 end

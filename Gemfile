@@ -58,6 +58,11 @@ gem "figaro"
 gem 'tiny_tds' 
 gem 'activerecord-sqlserver-adapter', :github => 'rails-sqlserver/activerecord-sqlserver-adapter', :branch => 'master'
 
+# Do some browser detection with Ruby. Includes ActionController integration.
+gem 'browser'
+
+gem 'simple_form'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
