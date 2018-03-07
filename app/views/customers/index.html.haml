@@ -9,7 +9,7 @@
     / Main content
     %section.content
       / Default box
-      .box
+      .box.box-primary
         .box-header.with-border
           %h3.box-title 
             Active
@@ -34,6 +34,6 @@
                   %td= employee.first_name
                   %td= employee.last_name
                   %td= employee.phone
-                  %td= link_to 'More', employee, class: 'btn btn-secondary btn-sm'
+                  %td= link_to 'More', employee, class: 'btn btn-primary btn-sm'
         .box-footer
           .pull-right Pagination goes here>

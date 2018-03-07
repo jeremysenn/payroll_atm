@@ -4,7 +4,6 @@
     %section.content-header
       %h1
         %i.fa.fa-male
-        %i.fa.fa-female
         Employee Profile
     / Main content
     %section.content
@@ -67,27 +66,53 @@
               %li.nav-item
                 %a#accounts-tab.nav-link{"aria-controls" => "accounts", "aria-selected" => "false", "data-toggle" => "tab", :href => "#accounts", :role => "tab"} Accounts
             #myTabContent.tab-content
-              #payments.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"} 1
-              #withdrawals.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"} 2
+              #payments.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                %table.table
+                  %thead
+                    %tr
+                      %th{:scope => "col"} #
+                      %th{:scope => "col"} To
+                      %th{:scope => "col"} From
+                      %th{:scope => "col"} Amount
+                  %tbody
+                    %tr
+                      %th{:scope => "row"} 1
+                      %td Mark
+                      %td Otto
+                      %td $5632
+                    %tr
+                      %th{:scope => "row"} 2
+                      %td Jacob
+                      %td Thornton
+                      %td $18,234
+                    %tr
+                      %th{:scope => "row"} 3
+                      %td Larry
+                      %td Jacobs
+                      %td $16,200
+              #withdrawals.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"}
+                %table.table
+                  %thead
+                    %tr
+                      %th{:scope => "col"} Date
+                      %th{:scope => "col"} Location
+                      %th{:scope => "col"} Amount
+                  %tbody
+                    %tr
+                      %th{:scope => "row"} 2/1/2018
+                      %td St. Pete
+                      %td $5632
+                    %tr
+                      %th{:scope => "row"} 2/8/2018
+                      %td St. Pete
+                      %td $5,234
+                    %tr
+                      %th{:scope => "row"} 3/1/2018
+                      %td St. Pete
+                      %td $5,200
               #messages.tab-pane.fade{"aria-labelledby" => "contact-tab", :role => "tabpanel"} 3
               #accounts.tab-pane.fade{"aria-labelledby" => "contact-tab", :role => "tabpanel"}
                 .container
                   - @employee.accounts.each do |account|
                     = account.id
                     = number_to_currency(account.balance)
-          -#
-            %div.nav-tabs-custom
-              %ul.nav.nav-tabs
-                %li.active
-                  %a{"data-toggle" => "tab", :href => "#activity"} Activity
-                %li
-                  %a{"data-toggle" => "tab", :href => "#timeline"} Timeline
-                %li
-                  %a{"data-toggle" => "tab", :href => "#settings"} Settings
-              .tab-content
-                #activity.active.tab-pane
-                  Hey there
-                #timeline.tab-pane
-                  Timeline
-                #settings.tab-pane
-                  Settings
