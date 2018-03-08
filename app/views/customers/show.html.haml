@@ -32,8 +32,15 @@
                 %li.list-group-item
                   %b Messages
                   %a.pull-right= "#{@messages.blank? ? 0 : @messages.count}"
-              %a.btn.btn-primary.btn-block{:href => "#"}
-                %b Send Message
+              - if current_user.admin?
+                %a.btn.btn-success.btn-block{:href => "#"}
+                  %b 
+                    %i.fa.fa-dollar
+                    One Time Payment
+                %a.btn.bg-orange.btn-block{:href => "#"}
+                  %b 
+                    %i.fa.fa-comment
+                    Send Message
             / /.box-body
           / /.box
           / Details Box
@@ -45,7 +52,11 @@
               %strong
                 %i.fa.fa-envelope.margin-r-5
                 Email
-              %p.text-muted= "#{@employee.email.blank? ? 'None' : @employee.email}"
+              %p.text-muted
+                - unless @employee.email.blank?
+                  = mail_to(@employee.email)
+                - else
+                  None
               %hr/
               %strong
                 %i.fa.fa-mobile.margin-r-5

@@ -15,7 +15,7 @@
           Employees
       %li.nav-item
         %a.nav-link{:href => users_path}
-          %i.fa.fa-users
+          %i.fa.fa-user
           Users
       %li.nav-item.dropdown
         %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
@@ -32,7 +32,7 @@
         %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
           = current_user.full_name
         .dropdown-menu{"aria-labelledby" => "navbarDropdown"}
-          %a.dropdown-item{:href => "#"} Action
+          %a.dropdown-item{:href => "#"}= current_user.company.name
           %a.dropdown-item{:href => "#"} Another action
           .dropdown-divider
           %a.dropdown-item{:href => "#"} Something else here
