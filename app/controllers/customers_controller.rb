@@ -1,6 +1,6 @@
 class CustomersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_employee, only: [:show, :edit, :update, :destroy]
+  before_action :set_employee, only: [:show, :edit, :update, :destroy, :one_time_payment]
   
   # GET /customers
   # GET /customers.json
@@ -14,6 +14,7 @@ class CustomersController < ApplicationController
     @withdrawal_transactions = @employee.withdrawals
     @payment_transactions = @employee.payments
     @account = @employee.accounts.first
+    @base64_barcode_string = @employee.barcode_png
   end
   
   # GET /customers/new
@@ -63,6 +64,18 @@ class CustomersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to customers_url, notice: 'Employee was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+  
+  def one_time_payment
+    amount = params[:amount].to_f.abs unless params[:amount].blank?
+    note = params[:note]
+    transaction_id = @employee.one_time_payment(amount, note)
+    Rails.logger.debug "*********************************One time payment transaction ID: #{transaction_id}"
+    unless transaction_id.blank?
+      redirect_back fallback_location: @employee, notice: 'One time payment submitted.'
+    else
+      redirect_back fallback_location: @employee, alert: 'There was a problem creating the one time payment.'
     end
   end
   

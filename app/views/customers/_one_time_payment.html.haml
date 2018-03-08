@@ -1,0 +1,21 @@
+#one_time_payment.modal.fade
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-body
+        = form_tag one_time_payment_customer_path(@employee), id: 'one_time_payment_form', method: 'get', class: 'form-horizontal' do |f|
+
+          .input-group.mb-3
+            .input-group-prepend
+              %span.input-group-text $
+            = number_field_tag :amount, nil, :placeholder => "Amount", class: "form-control input-lg", required: true, step: '1'
+            .input-group-append
+              %span.input-group-text .00
+          
+          .form-group
+            = text_area_tag :note, nil, :placeholder => "Notes", class: "form-control input-lg", style: "width: 100%;"
+
+          .modal-footer
+            %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Cancel
+            %button.btn.btn-primary{id: 'one_time_payment_button', :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Pay"}} 
+              %i.fa.fa-dollar
+              Pay

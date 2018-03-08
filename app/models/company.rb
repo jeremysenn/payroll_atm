@@ -6,6 +6,7 @@ class Company < ActiveRecord::Base
   
   has_many :users
   has_many :customers, :foreign_key => "CompanyNumber" # AKA employees
+  has_many :accounts, :foreign_key => "CompanyNumber" # This is all accounts that have this company ID
   
   ### Start Virtual Attributes ###
   def transaction_fee # Getter
@@ -25,6 +26,17 @@ class Company < ActiveRecord::Base
     self.CompanyName
   end
   
+  def account
+    Account.where(CompanyNumber: self.CompanyNumber, CustomerID: nil).last
+  end
+  
+  def perform_one_sided_credit_transaction(amount)
+    unless account.blank?
+      transaction_id = account.ezcash_one_sided_credit_transaction_web_service_call(amount) 
+      Rails.logger.debug "*************** Company One-sided EZcash transaction #{transaction_id}"
+      return transaction_id
+    end
+  end
   
   #############################
   #     Class Methods      #

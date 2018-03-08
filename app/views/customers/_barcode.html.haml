@@ -1,0 +1,12 @@
+#barcode.modal.fade.in
+  .modal-dialog.modal-sm{:role => "document"}
+    .modal-content
+      .modal-header
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        .text-center
+          %img{:src => "data:image/png;base64,#{@base64_barcode_string}", class: 'img-fluid'}
+    / /.modal-content
+  / /.modal-dialog
+/ /.modal

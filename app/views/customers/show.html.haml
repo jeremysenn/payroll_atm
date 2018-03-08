@@ -33,7 +33,7 @@
                   %b Messages
                   %a.pull-right= "#{@messages.blank? ? 0 : @messages.count}"
               - if current_user.admin?
-                %a.btn.btn-success.btn-block{:href => "#"}
+                %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
                   %b 
                     %i.fa.fa-dollar
                     One Time Payment
@@ -41,6 +41,12 @@
                   %b 
                     %i.fa.fa-comment
                     Send Message
+                %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
+                  %b 
+                    %i.fa.fa-dollar
+                    Get Paid at ATM!
+                = render 'one_time_payment'
+                = render 'barcode'
             / /.box-body
           / /.box
           / Details Box
@@ -54,14 +60,25 @@
                 Email
               %p.text-muted
                 - unless @employee.email.blank?
-                  = mail_to(@employee.email)
+                  - if current_user.admin?
+                    = mail_to(@employee.email)
+                  - else
+                    = @employee.email
                 - else
                   None
               %hr/
               %strong
                 %i.fa.fa-mobile.margin-r-5
                 Phone
-              %p.text-muted= "#{@employee.phone.blank? ? 'None' : @employee.phone}"
+              %p.text-muted
+                - unless @employee.phone.blank?
+                  - if current_user.admin?
+                    %a{href: "tel:#{@employee.phone}"}
+                      = @employee.phone
+                  - else
+                    = @employee.phone
+                - else
+                  None
               %hr/
               %strong
                 %i.fa.fa-file-text-o.margin-r-5
@@ -104,7 +121,7 @@
                               %td= number_to_currency(payment_transaction.amt_req)
                               %td= number_to_currency(payment_transaction.amt_auth)
                               %td= payment_transaction.Description
-                              %td= link_to "Show", '#', class: 'btn btn-primary'
+                              %td= link_to "Show", payment_transaction, class: 'btn btn-primary'
                   - else
                     %p.text-center None
 
@@ -132,7 +149,7 @@
                               %td= number_to_currency(withdrawal_transaction.amt_req)
                               %td= number_to_currency(withdrawal_transaction.amt_auth)
                               %td= withdrawal_transaction.Description
-                              %td= link_to "Show", '#', class: 'btn btn-primary'
+                              %td= link_to "Show", withdrawal_transaction, class: 'btn btn-primary'
                   - else
                     %p.text-center None 
 

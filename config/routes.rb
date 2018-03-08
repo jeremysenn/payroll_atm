@@ -5,7 +5,12 @@ Rails.application.routes.draw do
   get 'welcome/index'
   root 'welcome#index'
   
-  resources :customers
+  resources :customers do
+    member do
+      get 'one_time_payment'
+    end
+  end
   resources :users
+  resources :transactions
   
 end

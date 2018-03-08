@@ -34,6 +34,10 @@ class Customer < ActiveRecord::Base
   #     Instance Methods      #
   #############################
   
+  def account
+    accounts.first
+  end
+  
   def active_accounts
     Account.where(CustomerID: id, active: true)
   end
@@ -463,6 +467,34 @@ class Customer < ActiveRecord::Base
       accounts.first.wire_transactions 
     else
       return []
+    end
+  end
+  
+  def one_time_payment(amount, note)
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:ez_cash_txn, message: { FromActID: company.account.id, ToActID: account.id, Amount: amount, Fee: 0, FeeActId: company.account.id, Note: note})
+    Rails.logger.debug "************** ezcash_payment_transaction_web_service_call response body: #{response.body}"
+    if response.success?
+      unless response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0
+        return response.body[:ez_cash_txn_response][:tran_id]
+      else
+        return nil
+      end
+    else
+      return nil
+    end
+  end
+  
+  def barcode_png
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:get_customer_barcode_png, message: { CustomerID: self.CustomerID, CompanyNumber: self.CompanyNumber, Scale: 5})
+    
+    Rails.logger.debug "barcode_png response body: #{response.body}"
+    
+    unless response.body[:get_customer_barcode_png_response].blank? or response.body[:get_customer_barcode_png_response][:return].blank?
+      return response.body[:get_customer_barcode_png_response][:return]
+    else
+      return ""
     end
   end
   

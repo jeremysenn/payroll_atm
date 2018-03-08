@@ -1,0 +1,64 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      %h1
+        = @transaction.Description
+        %small= number_to_currency(@transaction.amt_auth)
+    / Main content
+    %section.content
+      / Default box
+      .box.box-primary
+        .box-header.with-border
+          %h3.box-title 
+            = @transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
+        .box-body
+          %p.lead
+            Company:
+            = @transaction.company.CompanyName unless @transaction.company.blank?
+          %p.lead
+            Tran ID:
+            = @transaction.id
+          %p.lead
+            Error Code:
+            = @transaction.error_code
+          %p.lead
+            Sec Tran Code:
+            = @transaction.sec_tran_code
+          %p.lead
+            Tran Code:
+            = @transaction.tran_code
+          %p.lead
+            Device ID:
+            = @transaction.dev_id
+          %p.lead
+            From Account:
+            = @transaction.from_account_customer.full_name unless @transaction.from_account_customer.blank?
+            = @transaction.from_acct_id
+          %p.lead
+            To Account:
+            = @transaction.to_account_customer.full_name unless @transaction.to_account_customer.blank?
+            = @transaction.to_acct_id
+          %p.lead
+            DateTime:
+            = @transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
+          %p.lead
+            Code:
+            = @transaction.error_code_long_description
+          %p.lead
+            Status:
+            = @transaction.status_long_description
+          %p.lead
+            Amount Requested:
+            = number_to_currency(@transaction.amt_req)
+          %p.lead
+            Amount Authorized:
+            = number_to_currency(@transaction.amt_auth)
+          %p.lead
+            Fee:
+            = number_to_currency(@transaction.ChpFee)
+          %p.lead
+            Description:
+            = @transaction.Description
+        .box-footer
+          = link_to 'Back', :back, class: 'btn btn-default'
