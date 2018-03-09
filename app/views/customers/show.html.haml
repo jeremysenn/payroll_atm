@@ -41,12 +41,12 @@
                   %b 
                     %i.fa.fa-comment
                     Send Message
+                = render 'one_time_payment'
               - if current_user.employee? and @account.balance > 0
                 %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
                   %b 
                     %i.fa.fa-dollar
                     Get Paid at ATM!
-                = render 'one_time_payment'
                 = render 'barcode'
             / /.box-body
           / /.box
