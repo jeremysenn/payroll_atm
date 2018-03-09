@@ -1,33 +1,29 @@
-.container
-  %br
-  .card.card-block
-    %p.lead
-      Date/Time of text message:
-      = @sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
-    %p.lead
-      To:
-      = @sms_message.customer.full_name
-    %p.lead
-      Body:
-      %br
-      = @sms_message.body
-  = link_to 'Back', :back, class: 'btn btn-secondary'
-
--#
-  %p
-    %b To:
-    = @sms_message.to
-  %p
-    %b Body:
-    = @sms_message.body
-  %p
-    %b Customer:
-    = @sms_message.customer_id
-  %p
-    %b Caddy:
-    = @sms_message.caddy_id
-
-  -#
-    = link_to 'Edit', edit_sms_message_path(@sms_message)
-    \|
-    = link_to 'Back', sms_messages_path
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      %h1
+        SMS Message
+    / Main content
+    %section.content
+      / Default box
+      .box.box-primary
+        .box-header.with-border
+          %h3.box-title 
+            = @sms_message.created_at.strftime("%-m/%-d/%y %l:%M %p")
+        .box-body
+          %p.lead
+            Date/Time of text message:
+            = @sms_message.created_at.strftime("%-m/%-d/%y %l:%M %p")
+          %p.lead
+            To:
+            = @sms_message.customer.full_name
+          %p.lead
+            From:
+            = @sms_message.user.full_name
+          %p.lead
+            Body:
+            %br
+            = @sms_message.body
+        .box-footer
+          = link_to 'Back', :back, class: 'btn btn-default'
