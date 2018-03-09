@@ -479,7 +479,11 @@ class Customer < ActiveRecord::Base
         unless phone.blank?
           client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
           host = Rails.application.routes.default_url_options[:host]
-          client.call(:send_sms, message: { Phone: phone, Msg: "You just received a payment of $#{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Login at #{host} for details."})
+          if user.blank?
+            client.call(:send_sms, message: { Phone: phone, Msg: "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host} for details."})
+          else
+            client.call(:send_sms, message: { Phone: phone, Msg: "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host}/customers/#{id} for an ATM withdrawal."})
+          end
         end
         return response.body[:ez_cash_txn_response][:tran_id]
       else

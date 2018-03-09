@@ -32,6 +32,7 @@ class User < ApplicationRecord
     unless employee.blank?
       self.customer_id = employee.id
       self.role = "employee"
+      self.company_id = employee.CompanyNumber
     end
   end
   
