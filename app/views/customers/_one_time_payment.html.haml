@@ -7,7 +7,7 @@
           .input-group.mb-3
             .input-group-prepend
               %span.input-group-text $
-            = number_field_tag :amount, nil, :placeholder => "Amount", class: "form-control input-lg", required: true, step: '1'
+            = number_field_tag :amount, nil, :placeholder => "Amount", class: "form-control input-lg", required: true, step: '1', autofocus: true
             .input-group-append
               %span.input-group-text .00
           
@@ -19,3 +19,8 @@
             %button.btn.btn-primary{id: 'one_time_payment_button', :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Pay"}} 
               %i.fa.fa-dollar
               Pay
+
+:javascript
+  $('.modal').on('shown.bs.modal', function() {
+    $(this).find('[autofocus]').first().focus();
+  });

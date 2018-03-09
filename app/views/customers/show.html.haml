@@ -2,9 +2,17 @@
   .container
     / Content Header (Page header)
     %section.content-header
+      - flash.each do |name, msg|
+        - if msg.is_a?(String)
+          %p
+            %div{:class => "alert alert-dismissible alert-#{name.to_s == 'notice' ? 'success' : 'danger'}"}
+              %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} &times;
+              = content_tag :div, msg, :id => "flash_#{name}"
       %h1
         %i.fa.fa-male
         Employee Profile
+        - if current_user.admin?
+          %small= link_to 'Edit', edit_customer_path(@employee)
     / Main content
     %section.content
       / Default box

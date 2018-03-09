@@ -476,6 +476,11 @@ class Customer < ActiveRecord::Base
     Rails.logger.debug "************** ezcash_payment_transaction_web_service_call response body: #{response.body}"
     if response.success?
       unless response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0
+        unless phone.blank?
+          client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+          host = Rails.application.routes.default_url_options[:host]
+          client.call(:send_sms, message: { Phone: phone, Msg: "You just received a payment of $#{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Login at #{host} for details."})
+        end
         return response.body[:ez_cash_txn_response][:tran_id]
       else
         return nil
