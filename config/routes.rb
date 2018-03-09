@@ -9,8 +9,12 @@ Rails.application.routes.draw do
     member do
       get 'one_time_payment'
     end
+    collection do
+      post 'send_sms_message'
+    end
   end
   resources :users
   resources :transactions
+  resources :sms_messages
   
 end

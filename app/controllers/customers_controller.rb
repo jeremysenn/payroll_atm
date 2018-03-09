@@ -13,6 +13,7 @@ class CustomersController < ApplicationController
   def show
     @withdrawal_transactions = @employee.withdrawals
     @payment_transactions = @employee.payments
+    @sms_messages = @employee.sms_messages
     @account = @employee.accounts.first
     @base64_barcode_string = @employee.barcode_png
   end
@@ -76,6 +77,19 @@ class CustomersController < ApplicationController
       redirect_back fallback_location: @employee, notice: 'One time payment submitted.'
     else
       redirect_back fallback_location: @employee, alert: 'There was a problem creating the one time payment.'
+    end
+  end
+  
+  def send_sms_message
+    @message_body = params[:message_body]
+    unless params[:customer_ids].blank?
+      params[:customer_ids].each do |customer_id|
+        customer = Customer.where(CustomerID: customer_id).first
+        customer.send_sms_message(@message_body, current_user.id) unless customer.blank?
+      end
+      redirect_back fallback_location: customers_path, notice: 'Text message sent.'
+    else
+      redirect_back fallback_location: customers_path, alert: 'You must select at least one customer to text message.'
     end
   end
   

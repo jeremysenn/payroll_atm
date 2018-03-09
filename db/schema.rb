@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180302194258) do
+ActiveRecord::Schema.define(version: 20180309194610) do
+
+  create_table "sms_messages", force: :cascade do |t|
+    t.string "to"
+    t.text "body"
+    t.integer "company_id"
+    t.integer "user_id"
+    t.integer "customer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name", default: "", null: false

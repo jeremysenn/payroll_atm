@@ -7,6 +7,7 @@ class Company < ActiveRecord::Base
   has_many :users
   has_many :customers, :foreign_key => "CompanyNumber" # AKA employees
   has_many :accounts, :foreign_key => "CompanyNumber" # This is all accounts that have this company ID
+  has_many :sms_messages
   
   ### Start Virtual Attributes ###
   def transaction_fee # Getter

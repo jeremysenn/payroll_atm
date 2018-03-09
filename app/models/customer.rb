@@ -5,6 +5,7 @@ class Customer < ActiveRecord::Base
   establish_connection :ez_cash
   
   belongs_to :company, :foreign_key => "CompanyNumber"
+  has_many :sms_messages
   
 #  has_one :account, :foreign_key => "CustomerID"
   has_many :accounts, :foreign_key => "CustomerID"
@@ -504,6 +505,15 @@ class Customer < ActiveRecord::Base
       return response.body[:get_customer_barcode_png_response][:return]
     else
       return ""
+    end
+  end
+  
+  def send_sms_message(message_body, user_id)
+    unless phone.blank?
+#      SendCaddySmsWorker.perform_async(cell_phone_number, id, self.CustomerID, self.ClubCompanyNbr, message_body)
+      client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+      client.call(:send_sms, message: { Phone: phone, Msg: message_body})
+      SmsMessage.create(to: phone, customer_id: self.id,user_id: user_id, company_id: self.CompanyNumber, body: message_body)
     end
   end
   

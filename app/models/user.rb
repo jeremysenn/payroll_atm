@@ -8,6 +8,7 @@ class User < ApplicationRecord
        
   belongs_to :company
   belongs_to :customer, optional: true
+  has_many :sms_messages
   
   before_create :search_for_employee_match
        

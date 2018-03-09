@@ -1,0 +1,11 @@
+= simple_form_for(@sms_message) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :to
+    = f.input :body
+    = f.input :customer_id
+    = f.input :caddy_id
+
+  .form-actions
+    = f.button :submit

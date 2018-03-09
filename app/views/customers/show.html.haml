@@ -34,18 +34,19 @@
                   %a.pull-right= "#{@withdrawal_transactions.blank? ? 0 : @withdrawal_transactions.count}"
                 %li.list-group-item
                   %b Messages
-                  %a.pull-right= "#{@messages.blank? ? 0 : @messages.count}"
+                  %a.pull-right= "#{@sms_messages.blank? ? 0 : @sms_messages.count}"
               - if current_user.admin?
                 %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
                   %b 
                     %i.fa.fa-dollar
                     One Time Payment
                 - unless @employee.phone.blank?
-                  %a.btn.bg-orange.btn-block{:href => "#"}
+                  %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
                     %b 
                       %i.fa.fa-comment
                       Send Message
                 = render 'one_time_payment'
+                = render 'sms_message'
               - if current_user.employee? and @account.balance > 0
                 %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
                   %b 
@@ -143,4 +144,21 @@
                     %p.text-center None 
 
                 #messages.tab-pane.fade{"aria-labelledby" => "contact-tab", :role => "tabpanel"}
-                  %p.text-center Messages
+                  - unless @sms_messages.blank?
+                    .table-responsive
+                      %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
+                        %thead
+                          %tr
+                            %th Sent
+                            %th From
+                            %th Message Body
+                            %th
+                        %tbody
+                          - @sms_messages.each do |sms_message|
+                            %tr
+                              %td= sms_message.created_at.strftime("%-m/%-d/%y %l:%M %p")
+                              %td= sms_message.user.full_name
+                              %td= sms_message.body
+                              %td= link_to "More", sms_message, class: 'btn btn-primary'
+                  - else
+                    %p.text-center None
