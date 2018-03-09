@@ -108,25 +108,17 @@
                       %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
                         %thead
                           %tr
-                            %th ID
-                            %th Date/Time
-                            %th Code
-                            %th Status
-                            %th Requested
-                            %th Authorized
+                            %th Date
                             %th Description
+                            %th Amount
                             %th
                         %tbody
                           - @payment_transactions.each do |payment_transaction|
                             %tr
-                              %td= payment_transaction.id
-                              %td= payment_transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
-                              %td= payment_transaction.error_code_description
-                              %td= payment_transaction.status_description
-                              %td= number_to_currency(payment_transaction.amt_req)
-                              %td= number_to_currency(payment_transaction.amt_auth)
+                              %td= payment_transaction.date_time.strftime("%^b %y")
                               %td= payment_transaction.Description
-                              %td= link_to "Show", payment_transaction, class: 'btn btn-primary'
+                              %td= number_to_currency(payment_transaction.amt_auth)
+                              %td= link_to "More", payment_transaction, class: 'btn btn-primary'
                   - else
                     %p.text-center None
 
@@ -136,25 +128,17 @@
                       %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
                         %thead
                           %tr
-                            %th ID
-                            %th Date/Time
-                            %th Code
-                            %th Status
-                            %th Requested
-                            %th Authorized
+                            %th Date
                             %th Description
+                            %th Amount
                             %th
                         %tbody
                           - @withdrawal_transactions.each do |withdrawal_transaction|
                             %tr
-                              %td= withdrawal_transaction.id
-                              %td= withdrawal_transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
-                              %td= withdrawal_transaction.error_code_description
-                              %td= withdrawal_transaction.status_description
-                              %td= number_to_currency(withdrawal_transaction.amt_req)
-                              %td= number_to_currency(withdrawal_transaction.amt_auth)
+                              %td= withdrawal_transaction.date_time.strftime("%^b %y")
                               %td= withdrawal_transaction.Description
-                              %td= link_to "Show", withdrawal_transaction, class: 'btn btn-primary'
+                              %td= number_to_currency(withdrawal_transaction.amt_auth)
+                              %td= link_to "More", withdrawal_transaction, class: 'btn btn-primary'
                   - else
                     %p.text-center None 
 
