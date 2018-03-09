@@ -10,11 +10,11 @@ class Customer < ActiveRecord::Base
   has_many :accounts, :foreign_key => "CustomerID"
   has_many :transactions, :through => :account
   has_one :user
+  has_many :sms_messages
   
   scope :members, -> { where(GroupID: 14) }
   scope :employees, -> { where(GroupID: 13) }
   scope :active, -> { where(Active: true) }
-  
   
   # Virtual Attributes
   

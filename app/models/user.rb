@@ -8,6 +8,8 @@ class User < ApplicationRecord
        
   belongs_to :company
   belongs_to :customer, optional: true
+  
+  before_create :search_for_employee_match
        
   #############################
   #     Instance Methods      #
@@ -19,6 +21,18 @@ class User < ApplicationRecord
   
   def admin?
     role == "admin"
+  end
+  
+  def employee?
+    role == "employee"
+  end
+  
+  def search_for_employee_match
+    employee = Customer.find_by(Email: email)
+    unless employee.blank?
+      self.customer_id = employee.id
+      self.role = "employee"
+    end
   end
   
 end

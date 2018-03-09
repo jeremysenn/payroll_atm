@@ -41,6 +41,7 @@
                   %b 
                     %i.fa.fa-comment
                     Send Message
+              - if current_user.employee? and @account.balance > 0
                 %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
                   %b 
                     %i.fa.fa-dollar

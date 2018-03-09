@@ -19,7 +19,8 @@
       - unless user_signed_in?
         = render 'shared/no_user_navbar'
       - else
-        = render 'shared/admin_user_navbar'
+        = render 'shared/admin_user_navbar' if current_user.admin?
+        = render 'shared/employee_user_navbar' if current_user.employee?
       - flash.each do |name, msg|
         - if msg.is_a?(String)
           %p
