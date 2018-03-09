@@ -513,7 +513,7 @@ class Customer < ActiveRecord::Base
 #      SendCaddySmsWorker.perform_async(cell_phone_number, id, self.CustomerID, self.ClubCompanyNbr, message_body)
       client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
       client.call(:send_sms, message: { Phone: phone, Msg: message_body})
-      SmsMessage.create(to: phone, customer_id: self.id,user_id: user_id, company_id: self.CompanyNumber, body: message_body)
+      SmsMessage.create(to: phone, customer_id: self.id,user_id: user_id, company_id: self.CompanyNumber, body: "#{message_body} - sent from #{company.name}")
     end
   end
   
