@@ -5,7 +5,13 @@ class CustomersController < ApplicationController
   # GET /customers
   # GET /customers.json
   def index
-    @employees = current_user.company.customers.employees.last(20)
+    unless params[:q].blank?
+      @query_string = "%#{params[:q]}%"
+      employees = current_user.company.customers.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string) #.order("customer.NameL")
+    else
+      employees = current_user.company.customers.employees
+    end
+    @employees = employees.page(params[:page]).per(3)
   end
   
   # GET /customers/1
