@@ -11,7 +11,7 @@ class CustomersController < ApplicationController
     else
       employees = current_user.company.customers.employees
     end
-    @employees = employees.page(params[:page]).per(3)
+    @employees = employees.page(params[:page]).per(20)
   end
   
   # GET /customers/1
