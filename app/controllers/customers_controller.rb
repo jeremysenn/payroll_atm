@@ -17,9 +17,9 @@ class CustomersController < ApplicationController
   # GET /customers/1
   # GET /customers/1.json
   def show
-    @withdrawal_transactions = @employee.withdrawals
-    @payment_transactions = @employee.payments
-    @sms_messages = @employee.sms_messages.order("created_at DESC")
+    @withdrawal_transactions = Kaminari.paginate_array(@employee.withdrawals).page(params[:withdrawals]).per(10)
+    @payment_transactions =  Kaminari.paginate_array(@employee.payments).page(params[:payments]).per(10)
+    @sms_messages = @employee.sms_messages.order("created_at DESC").page(params[:messages]).per(10)
     @account = @employee.accounts.first
     @base64_barcode_string = @employee.barcode_png
   end

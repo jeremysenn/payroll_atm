@@ -53,4 +53,4 @@
                   %td= employee.phone
                   %td= link_to 'More', employee, class: 'btn btn-primary btn-sm'
         .box-footer
-          .pull-right= paginate @employees
+          .pull-right= paginate @employees, param_name: 'result1'
