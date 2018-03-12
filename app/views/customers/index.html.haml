@@ -2,10 +2,16 @@
   .container
     / Content Header (Page header)
     %section.content-header
+      = render 'shared/flash_messages'
       %h1
         %i.fa.fa-male
         Employees
         %small= link_to 'New', new_customer_path
+        .pull-right
+          %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
+            %i.fa.fa-comment
+            Send Message
+        = render 'group_sms_message'
         
     / Main content
     %section.content

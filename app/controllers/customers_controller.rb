@@ -7,11 +7,11 @@ class CustomersController < ApplicationController
   def index
     unless params[:q].blank?
       @query_string = "%#{params[:q]}%"
-      employees = current_user.company.customers.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string) #.order("customer.NameL")
+      @all_employees = current_user.company.customers.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string) #.order("customer.NameL")
     else
-      employees = current_user.company.customers.employees
+      @all_employees = current_user.company.customers.employees
     end
-    @employees = employees.page(params[:page]).per(20)
+    @employees = @all_employees.page(params[:page]).per(20)
   end
   
   # GET /customers/1
@@ -19,7 +19,7 @@ class CustomersController < ApplicationController
   def show
     @withdrawal_transactions = @employee.withdrawals
     @payment_transactions = @employee.payments
-    @sms_messages = @employee.sms_messages
+    @sms_messages = @employee.sms_messages.order("created_at DESC")
     @account = @employee.accounts.first
     @base64_barcode_string = @employee.barcode_png
   end

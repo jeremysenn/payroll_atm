@@ -157,7 +157,11 @@
                           - @sms_messages.each do |sms_message|
                             %tr
                               %td= sms_message.created_at.strftime("%-m/%-d/%y %l:%M %p")
-                              %td= sms_message.user.full_name
+                              %td
+                                - unless sms_message.user.blank?
+                                  = sms_message.user.full_name unless sms_message.user.blank?
+                                - else
+                                  = sms_message.company.name
                               %td= sms_message.body
                               %td= link_to "More", sms_message, class: 'btn btn-primary'
                   - else

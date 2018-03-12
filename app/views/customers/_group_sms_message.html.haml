@@ -1,0 +1,18 @@
+#sms_message.modal.fade
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-body
+        = form_tag send_sms_message_customers_path(@employee), id: 'send_sms_form', method: 'post', class: 'form-horizontal' do |f|
+          - @all_employees.each do |employee|
+            = hidden_field_tag "customer_ids[]", employee.id
+          .form-group
+            = text_area_tag :message_body, @message_body, :placeholder => "Message", class: "form-control input-lg", rows: 8, style: 'width:100%', autofocus: true
+          .modal-footer
+            %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Cancel
+            %button.btn.btn-primary{id: 'send_sms_button', :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send"}} 
+              Send
+
+:javascript
+  $('.modal').on('shown.bs.modal', function() {
+    $(this).find('[autofocus]').first().focus();
+  });

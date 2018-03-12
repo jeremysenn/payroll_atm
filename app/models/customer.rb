@@ -481,10 +481,13 @@ class Customer < ActiveRecord::Base
           client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
           host = Rails.application.routes.default_url_options[:host]
           if user.blank?
-            client.call(:send_sms, message: { Phone: phone, Msg: "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host} for details."})
+            message_body = "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host} for details."
+            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
           else
-            client.call(:send_sms, message: { Phone: phone, Msg: "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host}/customers/#{id} for an ATM withdrawal."})
+            message_body = "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host}/customers/#{id} for an ATM withdrawal."
+            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
           end
+          SmsMessage.create(to: phone, customer_id: self.id, company_id: self.CompanyNumber, body: message_body)
         end
         return response.body[:ez_cash_txn_response][:tran_id]
       else
@@ -512,8 +515,8 @@ class Customer < ActiveRecord::Base
     unless phone.blank?
 #      SendCaddySmsWorker.perform_async(cell_phone_number, id, self.CustomerID, self.ClubCompanyNbr, message_body)
       client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
-      client.call(:send_sms, message: { Phone: phone, Msg: message_body})
-      SmsMessage.create(to: phone, customer_id: self.id,user_id: user_id, company_id: self.CompanyNumber, body: "#{message_body} - sent from #{company.name}")
+      client.call(:send_sms, message: { Phone: phone, Msg: "#{message_body} - sent from #{company.name}"})
+      SmsMessage.create(to: phone, customer_id: self.id, user_id: user_id, company_id: self.CompanyNumber, body: "#{message_body} - sent from #{company.name}")
     end
   end
   
