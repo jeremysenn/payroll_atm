@@ -2,7 +2,6 @@
   .box-body
     = simple_form_for(@employee) do |f|
       = f.error_notification
-
       .form-inputs
         - if current_user.admin?
           = f.input :CompanyNumber, :as => :hidden, :input_html => { :value => "#{@employee.new_record? ? current_user.company_id : @employee.CompanyNumber}" }
@@ -13,13 +12,13 @@
           = f.input :Email, label: 'Email'  
           = f.input :Active, as: :boolean, inline_label: 'Active'
           = f.input :GroupID, :as => :hidden, :input_html => { :value => "#{@employee.new_record? ? 13 : @employee.GroupID}" }
-          -#
-            = f.simple_fields_for :accounts do |account_form|
-              - if account_form.object.new_record?
-                = account_form.input :CompanyNumber, :as => :hidden, :input_html => { :value => current_user.company.id }
-                = account_form.input :Balance, :as => :hidden, :input_html => { :value => 0 }
-                = account_form.input :MinBalance, :as => :hidden, :input_html => { :value => 0}
-                = account_form.input :ActTypeID, :as => :hidden, :input_html => { :value => 6 }
+          = f.simple_fields_for :accounts do |account_form|
+            - if account_form.object.new_record?
+              = account_form.input :CustomerID, :as => :hidden, :input_html => { :value => @employee.id }
+              = account_form.input :CompanyNumber, :as => :hidden, :input_html => { :value => current_user.company.id }
+              = account_form.input :Balance, :as => :hidden, :input_html => { :value => 0 }
+              = account_form.input :MinBalance, :as => :hidden, :input_html => { :value => 0}
+              = account_form.input :ActTypeID, :as => :hidden, :input_html => { :value => 6 }
       .form-actions
         = link_to 'Cancel', :back, class: 'btn btn-default'
         = f.button :submit, 'Save'

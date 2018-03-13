@@ -27,7 +27,7 @@ class CustomersController < ApplicationController
   # GET /customers/new
   def new
     @employee = Customer.new
-#    @employee.accounts.build
+    @employee.accounts.build
   end
   
   # GET /customers/1/edit
