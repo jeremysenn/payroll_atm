@@ -39,8 +39,12 @@ class PayrollBatch < ActiveRecord::Base
     begin
       response = client.call(:process_payroll_batch, message: { PayrollBatchNbr: self.BatchNbr})
       Rails.logger.debug "************** payroll_batch.process response body: #{response.body}"
-      self.processed_status = response['process_payroll_batch_response']
-      return response['process_payroll_batch_response']
+      if response.success?
+        unless response.body[:process_payroll_batch_response].blank?
+          self.processed_status = response.body[:process_payroll_batch_response]
+          return response.body[:process_payroll_batch_response]
+        end
+      end
     rescue Savon::SOAPFault => error
       raise ActiveRecord::Rollback
       Rails.logger.debug error.http.code
