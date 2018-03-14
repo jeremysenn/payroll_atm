@@ -41,8 +41,8 @@ class PayrollBatch < ActiveRecord::Base
       Rails.logger.debug "************** payroll_batch.process response body: #{response.body}"
       if response.success?
         unless response.body[:process_payroll_batch_response].blank?
-          self.processed_status = response.body[:process_payroll_batch_response]
-          return response.body[:process_payroll_batch_response]
+          self.processed_status = response.body[:process_payroll_batch_response][:return]
+          return response.body[:process_payroll_batch_response][:return]
         end
       end
     rescue Savon::SOAPFault => error
