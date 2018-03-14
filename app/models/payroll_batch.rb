@@ -14,7 +14,7 @@ class PayrollBatch < ActiveRecord::Base
   validates :CSVFile, presence: true
   
   after_commit :create_payroll_payments_from_csv, on: [:create]
-  after_update :process
+  before_update :process
     
   #############################
   #     Instance Methods      #
@@ -38,8 +38,8 @@ class PayrollBatch < ActiveRecord::Base
     client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
     begin
       response = client.call(:process_payroll_batch, message: { PayrollBatchNbr: self.BatchNbr})
-      Rails.logger.debug "************** payroll_batch.process response body: #{response.body}"
       if response.success?
+        Rails.logger.debug "************** payroll_batch.process response body: #{response.body}"
         unless response.body[:process_payroll_batch_response].blank?
           self.processed_status = response.body[:process_payroll_batch_response][:return]
           return response.body[:process_payroll_batch_response][:return]
