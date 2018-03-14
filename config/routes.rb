@@ -16,5 +16,7 @@ Rails.application.routes.draw do
   resources :users
   resources :transactions
   resources :sms_messages
+  resources :payroll_batches
+  resources :payroll_payments
   
 end

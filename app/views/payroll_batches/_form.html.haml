@@ -1,0 +1,36 @@
+.box.box-primary
+  .box-body
+    %p Format must be the following:
+    %table.table.table-bordered.table-sm
+      %thead.thead-dark
+        %tr
+          %th{:scope => "col"} EmployeeNbr
+          %th{:scope => "col"} EmployeeFirstName
+          %th{:scope => "col"} EmployeeLastName
+          %th{:scope => "col"} NetPaycheckAmt
+      %tbody
+        %tr
+          %td 1234567
+          %td John
+          %td Smith
+          %td 2345
+        %tr
+          %td 1234568
+          %td Jane
+          %td Doe
+          %td 2675
+        %tr
+          %td 1234569
+          %td Rick
+          %td Williams
+          %td 2242
+    = simple_form_for(@payroll_batch) do |f|
+      = f.error_notification
+      .form-inputs
+        - if current_user.admin?
+          = f.input :CompanyNbr, :as => :hidden, :input_html => { :value => "#{@payroll_batch.new_record? ? current_user.company_id : @payroll_batch.CompanyNbr}" }
+          = f.input :CSVFile, :as => :file, label: false, :input_html => {:accept => 'text/csv'}, required: true
+      .form-actions
+        = link_to 'Cancel', :back, class: 'btn btn-default'
+        %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Import CSV"}}
+          Import CSV

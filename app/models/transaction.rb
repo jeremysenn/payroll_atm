@@ -7,6 +7,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :account, :foreign_key => :from_acct_id # Assume from account is the main account
   has_one :transfer, :foreign_key => :ez_cash_tran_id
   belongs_to :company, :foreign_key => "DevCompanyNbr"
+  has_one :payroll_payment, :foreign_key => "TranID"
   
   scope :withdrawals, -> { where(tran_code: ["WDL", "ALL"], sec_tran_code: ["TFR", ""]) }
   scope :transfers, -> { where(tran_code: ["CARD"], sec_tran_code: ["TFR"]) }

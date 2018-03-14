@@ -1,0 +1,56 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      %h1
+        %i.fa.fa-dollar
+        Payroll Batches
+        %small= link_to 'New', new_payroll_batch_path
+    / Main content
+    %section.content
+      / Default box
+      .box.box-primary
+        .box-header.with-border
+          %h3.box-title 
+            Unprocessed
+        .box-body.no-padding
+          - unless @unprocessed_payroll_batches.blank?
+            %table.table
+              %thead
+                %tr
+                  %th{:scope => "col"} #
+                  %th{:scope => "col"} Date
+                  %th
+              %tbody
+                - @unprocessed_payroll_batches.each do |payroll_batch|
+                  %tr
+                    %th{:scope => "row"}= payroll_batch.id
+                    %td= payroll_batch.created_at
+                    %td
+                      = link_to 'More', payroll_batch, class: 'btn btn-primary btn-sm'
+                      = link_to 'Delete', payroll_batch, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
+          - else
+            %p.text-center None
+      / Default box
+      .box.box-success
+        .box-header.with-border
+          %h3.box-title 
+            Processed
+        .box-body.no-padding
+          - unless @processed_payroll_batches.blank?
+            %table.table
+              %thead
+                %tr
+                  %th{:scope => "col"} #
+                  %th{:scope => "col"} Date
+                  %th{:scope => "col"} Status
+                  %th
+              %tbody
+                - @processed_payroll_batches.each do |payroll_batch|
+                  %tr
+                    %th{:scope => "row"}= payroll_batch.id
+                    %td= payroll_batch.created_at
+                    %td= payroll_batch.processed_status
+                    %td= link_to 'More', payroll_batch, class: 'btn btn-primary btn-sm'
+          - else
+            %p.text-center None

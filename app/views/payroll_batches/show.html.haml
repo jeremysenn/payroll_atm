@@ -1,0 +1,85 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      = render 'shared/flash_messages'
+      %h1
+        %i.fa.fa-dollar
+        Payroll Batch
+    / Main content
+    %section.content
+      / Default box
+      .box.box-primary
+        .box-header.with-border
+          %h3.box-title 
+            = @payroll_batch.created_at
+          .box-tools.pull-right
+            - unless @payroll_batch.processed?
+              - if current_user.admin?
+                = form_for @payroll_batch do |f|
+                  = f.hidden_field :Processed, value: 1
+                  %button.btn.bg-orange{:type => "submit", data: {disable_with: "<i class='fa fa-refresh fa-spin'></i> Process"}}
+                    %i.fa.fa-refresh
+                    Process
+            - else
+              .text-success= @payroll_batch.processed_status
+        .box-body
+          %ul#myTab.nav.nav-tabs{:role => "tablist"}
+            %li.nav-item
+              %a#payments-tab.nav-link.active{"aria-controls" => "payments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#payments", :role => "tab"} Payments
+            %li.nav-item
+              %a#csv-tab.nav-link{"aria-controls" => "csv", "aria-selected" => "false", "data-toggle" => "tab", :href => "#csv", :role => "tab"} CSV
+          #myTabContent.tab-content
+            #payments.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+              .table-responsive
+                %table.table.table-striped
+                  %thead
+                    %tr
+                      %th{:scope => "col"} TranID
+                      %th{:scope => "col"} EmployeeNbr
+                      %th{:scope => "col"} CustomerID
+                      %th{:scope => "col"} EmployeeFirstName
+                      %th{:scope => "col"} EmployeeLastName
+                      %th{:scope => "col"} NetPaycheckAmt
+                      %th{:scope => "col"} Processed
+                      - unless @payroll_batch.processed?
+                        %th
+                  %tbody
+                    - @payroll_batch.payroll_payments.each do |payroll_payment|
+                      %tr{class: "#{payroll_payment.customer.blank? ? 'table-danger' : ''}"}
+                        %td
+                          - unless payroll_payment.TranID.blank?
+                            = link_to payroll_payment.TranID, payroll_payment.ezcash_transaction
+                          - else
+                            N/A
+                        %td= payroll_payment.EmployeeNbr
+                        %td
+                          - unless payroll_payment.customer.blank?
+                            = link_to payroll_payment.CustomerID, payroll_payment.customer
+                          - else
+                            Unknown
+                        %td
+                          - unless payroll_payment.customer.blank?
+                            = payroll_payment.customer.first_name
+                          - else
+                            Unknown
+                        %td
+                          - unless payroll_payment.customer.blank?
+                            = payroll_payment.customer.last_name
+                          - else
+                            Unknown
+                        %td= number_to_currency(payroll_payment.NetPaycheckAmt)
+                        %td= payroll_payment.Processed? ? 'Yes' : 'No'
+                        - unless @payroll_batch.processed?
+                          %td
+                            = link_to 'Edit', edit_payroll_payment_path(payroll_payment), class: 'btn btn-primary btn-sm'
+                            = link_to 'Delete', payroll_payment, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
+
+                
+            #csv.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+              .table-responsive
+                %table.table.table-striped
+                  - CSV.parse(@payroll_batch.CSVFile).each do |row|
+                    %tr
+                      - row.each do |element|
+                        %td= element

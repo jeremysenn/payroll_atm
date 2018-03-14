@@ -12,6 +12,7 @@ class Customer < ActiveRecord::Base
   has_many :transactions, :through => :account
   has_one :user
   has_many :sms_messages
+  has_many :payroll_payments, :foreign_key => "CustomerID"
   
   scope :members, -> { where(GroupID: 14) }
   scope :employees, -> { where(GroupID: 13) }
@@ -521,7 +522,7 @@ class Customer < ActiveRecord::Base
   end
   
   #############################
-  #     Class Methods      #
+  #     Class Methods         #
   #############################
   
   def self.authenticate(user_name, pass)
