@@ -2,8 +2,13 @@ class WelcomeController < ApplicationController
 #  before_action :authenticate_user!
   
   def index
-    if user_signed_in? and current_user.employee?
-      redirect_to current_user.customer
+    if user_signed_in?
+      if current_user.employee?
+        redirect_to current_user.customer
+      end
+      if current_user.admin?
+        @processed_payroll_batches = current_user.company.payroll_batches.processed.order("created_at DESC").last(3)
+      end
     end
   end
   

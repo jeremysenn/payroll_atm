@@ -7,81 +7,59 @@
         %small Recent payments
     / Main content
     %section.content
-      / Default box
-      .box.box-primary
-        .box-header.with-border
-          %h3.box-title 
-            = "March 1, 2018"
-          .box-tools.pull-right
-            %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
-              %i.fa.fa-minus
-            %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
-              %i.fa.fa-times
-        .box-body
-          Lots of details go here. And more stuff.
-          %table.table
-            %thead
-              %tr
-                %th{:scope => "col"} #
-                %th{:scope => "col"} First
-                %th{:scope => "col"} Last
-                %th{:scope => "col"} Amount
-            %tbody
-              %tr
-                %th{:scope => "row"} 1
-                %td Mark
-                %td Otto
-                %td $10,432
-              %tr
-                %th{:scope => "row"} 2
-                %td Jacob
-                %td Thornton
-                %td $8759
-              %tr
-                %th{:scope => "row"} 3
-                %td Larry
-                %td Jacobs
-                %td $16,890
-
-        .box-footer
-          $23,782
-
-      .box.box-primary
-        .box-header.with-border
-          %h3.box-title 
-            = "February 1, 2018"
-          .box-tools.pull-right
-            %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
-              %i.fa.fa-minus
-            %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
-              %i.fa.fa-times
-        .box-body
-          Lots of details go here. And more stuff.
-          %table.table
-            %thead
-              %tr
-                %th{:scope => "col"} #
-                %th{:scope => "col"} First
-                %th{:scope => "col"} Last
-                %th{:scope => "col"} Amount
-            %tbody
-              %tr
-                %th{:scope => "row"} 1
-                %td Mark
-                %td Otto
-                %td $5632
-              %tr
-                %th{:scope => "row"} 2
-                %td Jacob
-                %td Thornton
-                %td $18,234
-              %tr
-                %th{:scope => "row"} 3
-                %td Larry
-                %td Jacobs
-                %td $16,200
-          .box-footer
-            $23,782
-
-    / /.content
-  / /.content-wrapper
+      - unless @processed_payroll_batches.blank?
+        - @processed_payroll_batches.each do |payroll_batch|
+          .box.box-primary{"data-widget" => "box-widget"}
+            .box-header.with-border
+              %h3.box-title 
+                = payroll_batch.created_at.strftime("%B %-d, %Y")
+              .box-tools.pull-right
+                %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+                  %i.fa.fa-minus
+                %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+                  %i.fa.fa-times
+            .box-body
+              .text-success= payroll_batch.processed_status
+              .table-responsive
+                %table.table.table-striped
+                  %thead
+                    %tr
+                      %th{:scope => "col"} TranID
+                      %th{:scope => "col"} CheckNbr
+                      %th{:scope => "col"} EmployeeNbr
+                      %th{:scope => "col"} CustomerID
+                      %th{:scope => "col"} EmployeeFirstName
+                      %th{:scope => "col"} EmployeeLastName
+                      %th{:scope => "col"} NetPaycheckAmt
+                      %th{:scope => "col"} Processed
+                  %tbody
+                    - payroll_batch.payroll_payments.each do |payroll_payment|
+                      %tr{class: "#{payroll_payment.customer.blank? ? 'table-danger' : ''}"}
+                        %td
+                          - unless payroll_payment.TranID.blank?
+                            = link_to payroll_payment.TranID, payroll_payment.ezcash_transaction
+                          - else
+                            N/A
+                        %td= payroll_payment.CheckNbr
+                        %td= payroll_payment.EmployeeNbr
+                        %td
+                          - unless payroll_payment.customer.blank?
+                            = link_to payroll_payment.CustomerID, payroll_payment.customer
+                          - else
+                            Not found
+                        %td
+                          - unless payroll_payment.customer.blank?
+                            = payroll_payment.customer.first_name
+                          - else
+                            Not found
+                        %td
+                          - unless payroll_payment.customer.blank?
+                            = payroll_payment.customer.last_name
+                          - else
+                            Not found
+                        %td= number_to_currency(payroll_payment.NetPaycheckAmt)
+                        %td= payroll_payment.Processed? ? 'Yes' : 'No'
+            .box-footer
+              .pull-right= link_to 'More', payroll_batch, class: 'btn btn-primary'
+      - else
+        %p None

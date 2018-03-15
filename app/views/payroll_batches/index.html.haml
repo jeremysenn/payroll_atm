@@ -25,7 +25,7 @@
                 - @unprocessed_payroll_batches.each do |payroll_batch|
                   %tr
                     %th{:scope => "row"}= payroll_batch.id
-                    %td= payroll_batch.created_at
+                    %td= payroll_batch.created_at.strftime("%B %-d, %Y")
                     %td
                       = link_to 'More', payroll_batch, class: 'btn btn-primary btn-sm'
                       = link_to 'Delete', payroll_batch, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
@@ -49,7 +49,7 @@
                 - @processed_payroll_batches.each do |payroll_batch|
                   %tr
                     %th{:scope => "row"}= payroll_batch.id
-                    %td= payroll_batch.created_at
+                    %td= payroll_batch.created_at.strftime("%B %-d, %Y")
                     %td= payroll_batch.processed_status
                     %td= link_to 'More', payroll_batch, class: 'btn btn-primary btn-sm'
           - else

@@ -12,7 +12,7 @@
       .box.box-primary
         .box-header.with-border
           %h3.box-title 
-            = @payroll_batch.created_at
+            = @payroll_batch.created_at.strftime("%B %-d, %Y")
           .box-tools.pull-right
             - unless @payroll_batch.processed?
               - if current_user.admin?
