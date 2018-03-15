@@ -36,6 +36,7 @@
                   %thead
                     %tr
                       %th{:scope => "col"} TranID
+                      %th{:scope => "col"} CheckNbr
                       %th{:scope => "col"} EmployeeNbr
                       %th{:scope => "col"} CustomerID
                       %th{:scope => "col"} EmployeeFirstName
@@ -52,22 +53,23 @@
                             = link_to payroll_payment.TranID, payroll_payment.ezcash_transaction
                           - else
                             N/A
+                        %td= payroll_payment.CheckNbr
                         %td= payroll_payment.EmployeeNbr
                         %td
                           - unless payroll_payment.customer.blank?
                             = link_to payroll_payment.CustomerID, payroll_payment.customer
                           - else
-                            Unknown
+                            Not found
                         %td
                           - unless payroll_payment.customer.blank?
                             = payroll_payment.customer.first_name
                           - else
-                            Unknown
+                            Not found
                         %td
                           - unless payroll_payment.customer.blank?
                             = payroll_payment.customer.last_name
                           - else
-                            Unknown
+                            Not found
                         %td= number_to_currency(payroll_payment.NetPaycheckAmt)
                         %td= payroll_payment.Processed? ? 'Yes' : 'No'
                         - unless @payroll_batch.processed?

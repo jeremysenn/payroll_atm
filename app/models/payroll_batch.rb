@@ -30,7 +30,7 @@ class PayrollBatch < ActiveRecord::Base
       if customer.blank?
         customer = Customer.find_by(CompanyNumber: self.CompanyNbr, NameF: row['EmployeeFirstName'], NameL: row['EmployeeLastName'])
       end
-      PayrollPayment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, CustomerID: customer.blank? ? nil : customer.id, EmployeeNbr: row['EmployeeNbr'], NetPaycheckAmt: row['NetPaycheckAmt'])
+      PayrollPayment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, CheckNbr:  row['CheckNbr'], CustomerID: customer.blank? ? nil : customer.id, EmployeeNbr: row['EmployeeNbr'], NetPaycheckAmt: row['NetPaycheckAmt'])
     end
   end
   
