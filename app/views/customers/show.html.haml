@@ -5,7 +5,7 @@
       = render 'shared/flash_messages'
       %h1
         %i.fa.fa-male
-        Employee Profile
+        Payee Profile
         - if current_user.admin?
           %small= link_to 'Edit', edit_customer_path(@employee)
     / Main content

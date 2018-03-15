@@ -5,7 +5,7 @@
         = @payroll_payment.customer.first_name
         = @payroll_payment.customer.last_name
       - else
-        No employee found
+        No payee found
     .box-tools.pull-right= @payroll_payment.payroll_batch.created_at
   .box-body
     = form_for @payroll_payment, class: 'form-horizontal' do |f|
