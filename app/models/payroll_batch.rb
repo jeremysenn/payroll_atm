@@ -26,11 +26,11 @@ class PayrollBatch < ActiveRecord::Base
   
   def create_payroll_payments_from_csv
     CSV.parse(self.CSVFile, { :headers => true }) do |row| 
-      customer = Customer.find_by(CompanyNumber: self.CompanyNbr, Registration_Source: row['EmployeeNbr'])
+      customer = Customer.find_by(CompanyNumber: self.CompanyNbr, Registration_Source: row['PayeeNbr'])
       if customer.blank?
-        customer = Customer.find_by(CompanyNumber: self.CompanyNbr, NameF: row['EmployeeFirstName'], NameL: row['EmployeeLastName'])
+        customer = Customer.find_by(CompanyNumber: self.CompanyNbr, NameF: row['FirstName'], NameL: row['LastName'])
       end
-      PayrollPayment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, CheckNbr:  row['CheckNbr'], CustomerID: customer.blank? ? nil : customer.id, EmployeeNbr: row['EmployeeNbr'], NetPaycheckAmt: row['NetPaycheckAmt'])
+      PayrollPayment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, CheckNbr:  row['CheckNbr'], CustomerID: customer.blank? ? nil : customer.id, EmployeeNbr: row['PayeeNbr'], NetPaycheckAmt: row['NetPaycheckAmt'])
     end
   end
   
