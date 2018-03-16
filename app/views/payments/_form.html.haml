@@ -13,7 +13,7 @@
         %label{:for => "PayeeNbr"} Payee Number
         = f.text_field :PayeeNbr, class: "form-control input-lg"
       .form-group
-        %label{:for => "CustomerID"} Customer
+        %label{:for => "CustomerID"} Payee
         =# f.text_field :CustomerID, class: "form-control input-lg" 
         = f.select :CustomerID, options_from_collection_for_select(current_user.company.customers.order(:NameL), "id", "full_name_with_member_number", @payment.CustomerID), {:include_blank => true}, class: "form-control", style: "width: 100%;"
       .input-group.mb-3
