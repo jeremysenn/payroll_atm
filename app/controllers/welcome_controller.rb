@@ -3,7 +3,7 @@ class WelcomeController < ApplicationController
   
   def index
     if user_signed_in?
-      if current_user.employee?
+      if current_user.payee?
         redirect_to current_user.customer
       end
       if current_user.admin?

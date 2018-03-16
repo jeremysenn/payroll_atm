@@ -3,6 +3,6 @@
 - if user_signed_in?
   =# render 'admin_user_sidebar'
   = render 'admin_user_start' if current_user.admin?
-  = render 'employee_user_start' if current_user.employee?
+  = render 'customer_user_start' if current_user.payee?
 - else
   = render 'no_user_start'

@@ -41,7 +41,7 @@
                           - else
                             N/A
                         %td= payment.ReferenceNbr
-                        %td= payment.EmployeeNbr
+                        %td= payment.PayeeNbr
                         %td
                           - unless payment.customer.blank?
                             = link_to payment.CustomerID, payment.customer
@@ -57,7 +57,7 @@
                             = payment.customer.last_name
                           - else
                             Not found
-                        %td= number_to_currency(payment.NetPaycheckAmt)
+                        %td= number_to_currency(payment.PaymentAmt)
                         %td= payment.Processed? ? 'Yes' : 'No'
             .box-footer
               .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'

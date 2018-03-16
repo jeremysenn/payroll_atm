@@ -27,6 +27,9 @@ class PaymentBatch < ActiveRecord::Base
   def create_payments_from_csv
     CSV.parse(self.CSVFile, { :headers => true }) do |row| 
       customer = Customer.find_by(CompanyNumber: self.CompanyNbr, Registration_Source: row['PayeeNbr'])
+      if customer.blank?
+        customer = Customer.find_by(CompanyNumber: self.CompanyNbr, CustomerID: row['PayeeNbr'])
+      end
       Payment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, ReferenceNbr:  row['ReferenceNbr'], CustomerID: customer.blank? ? nil : customer.id, PayeeNbr: row['PayeeNbr'], PaymentAmt: row['PaymentAmt'])
     end
   end
@@ -34,7 +37,7 @@ class PaymentBatch < ActiveRecord::Base
   def process
     client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
     begin
-      response = client.call(:process_payment_batch, message: { PayrollBatchNbr: self.BatchNbr})
+      response = client.call(:process_payment_batch, message: { BatchNbr: self.BatchNbr})
       if response.success?
         Rails.logger.debug "************** payment_batch.process response body: #{response.body}"
         unless response.body[:process_payment_batch_response].blank?
