@@ -10,6 +10,7 @@
           = f.input :NameL, label: 'Last Name'
           = f.input :PhoneMobile, label: 'Phone'
           = f.input :Email, label: 'Email'  
+          = f.input :Registration_Source, label: 'Reference Number'
           = f.input :Active, as: :boolean, inline_label: 'Active'
           = f.input :GroupID, :as => :hidden, :input_html => { :value => "#{@customer.new_record? ? 13 : @customer.GroupID}" }
           = f.simple_fields_for :accounts do |account_form|
