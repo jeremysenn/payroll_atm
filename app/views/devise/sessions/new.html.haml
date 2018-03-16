@@ -7,7 +7,8 @@
     %p.login-box-msg Log in
     = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
       .form-group
-        = f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', :placeholder => "Email", :type => "email"
+        =# f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', :placeholder => "Email", :type => "email"
+        = f.text_field :phone, autofocus: true, autocomplete: "phone", class: 'form-control', :placeholder => "Phone"
       .form-group
         = f.password_field :password, autocomplete: "off",  class: 'form-control', :placeholder => "Password"
       - if devise_mapping.rememberable?

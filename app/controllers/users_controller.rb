@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   def index
     @users = current_user.company.users
     @admin_users = @users.where(role: 'admin')
-    @employee_users = @users.where(role: 'employee')
+    @payee_users = @users.where(role: 'payee')
   end
 
   # GET /users/1
