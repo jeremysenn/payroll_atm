@@ -15,7 +15,7 @@ class Customer < ActiveRecord::Base
   has_many :payments, :foreign_key => "CustomerID"
   
   scope :members, -> { where(GroupID: 14) }
-  scope :employees, -> { where(GroupID: 13) }
+  scope :payees, -> { where(GroupID: 13) }
   scope :active, -> { where(Active: true) }
   
   # Virtual Attributes

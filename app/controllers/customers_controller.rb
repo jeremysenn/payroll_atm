@@ -9,7 +9,7 @@ class CustomersController < ApplicationController
       @query_string = "%#{params[:q]}%"
       @all_customers = current_user.company.customers.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string) #.order("customer.NameL")
     else
-      @all_customers = current_user.company.customers.customers
+      @all_customers = current_user.company.customers.payees
     end
     @customers = @all_customers.page(params[:page]).per(20)
   end

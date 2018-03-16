@@ -47,7 +47,7 @@
                       Send Message
                 = render 'one_time_payment'
                 = render 'sms_message'
-              - if current_user.customer? and @account.balance > 0
+              - if current_user.payee? and @account.balance > 0
                 %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
                   %b 
                     %i.fa.fa-dollar
