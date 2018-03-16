@@ -4,11 +4,11 @@
     %table.table.table-bordered.table-sm
       %thead.thead-dark
         %tr
-          %th{:scope => "col"} CheckNbr
+          %th{:scope => "col"} ReferenceNbr
           %th{:scope => "col"} PayeeNbr
           %th{:scope => "col"} FirstName
           %th{:scope => "col"} LastName
-          %th{:scope => "col"} NetPaycheckAmt
+          %th{:scope => "col"} PaymentAmt
       %tbody
         %tr
           %td 00010
@@ -28,11 +28,11 @@
           %td Rick
           %td Williams
           %td 2242
-    = simple_form_for(@payroll_batch) do |f|
+    = simple_form_for(@payment_batch) do |f|
       = f.error_notification
       .form-inputs
         - if current_user.admin?
-          = f.input :CompanyNbr, :as => :hidden, :input_html => { :value => "#{@payroll_batch.new_record? ? current_user.company_id : @payroll_batch.CompanyNbr}" }
+          = f.input :CompanyNbr, :as => :hidden, :input_html => { :value => "#{@payment_batch.new_record? ? current_user.company_id : @payment_batch.CompanyNbr}" }
           = f.input :CSVFile, :as => :file, label: false, :input_html => {:accept => 'text/csv'}, required: true
       .form-actions
         = link_to 'Cancel', :back, class: 'btn btn-default'

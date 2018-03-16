@@ -1,0 +1,25 @@
+.box.box-primary
+  .box-header.with-border
+    %h3.box-title 
+      - unless @payment.customer.blank?
+        = @payment.customer.first_name
+        = @payment.customer.last_name
+      - else
+        No payee found
+    .box-tools.pull-right= @payment.payment_batch.created_at
+  .box-body
+    = form_for @payment, class: 'form-horizontal' do |f|
+      .form-group
+        %label{:for => "PayeeNbr"} Employee Number
+        = f.text_field :PayeeNbr, class: "form-control input-lg"
+      .form-group
+        %label{:for => "CustomerID"} Customer
+        =# f.text_field :CustomerID, class: "form-control input-lg" 
+        = f.select :CustomerID, options_from_collection_for_select(current_user.company.customers.order(:NameL), "id", "full_name_with_member_number", @payment.CustomerID), {:include_blank => true}, class: "form-control", style: "width: 100%;"
+      .input-group.mb-3
+        .input-group-prepend
+          %span.input-group-text $
+        = f.text_field :PaymentAmt, class: "form-control input-lg"
+      = link_to 'Cancel', :back, class: "btn btn-default"
+      %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Save"}} 
+        Save

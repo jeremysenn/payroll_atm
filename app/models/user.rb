@@ -4,13 +4,13 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
        
-  ROLES = %w[admin employee].freeze
+  ROLES = %w[admin payee].freeze
        
   belongs_to :company
   belongs_to :customer, optional: true
   has_many :sms_messages
   
-  before_create :search_for_employee_match
+  before_create :search_for_payee_match
        
   #############################
   #     Instance Methods      #
@@ -24,16 +24,16 @@ class User < ApplicationRecord
     role == "admin"
   end
   
-  def employee?
-    role == "employee"
+  def payee?
+    role == "payee"
   end
   
-  def search_for_employee_match
-    employee = Customer.find_by(Email: email)
-    unless employee.blank?
-      self.customer_id = employee.id
-      self.role = "employee"
-      self.company_id = employee.CompanyNumber
+  def search_for_payee_match
+    payee = Customer.find_by(Email: email)
+    unless payee.blank?
+      self.customer_id = payee.id
+      self.role = "payee"
+      self.company_id = payee.CompanyNumber
     end
   end
   

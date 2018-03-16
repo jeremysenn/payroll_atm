@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.ruby.railsprojects</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/rails-project/1">
-            <name>payroll_atm</name>
+            <name>payment_atm</name>
         </data>
     </configuration>
 </project>

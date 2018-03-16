@@ -1,33 +1,33 @@
 class CustomersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_employee, only: [:show, :edit, :update, :destroy, :one_time_payment]
+  before_action :set_customer, only: [:show, :edit, :update, :destroy, :one_time_payment]
   
   # GET /customers
   # GET /customers.json
   def index
     unless params[:q].blank?
       @query_string = "%#{params[:q]}%"
-      @all_employees = current_user.company.customers.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string) #.order("customer.NameL")
+      @all_customers = current_user.company.customers.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string) #.order("customer.NameL")
     else
-      @all_employees = current_user.company.customers.employees
+      @all_customers = current_user.company.customers.customers
     end
-    @employees = @all_employees.page(params[:page]).per(20)
+    @customers = @all_customers.page(params[:page]).per(20)
   end
   
   # GET /customers/1
   # GET /customers/1.json
   def show
-    @withdrawal_transactions = Kaminari.paginate_array(@employee.withdrawals).page(params[:withdrawals]).per(10)
-    @payment_transactions =  Kaminari.paginate_array(@employee.payments).page(params[:payments]).per(10)
-    @sms_messages = @employee.sms_messages.order("created_at DESC").page(params[:messages]).per(10)
-    @account = @employee.accounts.first
-    @base64_barcode_string = @employee.barcode_png
+    @withdrawal_transactions = Kaminari.paginate_array(@customer.withdrawals).page(params[:withdrawals]).per(10)
+    @payment_transactions =  Kaminari.paginate_array(@customer.payments).page(params[:payments]).per(10)
+    @sms_messages = @customer.sms_messages.order("created_at DESC").page(params[:messages]).per(10)
+    @account = @customer.accounts.first
+    @base64_barcode_string = @customer.barcode_png
   end
   
   # GET /customers/new
   def new
-    @employee = Customer.new
-    @employee.accounts.build
+    @customer = Customer.new
+    @customer.accounts.build
   end
   
   # GET /customers/1/edit
@@ -37,15 +37,15 @@ class CustomersController < ApplicationController
   # POST /customers
   # POST /customers.json
   def create
-    @employee = Customer.new(customer_params)
+    @customer = Customer.new(customer_params)
 
     respond_to do |format|
-      if @employee.save
-        format.html { redirect_to @employee, notice: 'Employee was successfully created.' }
-        format.json { render :show, status: :created, location: @employee }
+      if @customer.save
+        format.html { redirect_to @customer, notice: 'Customer was successfully created.' }
+        format.json { render :show, status: :created, location: @customer }
       else
         format.html { render :new }
-        format.json { render json: @employee.errors, status: :unprocessable_entity }
+        format.json { render json: @customer.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -54,12 +54,12 @@ class CustomersController < ApplicationController
   # PATCH/PUT /customers/1.json
   def update
     respond_to do |format|
-      if @employee.update(customer_params)
-        format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
-        format.json { render :show, status: :ok, location: @employee }
+      if @customer.update(customer_params)
+        format.html { redirect_to @customer, notice: 'Customer was successfully updated.' }
+        format.json { render :show, status: :ok, location: @customer }
       else
         format.html { render :edit }
-        format.json { render json: @employee.errors, status: :unprocessable_entity }
+        format.json { render json: @customer.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -67,9 +67,9 @@ class CustomersController < ApplicationController
   # DELETE /customers/1
   # DELETE /customers/1.json
   def destroy
-    @employee.destroy
+    @customer.destroy
     respond_to do |format|
-      format.html { redirect_to customers_url, notice: 'Employee was successfully destroyed.' }
+      format.html { redirect_to customers_url, notice: 'Customer was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -77,12 +77,12 @@ class CustomersController < ApplicationController
   def one_time_payment
     amount = params[:amount].to_f.abs unless params[:amount].blank?
     note = params[:note]
-    transaction_id = @employee.one_time_payment(amount, note)
+    transaction_id = @customer.one_time_payment(amount, note)
     Rails.logger.debug "*********************************One time payment transaction ID: #{transaction_id}"
     unless transaction_id.blank?
-      redirect_back fallback_location: @employee, notice: 'One time payment submitted.'
+      redirect_back fallback_location: @customer, notice: 'One time payment submitted.'
     else
-      redirect_back fallback_location: @employee, alert: 'There was a problem creating the one time payment.'
+      redirect_back fallback_location: @customer, alert: 'There was a problem creating the one time payment.'
     end
   end
   
@@ -101,8 +101,8 @@ class CustomersController < ApplicationController
   
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_employee
-      @employee = Customer.find(params[:id])
+    def set_customer
+      @customer = Customer.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

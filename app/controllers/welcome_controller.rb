@@ -7,7 +7,7 @@ class WelcomeController < ApplicationController
         redirect_to current_user.customer
       end
       if current_user.admin?
-        @processed_payroll_batches = current_user.company.payroll_batches.processed.order("created_at DESC").first(3)
+        @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC").first(3)
       end
     end
   end

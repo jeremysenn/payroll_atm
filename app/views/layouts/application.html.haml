@@ -20,5 +20,5 @@
         = render 'shared/no_user_navbar'
       - else
         = render 'shared/admin_user_navbar' if current_user.admin?
-        = render 'shared/employee_user_navbar' if current_user.employee?
+        = render 'shared/customer_user_navbar' if current_user.payee?
       = yield

@@ -45,12 +45,12 @@
                 %th{:scope => "col"} Phone
                 %th
             %tbody
-              - @employees.each do |employee|
+              - @customers.each do |customer|
                 %tr
-                  %th{:scope => "row"}= employee.id
-                  %td= employee.first_name
-                  %td= employee.last_name
-                  %td= employee.phone
-                  %td= link_to 'More', employee, class: 'btn btn-primary btn-sm'
+                  %th{:scope => "row"}= customer.id
+                  %td= customer.first_name
+                  %td= customer.last_name
+                  %td= customer.phone
+                  %td= link_to 'More', customer, class: 'btn btn-primary btn-sm'
         .box-footer
-          .pull-right= paginate @employees, param_name: 'result1'
+          .pull-right= paginate @customers, param_name: 'result1'

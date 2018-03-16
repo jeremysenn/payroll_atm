@@ -7,7 +7,7 @@
         %i.fa.fa-male
         Payee Profile
         - if current_user.admin?
-          %small= link_to 'Edit', edit_customer_path(@employee)
+          %small= link_to 'Edit', edit_customer_path(@customer)
     / Main content
     %section.content
       / Default box
@@ -18,9 +18,9 @@
             .box-body.box-profile
               -#
                 %img.profile-user-img.img-responsive.img-circle{:alt => "User profile picture", :src => "../../dist/img/user4-128x128.jpg"}/
-              %h3.profile-username.text-center= @employee.full_name
+              %h3.profile-username.text-center= @customer.full_name
               %p.text-muted.text-center
-                = "Created #{@employee.CreateDate.strftime('%-m/%-d/%Y')}"
+                = "Created #{@customer.CreateDate.strftime('%-m/%-d/%Y')}"
                 %br
                 Balance
                 = number_to_currency(@account.balance)
@@ -40,14 +40,14 @@
                   %b 
                     %i.fa.fa-dollar
                     One Time Payment
-                - unless @employee.phone.blank?
+                - unless @customer.phone.blank?
                   %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
                     %b 
                       %i.fa.fa-comment
                       Send Message
                 = render 'one_time_payment'
                 = render 'sms_message'
-              - if current_user.employee? and @account.balance > 0
+              - if current_user.customer? and @account.balance > 0
                 %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
                   %b 
                     %i.fa.fa-dollar
@@ -65,11 +65,11 @@
                 %i.fa.fa-envelope.margin-r-5
                 Email
               %p.text-muted
-                - unless @employee.email.blank?
+                - unless @customer.email.blank?
                   - if current_user.admin?
-                    = mail_to(@employee.email)
+                    = mail_to(@customer.email)
                   - else
-                    = @employee.email
+                    = @customer.email
                 - else
                   None
               %hr/
@@ -77,12 +77,12 @@
                 %i.fa.fa-mobile.margin-r-5
                 Phone
               %p.text-muted
-                - unless @employee.phone.blank?
+                - unless @customer.phone.blank?
                   - if current_user.admin?
-                    %a{href: "tel:#{@employee.phone}"}
-                      = @employee.phone
+                    %a{href: "tel:#{@customer.phone}"}
+                      = @customer.phone
                   - else
-                    = @employee.phone
+                    = @customer.phone
                 - else
                   None
               %hr/

@@ -12,17 +12,17 @@
       .box.box-primary
         .box-header.with-border
           %h3.box-title 
-            = @payroll_batch.created_at.strftime("%B %-d, %Y")
+            = @payment_batch.created_at.strftime("%B %-d, %Y")
           .box-tools.pull-right
-            - unless @payroll_batch.processed?
+            - unless @payment_batch.processed?
               - if current_user.admin?
-                = form_for @payroll_batch do |f|
+                = form_for @payment_batch do |f|
                   = f.hidden_field :Processed, value: 1
                   %button.btn.bg-orange{:type => "submit", data: {disable_with: "<i class='fa fa-refresh fa-spin'></i> Process"}}
                     %i.fa.fa-refresh
                     Process
             - else
-              .text-success= @payroll_batch.processed_status
+              .text-success= @payment_batch.processed_status
         .box-body
           %ul#myTab.nav.nav-tabs{:role => "tablist"}
             %li.nav-item
@@ -36,52 +36,52 @@
                   %thead
                     %tr
                       %th{:scope => "col"} TranID
-                      %th{:scope => "col"} CheckNbr
+                      %th{:scope => "col"} ReferenceNbr
                       %th{:scope => "col"} PayeeNbr
                       %th{:scope => "col"} CustomerID
                       %th{:scope => "col"} FirstName
                       %th{:scope => "col"} LastName
-                      %th{:scope => "col"} NetPaycheckAmt
+                      %th{:scope => "col"} PaymentAmt
                       %th{:scope => "col"} Processed
-                      - unless @payroll_batch.processed?
+                      - unless @payment_batch.processed?
                         %th
                   %tbody
-                    - @payroll_batch.payroll_payments.each do |payroll_payment|
-                      %tr{class: "#{payroll_payment.customer.blank? ? 'table-danger' : ''}"}
+                    - @payment_batch.payments.each do |payment|
+                      %tr{class: "#{payment.customer.blank? ? 'table-danger' : ''}"}
                         %td
-                          - unless payroll_payment.TranID.blank?
-                            = link_to payroll_payment.TranID, payroll_payment.ezcash_transaction
+                          - unless payment.TranID.blank?
+                            = link_to payment.TranID, payment.ezcash_transaction
                           - else
                             N/A
-                        %td= payroll_payment.CheckNbr
-                        %td= payroll_payment.EmployeeNbr
+                        %td= payment.ReferenceNbr
+                        %td= payment.PayeeNbr
                         %td
-                          - unless payroll_payment.customer.blank?
-                            = link_to payroll_payment.CustomerID, payroll_payment.customer
+                          - unless payment.customer.blank?
+                            = link_to payment.CustomerID, payment.customer
                           - else
                             Not found
                         %td
-                          - unless payroll_payment.customer.blank?
-                            = payroll_payment.customer.first_name
+                          - unless payment.customer.blank?
+                            = payment.customer.first_name
                           - else
                             Not found
                         %td
-                          - unless payroll_payment.customer.blank?
-                            = payroll_payment.customer.last_name
+                          - unless payment.customer.blank?
+                            = payment.customer.last_name
                           - else
                             Not found
-                        %td= number_to_currency(payroll_payment.NetPaycheckAmt)
-                        %td= payroll_payment.Processed? ? 'Yes' : 'No'
-                        - unless @payroll_batch.processed?
+                        %td= number_to_currency(payment.PaymentAmt)
+                        %td= payment.Processed? ? 'Yes' : 'No'
+                        - unless @payment_batch.processed?
                           %td
-                            = link_to 'Edit', edit_payroll_payment_path(payroll_payment), class: 'btn btn-primary btn-sm'
-                            = link_to 'Delete', payroll_payment, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
+                            = link_to 'Edit', edit_payment_path(payment), class: 'btn btn-primary btn-sm'
+                            = link_to 'Delete', payment, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
 
                 
             #csv.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
               .table-responsive
                 %table.table.table-striped
-                  - CSV.parse(@payroll_batch.CSVFile).each do |row|
+                  - CSV.parse(@payment_batch.CSVFile).each do |row|
                     %tr
                       - row.each do |element|
                         %td= element

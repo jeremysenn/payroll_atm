@@ -12,7 +12,7 @@ class Customer < ActiveRecord::Base
   has_many :transactions, :through => :account
   has_one :user
   has_many :sms_messages
-  has_many :payroll_payments, :foreign_key => "CustomerID"
+  has_many :payments, :foreign_key => "CustomerID"
   
   scope :members, -> { where(GroupID: 14) }
   scope :employees, -> { where(GroupID: 13) }
