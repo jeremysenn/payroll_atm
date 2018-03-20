@@ -128,7 +128,7 @@
                         %tbody
                           - @payment_transactions.each do |payment_transaction|
                             %tr
-                              %td= payment_transaction.date_time.strftime("%^b %y")
+                              %td= payment_transaction.date_time.strftime("%^b %d")
                               %td= payment_transaction.Description
                               %td= number_to_currency(payment_transaction.amt_auth)
                               %td= link_to "More", payment_transaction, class: 'btn btn-primary'
@@ -149,7 +149,7 @@
                         %tbody
                           - @withdrawal_transactions.each do |withdrawal_transaction|
                             %tr
-                              %td= withdrawal_transaction.date_time.strftime("%^b %y")
+                              %td= withdrawal_transaction.date_time.strftime("%^b %d")
                               %td= withdrawal_transaction.Description
                               %td= number_to_currency(withdrawal_transaction.amt_auth)
                               %td= link_to "More", withdrawal_transaction, class: 'btn btn-primary'
