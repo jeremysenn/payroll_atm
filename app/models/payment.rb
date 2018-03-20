@@ -13,6 +13,22 @@ class Payment< ActiveRecord::Base
   #     Instance Methods      #
   #############################
   
+  def processed?
+    self.Processed?
+  end
+  
+  def send_customer_text_message_payment_link
+    phone = customer.phone
+    barcode_access_string = customer.barcode_access_string
+    unless phone.blank? or barcode_access_string.blank?
+#      SendSmsWorker.perform_async(cell_phone_number, id, self.CustomerID, self.ClubCompanyNbr, message_body)
+      payment_link = "#{Rails.application.routes.default_url_options[:host]}/customers/#{barcode_access_string}/barcode"
+      message = "You've just been paid by #{customer.company.name}! Get cash from the PaymentATM by clicking this link: #{payment_link}"
+      client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+      client.call(:send_sms, message: { Phone: phone, Msg: "#{message}"})
+    end
+  end
+  
   #############################
   #     Class Methods         #
   #############################

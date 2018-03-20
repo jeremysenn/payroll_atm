@@ -7,7 +7,7 @@
         %i.fa.fa-male
         Payee Profile
         - if current_user.admin?
-          %small= link_to 'Edit', edit_customer_path(@customer)
+          %small= link_to 'Edit', edit_customer_path(@customer), class: 'btn btn-default'
     / Main content
     %section.content
       / Default box
@@ -36,10 +36,16 @@
                   %b Messages
                   %a.pull-right= "#{@sms_messages.blank? ? 0 : @sms_messages.count}"
               - if current_user.admin?
-                %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
-                  %b 
-                    %i.fa.fa-dollar
-                    One Time Payment
+                - if @account.balance > 0 and not @customer.phone.blank?
+                  %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#send_payment_link"}
+                    %b 
+                      %i.fa.fa-dollar
+                      Send Payment Link
+                -#
+                  %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
+                    %b 
+                      %i.fa.fa-dollar
+                      One Time Payment
                 - unless @customer.phone.blank?
                   %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
                     %b 
@@ -47,12 +53,18 @@
                       Send Message
                 = render 'one_time_payment'
                 = render 'sms_message'
-              - if current_user.payee? and @account.balance > 0
-                %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
-                  %b 
-                    %i.fa.fa-dollar
-                    Get Paid at ATM!
-                = render 'barcode'
+              -#
+                - if current_user.payee? and @account.balance > 0
+                  %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
+                    %b 
+                      %i.fa.fa-dollar
+                      Get Paid at ATM!
+                  = render 'barcode'
+                - if current_user.payee? and @account.balance > 0 and not @barcode_access_string.blank?
+                  %a.btn.btn-success.btn-block{href: barcode_customer_path(@barcode_access_string)}
+                    %b 
+                      %i.fa.fa-qrcode
+                      Get Paid at ATM!
             / /.box-body
           / /.box
           / Details Box

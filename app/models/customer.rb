@@ -522,6 +522,11 @@ class Customer < ActiveRecord::Base
     end
   end
   
+  def generate_barcode_access_string
+    self.barcode_access_string = SecureRandom.urlsafe_base64
+    self.save
+  end
+  
   #############################
   #     Class Methods         #
   #############################

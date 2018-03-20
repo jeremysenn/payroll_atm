@@ -22,6 +22,7 @@ class CustomersController < ApplicationController
     @sms_messages = @customer.sms_messages.order("created_at DESC").page(params[:messages]).per(10)
     @account = @customer.accounts.first
     @base64_barcode_string = @customer.barcode_png
+    @barcode_access_string = @customer.barcode_access_string
   end
   
   # GET /customers/new
@@ -96,6 +97,15 @@ class CustomersController < ApplicationController
       redirect_back fallback_location: customers_path, notice: 'Text message sent.'
     else
       redirect_back fallback_location: customers_path, alert: 'You must select at least one customer to text message.'
+    end
+  end
+  
+  def barcode
+    @customer = Customer.find_by(barcode_access_string: params[:id]) # ID is random and unique urlsafe_base64 string
+    unless @customer.blank?
+      @base64_barcode_string = Transaction.ezcash_get_barcode_png_web_service_call(@customer.CustomerID, current_user.company_id, 5)
+    else
+      redirect_to root_path, alert: 'There was a problem getting barcode.'
     end
   end
   

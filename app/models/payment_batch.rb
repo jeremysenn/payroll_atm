@@ -15,6 +15,7 @@ class PaymentBatch < ActiveRecord::Base
   
   after_commit :create_payments_from_csv, on: [:create]
   before_update :process
+  after_update :send_payment_text_messages, if: :processed?
     
   #############################
   #     Instance Methods      #
@@ -30,7 +31,8 @@ class PaymentBatch < ActiveRecord::Base
       if customer.blank?
         customer = Customer.find_by(CompanyNumber: self.CompanyNbr, CustomerID: row['PayeeNbr'])
       end
-      Payment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, ReferenceNbr:  row['ReferenceNbr'], CustomerID: customer.blank? ? nil : customer.id, PayeeNbr: row['PayeeNbr'], PaymentAmt: row['PaymentAmt'])
+      Payment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, ReferenceNbr: row['ReferenceNbr'], CustomerID: customer.blank? ? nil : customer.id, PayeeNbr: row['PayeeNbr'], PaymentAmt: row['PaymentAmt'])
+      customer.generate_barcode_access_string unless customer.blank?
     end
   end
   
@@ -53,6 +55,12 @@ class PaymentBatch < ActiveRecord::Base
       raise ActiveRecord::Rollback
       Rails.logger.debug error.http.code
       return error.http.code
+    end
+  end
+  
+  def send_payment_text_messages
+    payments.each do |payment|
+      payment.send_customer_text_message_payment_link
     end
   end
   

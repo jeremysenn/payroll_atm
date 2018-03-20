@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :customers do
     member do
       get 'one_time_payment'
+      get 'barcode'
     end
     collection do
       post 'send_sms_message'
