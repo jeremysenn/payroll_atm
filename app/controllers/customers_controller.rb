@@ -1,6 +1,6 @@
 class CustomersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_customer, only: [:show, :edit, :update, :destroy, :one_time_payment]
+  before_action :set_customer, only: [:show, :edit, :update, :destroy, :one_time_payment, :send_barcode_link_sms_message]
   
   # GET /customers
   # GET /customers.json
@@ -106,6 +106,15 @@ class CustomersController < ApplicationController
       @base64_barcode_string = Transaction.ezcash_get_barcode_png_web_service_call(@customer.CustomerID, current_user.company_id, 5)
     else
       redirect_to root_path, alert: 'There was a problem getting barcode.'
+    end
+  end
+  
+  def send_barcode_link_sms_message
+    unless @customer.barcode_access_string.blank?
+      @customer.send_barcode_link_sms_message
+      redirect_back fallback_location: @customer, notice: 'Text message sent.'
+    else
+      redirect_back fallback_location: @customer, alert: 'There was a problem with barcode.'
     end
   end
   

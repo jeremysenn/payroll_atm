@@ -522,6 +522,16 @@ class Customer < ActiveRecord::Base
     end
   end
   
+  def send_barcode_link_sms_message
+    unless phone.blank? or barcode_access_string.blank?
+#      SendSmsWorker.perform_async(cell_phone_number, id, self.CustomerID, self.ClubCompanyNbr, message_body)
+      payment_link = "#{Rails.application.routes.default_url_options[:host]}/customers/#{barcode_access_string}/barcode"
+      message = "Get your cash from the PaymentATM by clicking this link: #{payment_link}"
+      client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+      client.call(:send_sms, message: { Phone: phone, Msg: "#{message}"})
+    end
+  end
+  
   def generate_barcode_access_string
     self.barcode_access_string = SecureRandom.urlsafe_base64
     self.save
