@@ -1,0 +1,85 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      %h1
+        %i.fa.fa-user
+        = @user.full_name
+        %small= link_to 'Payee Account', @user.customer
+      - if @user.confirmed?
+        Sign In Count:
+        = @user.sign_in_count
+        %br
+        Current Sign In At:
+        = @user.current_sign_in_at.strftime('%-m/%-d/%Y')
+        %br
+        Last Sign In At:
+        = @user.last_sign_in_at.strftime('%-m/%-d/%Y')
+        %br
+        Current Sign In IP:
+        = @user.current_sign_in_ip
+        %br
+        Last Sign In IP:
+        = @user.last_sign_in_ip
+      - else
+        .text-danger Waiting for user to confirm account
+    -#
+      / Main content
+      %section.content
+        / Default box
+        .box.box-primary
+          .box-header.with-border
+            %h3.box-title 
+              Admins
+            .box-tools.pull-right
+              %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+                %i.fa.fa-minus
+              %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+                %i.fa.fa-times
+          .box-body.no-padding
+            %table.table.table-condensed
+              %thead
+                %tr
+                  %th{:scope => "col"} #
+                  %th{:scope => "col"} First
+                  %th{:scope => "col"} Last
+                  %th{:scope => "col"} Phone
+                  %th{:scope => "col"} Email
+                  %th
+              %tbody
+                - @admin_users.each do |admin_user|
+                  %tr
+                    %th{:scope => "row"}= admin_user.id
+                    %td= admin_user.first_name
+                    %td= admin_user.last_name
+                    %td= admin_user.phone
+                    %td= admin_user.email
+                    %td= link_to 'More', admin_user, class: 'btn btn-primary btn-sm'
+        .box.box-primary
+          .box-header.with-border
+            %h3.box-title 
+              Payees
+            .box-tools.pull-right
+              %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+                %i.fa.fa-minus
+              %button.btn.btn-box-tool{"data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+                %i.fa.fa-times
+          .box-body.no-padding
+            %table.table.table-condensed
+              %thead
+                %tr
+                  %th{:scope => "col"} #
+                  %th{:scope => "col"} First
+                  %th{:scope => "col"} Last
+                  %th{:scope => "col"} Phone
+                  %th{:scope => "col"} Email
+                  %th
+              %tbody
+                - @payee_users.each do |payee_user|
+                  %tr
+                    %th{:scope => "row"}= payee_user.id
+                    %td= payee_user.first_name
+                    %td= payee_user.last_name
+                    %td= payee_user.phone
+                    %td= payee_user.email
+                    %td= link_to 'More', payee_user, class: 'btn btn-primary btn-sm'

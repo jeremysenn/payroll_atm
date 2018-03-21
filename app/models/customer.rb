@@ -19,6 +19,7 @@ class Customer < ActiveRecord::Base
   scope :active, -> { where(Active: true) }
   
   # Virtual Attributes
+  attr_accessor :create_payee_user
   
   accepts_nested_attributes_for :accounts
   
@@ -31,6 +32,9 @@ class Customer < ActiveRecord::Base
 #  validates_uniqueness_of :PhoneMobile
 #  validates :Email, uniqueness: {allow_blank: true}
 #  validates :PhoneMobile, uniqueness: true
+
+  after_commit :create_payee_user, on: [:create]
+  after_update :create_payee_user, if: :need_to_create_payee_user?
   
   
   #############################
@@ -319,6 +323,10 @@ class Customer < ActiveRecord::Base
     self.Email
   end
   
+  def company_id
+    self.CompanyNumber
+  end
+  
   def member_number
     self.Registration_Source
 #    unless self.Registration_Source.blank?
@@ -535,6 +543,16 @@ class Customer < ActiveRecord::Base
   def generate_barcode_access_string
     self.barcode_access_string = SecureRandom.urlsafe_base64
     self.save
+  end
+  
+  def need_to_create_payee_user?
+    create_payee_user == true
+  end
+  
+  def create_payee_user
+    temporary_password = Devise.friendly_token.first(10)
+    User.create(first_name: first_name, last_name: last_name, email: email, company_id: company_id, customer_id: id, role: "payee", phone: phone,
+    password: temporary_password, password_confirmation: temporary_password, temporary_password: temporary_password)
   end
   
   #############################

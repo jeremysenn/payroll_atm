@@ -23,6 +23,9 @@ class CustomersController < ApplicationController
     @account = @customer.accounts.first
     @base64_barcode_string = @customer.barcode_png
     @barcode_access_string = @customer.barcode_access_string
+    if @customer.user.blank?
+      @temporary_password = Devise.friendly_token.first(10)
+    end
   end
   
   # GET /customers/new
@@ -127,7 +130,7 @@ class CustomersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def customer_params
       params.require(:customer).permit(:ParentCustID, :CompanyNumber, :Active, :GroupID, :NameF, :NameL, :NameS, :PhoneMobile, :Email, 
-        :LangID, :Registration_Source, :Registration_Source_ext,
+        :LangID, :Registration_Source, :Registration_Source_ext, :create_payee_user,
         accounts_attributes:[:CompanyNumber, :Balance, :MinBalance, :Active, :CustomerID, :ActNbr, :ActTypeID, :BankActNbr, :RoutingNbr, :_destroy,:id])
     end
   
