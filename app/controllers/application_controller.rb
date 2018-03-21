@@ -13,11 +13,16 @@ class ApplicationController < ActionController::Base
   
   # Redirect to a specific page on successful sign in
   def after_sign_in_path_for(resource)
-    sign_in_url = new_user_session_url
-    if request.referer == sign_in_url
-      super
+    if current_user.sign_in_count == 1
+      flash[:alert] = "Please update your password."
+      edit_registration_path(current_user)
     else
-      stored_location_for(resource) || request.referer || root_path
+      sign_in_url = new_user_session_url
+      if request.referer == sign_in_url
+        super
+      else
+        stored_location_for(resource) || request.referer || root_path
+      end
     end
   end
 end
