@@ -5,7 +5,7 @@ class Account < ActiveRecord::Base
   establish_connection :ez_cash
   
   has_many :bill_payments
-  belongs_to :customer, :foreign_key => "CustomerID"
+  belongs_to :customer, :foreign_key => "CustomerID", optional: true
   has_many :transactions, :foreign_key => :from_acct_id
   belongs_to :company, :foreign_key => "CompanyNumber"
   

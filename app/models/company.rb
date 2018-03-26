@@ -10,6 +10,7 @@ class Company < ActiveRecord::Base
   has_many :sms_messages
   has_many :payment_batches, :foreign_key => "CompanyNbr"
   has_many :payments, :foreign_key => "CompanyNbr"
+  has_one :company_act_default_min_bal, :foreign_key => "CompanyNumber"
   
   ### Start Virtual Attributes ###
   def transaction_fee # Getter
