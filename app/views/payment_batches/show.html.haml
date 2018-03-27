@@ -47,10 +47,13 @@
                         %th
                   %tbody
                     - @payment_batch.payments.each do |payment|
-                      %tr{class: "#{payment.customer.blank? ? 'table-danger' : ''}"}
+                      %tr{class: "#{(payment.customer.blank? or payment.TranID == 0) ? 'table-danger' : ''}"}
                         %td
                           - unless payment.TranID.blank?
-                            = link_to payment.TranID, payment.ezcash_transaction
+                            - if payment.TranID == 0
+                              Duplicate reference number
+                            - else
+                              = link_to payment.TranID, payment.ezcash_transaction
                           - else
                             N/A
                         %td= payment.ReferenceNbr
