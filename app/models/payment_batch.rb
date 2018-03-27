@@ -60,7 +60,7 @@ class PaymentBatch < ActiveRecord::Base
   
   def send_payment_text_messages
     payments.each do |payment|
-      payment.send_customer_text_message_payment_link
+      payment.send_customer_text_message_payment_link if payment.processed?
     end
   end
   
