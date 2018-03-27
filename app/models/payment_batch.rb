@@ -32,7 +32,6 @@ class PaymentBatch < ActiveRecord::Base
         customer = Customer.find_by(CompanyNumber: self.CompanyNbr, CustomerID: row['PayeeNbr'])
       end
       Payment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, ReferenceNbr: row['ReferenceNbr'], CustomerID: customer.blank? ? nil : customer.id, PayeeNbr: row['PayeeNbr'], PaymentAmt: row['PaymentAmt'])
-      customer.generate_barcode_access_string unless customer.blank?
     end
   end
   
@@ -60,7 +59,12 @@ class PaymentBatch < ActiveRecord::Base
   
   def send_payment_text_messages
     payments.each do |payment|
-      payment.send_customer_text_message_payment_link if payment.processed?
+      if payment.processed?
+        unless payment.customer.blank?
+          payment.customer.generate_barcode_access_string 
+          payment.send_customer_text_message_payment_link
+        end
+      end
     end
   end
   
