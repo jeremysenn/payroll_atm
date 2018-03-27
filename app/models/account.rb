@@ -101,6 +101,12 @@ class Account < ActiveRecord::Base
     return transactions
   end
   
+  def successful_wire_transactions
+#    transactions = Transaction.where(from_acct_id: decrypted_account_number, tran_code: 'CARD', sec_tran_code: 'TFR') + Transaction.where(to_acct_id: decrypted_account_number, tran_code: 'CARD', sec_tran_code: 'TFR')
+    transactions = Transaction.where(from_acct_id: id, tran_code: 'CARD', sec_tran_code: ['TFR', 'TFR '], error_code: 0).order("date_time DESC") + Transaction.where(to_acct_id: id, tran_code: 'CARD', sec_tran_code: ['TFR', 'TFR '], error_code: 0).order("date_time DESC")
+    return transactions
+  end
+  
   def purchase_transactions
 #    transactions = Transaction.where(from_acct_id: decrypted_account_number, tran_code: 'POS', sec_tran_code: 'TFR') + Transaction.where(to_acct_id: decrypted_account_number, tran_code: 'POS', sec_tran_code: 'TFR')
     transactions = Transaction.where(from_acct_id: id, tran_code: 'POS', sec_tran_code: 'TFR') + Transaction.where(to_acct_id: id, tran_code: 'POS', sec_tran_code: 'TFR')

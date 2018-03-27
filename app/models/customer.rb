@@ -481,6 +481,14 @@ class Customer < ActiveRecord::Base
     end
   end
   
+  def successful_payments
+    unless accounts.blank?
+      accounts.first.successful_wire_transactions
+    else
+      return []
+    end
+  end
+  
   def one_time_payment(amount, note)
     client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
     response = client.call(:ez_cash_txn, message: { FromActID: company.account.id, ToActID: account.id, Amount: amount, Fee: 0, FeeActId: company.account.id, Note: note})
