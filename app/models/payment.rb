@@ -9,6 +9,8 @@ class Payment< ActiveRecord::Base
   belongs_to :customer, :foreign_key => "CustomerID", optional: true
   belongs_to :ezcash_transaction, :class_name => 'Transaction', :foreign_key => "TranID", optional: true
   
+  scope :processed, -> { where(Processed: 1) }
+  
   #############################
   #     Instance Methods      #
   #############################
