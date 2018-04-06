@@ -20,7 +20,7 @@
             = @sms_message.customer.full_name
           %p.lead
             From:
-            = @sms_message.user.full_name
+            = @sms_message.user.full_name unless @sms_message.user.blank?
           %p.lead
             Body:
             %br

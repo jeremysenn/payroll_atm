@@ -1,7 +1,7 @@
 class PaymentBatchesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_payment_batch, only: [:show, :edit, :update, :destroy]
-#  load_and_authorize_resource
+  load_and_authorize_resource
   
   # GET /payment_batches
   # GET /payment_batches.json

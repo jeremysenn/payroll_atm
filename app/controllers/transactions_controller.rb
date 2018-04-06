@@ -1,7 +1,7 @@
 class TransactionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
-#  load_and_authorize_resource
+  load_and_authorize_resource
   
   helper_method :transactions_sort_column, :transactions_sort_direction
 

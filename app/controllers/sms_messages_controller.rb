@@ -1,6 +1,6 @@
 class SmsMessagesController < ApplicationController
   before_action :set_sms_message, only: [:show, :edit, :update, :destroy]
-#  load_and_authorize_resource
+  load_and_authorize_resource
 
   # GET /sms_messages
   # GET /sms_messages.json
