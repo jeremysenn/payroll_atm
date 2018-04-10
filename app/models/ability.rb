@@ -64,6 +64,12 @@ class Ability
       end
       can :create, :users
       
+      # Devices
+      ############
+      can :manage, Device do |device|
+        user.company == device.company 
+      end
+      
     elsif user.payee?
       
       # Customers

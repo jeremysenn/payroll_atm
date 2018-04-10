@@ -12,6 +12,7 @@
     %form.form-inline.my-2.my-lg-0
       .my-2.my-sm-0.dropdown
         %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+          %i.fa.fa-user
           = current_user.full_name
         .dropdown-menu{"aria-labelledby" => "navbarDropdown"}
           %a.dropdown-item{:href => "#"}

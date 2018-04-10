@@ -12,6 +12,7 @@ class WelcomeController < ApplicationController
         end
       end
       if current_user.admin?
+        @devices = current_user.company.devices
         @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC").first(3)
       end
     end

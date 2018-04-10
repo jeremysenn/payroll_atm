@@ -21,5 +21,6 @@ Rails.application.routes.draw do
   resources :sms_messages
   resources :payment_batches
   resources :payments
+  resources :devices
   
 end

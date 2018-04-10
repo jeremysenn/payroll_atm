@@ -4,62 +4,98 @@
     %section.content-header
       %h1
         = current_user.company.name
-        %small Recent payments
+        %small Dashboard
     / Main content
     %section.content
-      - unless @processed_payment_batches.blank?
-        - @processed_payment_batches.each do |payment_batch|
+      .row
+        .col-md-6
           .box.box-primary{"data-widget" => "box-widget"}
             .box-header.with-border
               %h3.box-title 
-                = payment_batch.created_at.strftime("%B %-d, %Y")
+                %i.fa.fa-money
+                ATMs
               .box-tools.pull-right
-                %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
-                  %i.fa.fa-minus
-                %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
-                  %i.fa.fa-times
-            .box-body
-              .text-success= payment_batch.processed_status
+                = form_tag devices_path, id: 'devices_search_form', method: 'get', class: 'form-inline' do |f|
+                  .input-group.input-group-sm
+                    = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
+                    .input-group-append
+                      %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                        %i.fa.fa-search
+            .box-body.no-padding
               .table-responsive
-                %table.table.table-striped
+                %table.table.table-striped.table-condensed
                   %thead
                     %tr
-                      %th{:scope => "col"} TranID
-                      %th{:scope => "col"} ReferenceNbr
-                      %th{:scope => "col"} PayeeNbr
-                      %th{:scope => "col"} CustomerID
-                      %th{:scope => "col"} FirstName
-                      %th{:scope => "col"} LastName
-                      %th{:scope => "col"} PaymentAmt
-                      %th{:scope => "col"} Processed
+                      %th{:scope => "col"} ID
+                      %th{:scope => "col"} State
+                      %th{:scope => "col"} Status
+                      %th{:scope => "col"} Remaining
+                      %th
                   %tbody
-                    - payment_batch.payments.each do |payment|
-                      %tr{class: "#{payment.customer.blank? ? 'table-danger' : ''}"}
-                        %td
-                          - unless payment.TranID.blank?
-                            = link_to payment.TranID, payment.ezcash_transaction
-                          - else
-                            N/A
-                        %td= payment.ReferenceNbr
-                        %td= payment.PayeeNbr
-                        %td
-                          - unless payment.customer.blank?
-                            = link_to payment.CustomerID, payment.customer
-                          - else
-                            Not found
-                        %td
-                          - unless payment.customer.blank?
-                            = payment.customer.first_name
-                          - else
-                            Not found
-                        %td
-                          - unless payment.customer.blank?
-                            = payment.customer.last_name
-                          - else
-                            Not found
-                        %td= number_to_currency(payment.PaymentAmt)
-                        %td= payment.Processed? ? 'Yes' : 'No'
+                    - unless @devices.blank?
+                      - @devices.each do |device|
+                        %tr
+                          %td= device.id
+                          %td= device.online.blank? ? 'N/A' : "#{device_state_descriptions[device.online.to_i].truncate(15)}"
+                          %td= device.status_string
+                          %td= number_to_currency(device.remaining)
+                          %td= link_to 'More', '#', class: 'btn btn-primary btn-sm'
+                    - else
+                      %p None
+              .box-footer
+                -#
+                  .pull-right= paginate @customers, param_name: 'result1'
+        .col-md-6
+          .box.box-success{"data-widget" => "box-widget"}
+            .box-header.with-border
+              %h3.box-title
+                %i.fa.fa-dollar
+                Recent Payments
+              .box-tools.pull-right
+                = form_tag payment_batches_path, id: 'payment_batches_search_form', method: 'get', class: 'form-inline' do |f|
+                  .input-group.input-group-sm
+                    = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
+                    .input-group-append
+                      %button.btn.btn-success{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                        %i.fa.fa-search
+                -#
+                  %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+                    %i.fa.fa-minus
+                  %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+                    %i.fa.fa-times
+            .box-body.no-padding
+              -# .text-success= payment_batch.processed_status
+              - unless @processed_payment_batches.blank?
+                .table-responsive
+                  %table.table.table-striped.table-condensed
+                    %thead
+                      %tr
+                        %th{:scope => "col"} Date
+                        %th{:scope => "col"} First
+                        %th{:scope => "col"} Last
+                        %th{:scope => "col"} Amt
+                        %th{:scope => "col"} Processed
+                        %th
+                    %tbody
+                      - @processed_payment_batches.each do |payment_batch|
+                        - payment_batch.payments.each do |payment|
+                          %tr{class: "#{payment.customer.blank? ? 'table-danger' : ''}"}
+                            %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                            %td
+                              - unless payment.customer.blank?
+                                = payment.customer.first_name
+                              - else
+                                Not found
+                            %td
+                              - unless payment.customer.blank?
+                                = payment.customer.last_name
+                              - else
+                                Not found
+                            %td= number_to_currency(payment.PaymentAmt)
+                            %td= payment.Processed? ? 'Yes' : 'No'
+                            %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
+              - else
+                %p None
             .box-footer
-              .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'
-      - else
-        %p None
+              -#
+                .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'

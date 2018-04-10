@@ -5,21 +5,30 @@
     %span.navbar-toggler-icon
   #navbarSupportedContent.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
-      %li.nav-item.active
+      %li.nav-item{:class => (current_page? root_path) ? "active" : ""} 
         %a.nav-link{:href => root_path}
+          %i.fa.fa-dashboard
           Home
-          %span.sr-only (current)
-      %li.nav-item
+      %li.nav-item{:class => params[:controller] == 'customers' ?  "active" : ""}
         %a.nav-link{:href => customers_path}
           %i.fa.fa-male
           Payees
-      %li.nav-item
+      %li.nav-item{:class => params[:controller] == 'payment_batches' ?  "active" : ""}
         %a.nav-link{:href => payment_batches_path}
           %i.fa.fa-dollar
           Payments
+      %li.nav-item{:class => params[:controller] == 'devices' ?  "active" : ""}
+        %a.nav-link{:href => devices_path}
+          %i.fa.fa-money
+          ATMs
+      %li.nav-item{:class => params[:controller] == 'transactions' ?  "active" : ""}
+        %a.nav-link{:href => transactions_path}
+          %i.fa.fa-bolt
+          EZcash
     %form.form-inline.my-2.my-lg-0
       .my-2.my-sm-0.dropdown
         %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+          %i.fa.fa-user
           = current_user.full_name
         .dropdown-menu{"aria-labelledby" => "navbarDropdown"}
           %a.dropdown-item{:href => "#"}

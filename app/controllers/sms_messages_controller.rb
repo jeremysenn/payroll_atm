@@ -7,7 +7,8 @@ class SmsMessagesController < ApplicationController
   def index
     @start_date = sms_message_params[:start_date] ||= Date.today.to_s
     @end_date = sms_message_params[:end_date] ||= Date.today.to_s
-    sms_messages = current_user.company.sms_messages.where(created_at: @start_date.to_date.in_time_zone(current_user.time_zone).beginning_of_day..@end_date.to_date.in_time_zone(current_user.time_zone).end_of_day)
+#    sms_messages = current_user.company.sms_messages.where(created_at: @start_date.to_date.in_time_zone(current_user.time_zone).beginning_of_day..@end_date.to_date.in_time_zone(current_user.time_zone).end_of_day)
+    sms_messages = current_user.company.sms_messages.where(created_at: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
 #    @sms_messages = SmsMessage.all
     @sms_message_total = sms_messages.count
     respond_to do |format|
