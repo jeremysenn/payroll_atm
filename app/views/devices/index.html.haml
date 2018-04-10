@@ -19,17 +19,17 @@
                   %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
                     %i.fa.fa-search
         .box-body.no-padding
-          .table-responsive
-            %table.table.table-striped.table-condensed
-              %thead
-                %tr
-                  %th{:scope => "col"} ID
-                  %th{:scope => "col"} State
-                  %th{:scope => "col"} Status
-                  %th{:scope => "col"} Remaining
-                  %th
-              %tbody
-                - unless @devices.blank?
+          - unless @devices.blank?
+            .table-responsive
+              %table.table.table-striped.table-condensed
+                %thead
+                  %tr
+                    %th{:scope => "col"} ID
+                    %th{:scope => "col"} State
+                    %th{:scope => "col"} Status
+                    %th{:scope => "col"} Remaining
+                    %th
+                %tbody
                   - @devices.each do |device|
                     %tr
                       %td= device.id
@@ -37,8 +37,8 @@
                       %td= device.status_string
                       %td= number_to_currency(device.remaining)
                       %td= link_to 'More', '#', class: 'btn btn-primary btn-sm'
-                - else
-                  %p None
+          - else
+            %p None
           .box-footer
             -#
               .pull-right= paginate @customers, param_name: 'result1'
