@@ -41,7 +41,8 @@
                           %td= number_to_currency(device.remaining)
                           %td= link_to 'More', '#', class: 'btn btn-primary btn-sm'
               - else
-                %p None
+                &nbsp;
+                None
               .box-footer
                 -#
                   .pull-right= paginate @customers, param_name: 'result1'
@@ -95,7 +96,8 @@
                             %td= payment.Processed? ? 'Yes' : 'No'
                             %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
               - else
-                %p None
+                &nbsp;
+                None
             .box-footer
               -#
                 .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'
