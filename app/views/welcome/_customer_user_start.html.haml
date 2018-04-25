@@ -2,6 +2,7 @@
   .container
     / Content Header (Page header)
     %section.content-header
+      = render 'shared/flash_messages'
       %h1
         = current_user.company.name
     / Main content

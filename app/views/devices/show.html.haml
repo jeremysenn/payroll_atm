@@ -63,26 +63,8 @@
                     %i.fa.fa-info-circle
                     = "Acounts" unless browser.device.mobile?
               #myTabContent.tab-content
-                #payments.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
-                  - unless @payment_transactions.blank?
-                    .table-responsive
-                      %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
-                        %thead
-                          %tr
-                            %th Date
-                            %th Description
-                            %th Amount
-                            %th
-                        %tbody
-                          - @payment_transactions.each do |payment_transaction|
-                            %tr
-                              %td= payment_transaction.date_time.strftime("%^b %d")
-                              %td= payment_transaction.Description
-                              %td= number_to_currency(payment_transaction.amt_auth)
-                              %td= link_to "More", payment_transaction, class: 'btn btn-primary'
-                    .pull-right= paginate @payment_transactions, param_name: 'payments'
-                  - else
-                    %p.text-center None
+                #transactions.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                  = render partial: "transactions/index"
 
                 #withdrawals.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"}
                   - unless @withdrawal_transactions.blank?

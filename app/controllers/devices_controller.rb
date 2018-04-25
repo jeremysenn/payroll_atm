@@ -10,7 +10,7 @@ class DevicesController < ApplicationController
   end
   
   def show
-    
+    @transactions = @device.transactions_last_30_days_with_amount
   end
   
   private

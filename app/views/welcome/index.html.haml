@@ -1,5 +1,3 @@
-= render 'shared/flash_messages'
-
 - if user_signed_in?
   =# render 'admin_user_sidebar'
   = render 'admin_user_start' if current_user.admin?

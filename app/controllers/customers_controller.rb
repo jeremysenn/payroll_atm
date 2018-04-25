@@ -2,6 +2,7 @@ class CustomersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_customer, only: [:show, :edit, :update, :destroy, :one_time_payment, :send_barcode_link_sms_message]
   load_and_authorize_resource
+  skip_load_resource only: :barcode
   
   # GET /customers
   # GET /customers.json

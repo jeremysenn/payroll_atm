@@ -27,30 +27,7 @@
             -#
 
         .box-body.no-padding
-          - unless @transactions.blank?
-            %table.table.table-striped.table-condensed
-              %thead
-                %tr
-                  %th{:scope => "col"} #
-                  %th{:scope => "col"} Description
-                  %th{:scope => "col"} From
-                  %th{:scope => "col"} To
-                  %th
-              %tbody
-                - @transactions.each do |transaction|
-                  %tr
-                    %th{:scope => "row"}= transaction.id
-                    %td= transaction.Description
-                    %td
-                      = transaction.from_account_customer.full_name unless transaction.from_account_customer.blank?
-                      = transaction.from_acct_id
-                    %td
-                      = transaction.to_account_customer.full_name unless transaction.to_account_customer.blank?
-                      = transaction.to_acct_id
-                    %td= link_to 'More', transaction, class: 'btn btn-primary btn-sm'
-          - else
-            &nbsp;
-            None
+          = render partial: "transactions/index"
         .box-footer
           -#
             .pull-right= paginate @customers, param_name: 'result1'
