@@ -14,6 +14,7 @@
 //= require popper
 //= require BoxWidget
 //= require bootstrap-sprockets
+//= require bootstrap-datepicker
 //= require rails-ujs
 //= require turbolinks
 //= require_tree .

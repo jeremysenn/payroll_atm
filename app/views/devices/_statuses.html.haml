@@ -1,0 +1,14 @@
+.row
+  %br
+  %div.col-xs-12.col-md-8
+    .panel.panel-primary
+      .panel-heading
+        %h3.panel-title
+          = "ATMs"
+      = render template: "dev_statuses/index"
+  %div.col-xs-12.col-md-4
+    .panel.panel-primary
+      .panel-heading
+        %h3.panel-title
+          = "Cassettes"
+      = render partial: "cassettes"

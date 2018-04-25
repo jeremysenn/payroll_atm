@@ -36,7 +36,7 @@
                       %td= device.online.blank? ? 'N/A' : "#{device_state_descriptions[device.online.to_i].truncate(15)}"
                       %td= device.status_string
                       %td= number_to_currency(device.remaining)
-                      %td= link_to 'More', '#', class: 'btn btn-primary btn-sm'
+                      %td= link_to 'More', device, class: 'btn btn-primary btn-sm'
           - else
             %p None
           .box-footer

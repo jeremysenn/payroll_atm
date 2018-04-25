@@ -44,7 +44,7 @@ class User < ApplicationRecord
       message = "Confirm your PaymentATM account by clicking the link below. Your temporary password is: #{temporary_password} #{confirmation_link}"
       client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
       client.call(:send_sms, message: { Phone: phone, Msg: "#{message}"})
-      SmsMessage.create(to: phone, company_id: company_id, body: "#{message}")
+#      SmsMessage.create(to: phone, company_id: company_id, body: "#{message}")
     end
   end
   

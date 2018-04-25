@@ -62,7 +62,8 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "payment_atm_#{Rails.env}"
   config.action_mailer.perform_caching = false
   
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+#  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: ENV["APPLICATION_HOST"], port: 3000 }
   
   config.action_mailer.delivery_method = :smtp
 #
@@ -83,6 +84,8 @@ Rails.application.configure do
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
+  
+  Rails.application.routes.default_url_options[:host] = "http://#{ENV["APPLICATION_HOST"]}:3000"
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
