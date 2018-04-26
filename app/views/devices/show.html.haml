@@ -81,6 +81,23 @@
                           .box-title
                             Cassettes
                         .box-body
+                          %table.table.table-striped.table-condensed
+                            %thead
+                              %tr
+                                %th{:scope => "col"} Cassette
+                                %th{:scope => "col"} Denomination
+                                %th{:scope => "col"} Status
+                            %tbody
+                              - @denoms.each do |denom|
+                                - unless denom.denomination.zero?
+                                  %tr
+                                    %td= denom.cassette_id
+                                    %td= denom.denomination
+                                    %td= denom.bill_count_status
+                          -#
+                            - @denoms.each do |denom|
+                              %p= denom.denomination
+                              %p= denom.cassette_id
                           =# render partial: "bill_counts/index"
                 #cuts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   Cuts

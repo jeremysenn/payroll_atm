@@ -4,7 +4,21 @@ class Denom < ActiveRecord::Base
   
   belongs_to :device, :foreign_key => 'dev_id'
   
+  #############################
+  #     Instance Methods      #
+  #############################
   
+  def bill_count
+    BillCount.where(dev_id: dev_id, cassette_id: cassette_id).first
+  end
+  
+  def bill_count_status
+    unless bill_count.blank?
+      bill_count.status
+    else
+      "N/A"
+    end
+  end
   
   #############################
   #     Class Methods         #
