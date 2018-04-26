@@ -9,12 +9,18 @@ class DevStatus < ActiveRecord::Base
   #############################
   
   def status_description
-    status_desc = StatusDesc.find_by_status(status)
+    status_desc = StatusDesc.find_by(status: status)
     unless status_desc.blank?
       return status_desc.short_desc
     else
       return "N/A"
     end
+#    status_desc = StatusDesc.find_by_status(status)
+#    unless status_desc.blank?
+#      return status_desc.short_desc
+#    else
+#      return "N/A"
+#    end
   end
   
   #############################

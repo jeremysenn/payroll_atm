@@ -6,6 +6,8 @@ class Device < ActiveRecord::Base
   belongs_to :company, :foreign_key => "CompanyNbr"
   has_many :bill_counts, :foreign_key => "dev_id"
   has_many :denoms, :foreign_key => "dev_id"
+  has_many :transactions, :foreign_key => "dev_id"
+  has_many :dev_statuses, :foreign_key => 'dev_id'
   
   #############################
   #     Instance Methods      #
@@ -84,13 +86,13 @@ class Device < ActiveRecord::Base
     end
   end
   
-  def bill_counts
-    BillCount.where(dev_id: id)
-  end
-  
-  def bill_hists
-    BillHist.where('cut_dt >= ? AND dev_id = ?', 30.days.ago, id)
-  end
+#  def bill_counts
+#    BillCount.where(dev_id: id)
+#  end
+#  
+#  def bill_hists
+#    BillHist.where('cut_dt >= ? AND dev_id = ?', 30.days.ago, id)
+#  end
   
   def cards
     Card.where(dev_id: id)
@@ -104,17 +106,17 @@ class Device < ActiveRecord::Base
     Card.where('last_activity_date >= ? AND dev_id = ? AND avail_amt > ?', Date.today.beginning_of_day, id, 0)
   end
   
-  def dev_statuses
-    DevStatus.where(dev_id: id)
-  end
+#  def dev_statuses
+#    DevStatus.where(dev_id: id)
+#  end
   
   def dev_statuses_last_30_days
     DevStatus.where('date_time >= ? AND dev_id = ?', 30.days.ago, id)
   end
   
-  def transactions
-    Transaction.where(dev_id: id)
-  end
+#  def transactions
+#    Transaction.where(dev_id: id)
+#  end
   
   def transactions_last_30_days
     Transaction.where('date_time >= ? AND dev_id = ?', 30.days.ago, id)
@@ -424,9 +426,9 @@ class Device < ActiveRecord::Base
     end
   end
   
-  def self.bill_counts(device_id)
-    BillCount.find_all_by_device_id(device_id)
-  end
+#  def self.bill_counts(device_id)
+#    BillCount.find_all_by_device_id(device_id)
+#  end
   
   def self.status_string(caution_flag)
     if caution_flag == '1' 

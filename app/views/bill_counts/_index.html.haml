@@ -1,0 +1,16 @@
+- unless @bill_counts.blank?
+  %table.table.table-striped.table-condensed
+    %thead
+      %tr
+        %th{:scope => "col"} Cassette
+        %th{:scope => "col"} Denomination
+        %th{:scope => "col"} Status
+    %tbody
+      - @bill_counts.each do |bill_count|
+        %tr
+          %td= bill_count.cassette_id
+          %td= bill_count.denomination
+          %td= bill_count.status
+- else
+  &nbsp;
+  None

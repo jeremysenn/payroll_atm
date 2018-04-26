@@ -19,68 +19,69 @@
     %section.content
       / Default box
       .row
-        - unless browser.device.mobile? and current_user.payee?
-          .col-md-3
-            / Profile Image
-            .box.box-primary
-              .box-body.box-profile
-                -#
-                  %img.profile-user-img.img-responsive.img-circle{:alt => "User profile picture", :src => "../../dist/img/user4-128x128.jpg"}/
-                %h3.profile-username.text-center= @customer.full_name
-                %p.text-muted.text-center
-                  = "Created #{@customer.CreateDate.strftime('%-m/%-d/%Y')}"
-                  %br
-                  Balance
-                  = number_to_currency(@account.balance)
+        -# unless browser.device.mobile? and current_user.payee?
+        .col-md-3
+          / Profile Image
+          .box.box-primary
+            .box-body.box-profile
+              -#
+                %img.profile-user-img.img-responsive.img-circle{:alt => "User profile picture", :src => "../../dist/img/user4-128x128.jpg"}/
+              %h3.profile-username.text-center= @customer.full_name
+              %p.text-muted.text-center
+                = "Created #{@customer.CreateDate.strftime('%-m/%-d/%Y')}"
+                %br
+                Balance
+                = number_to_currency(@account.balance)
 
-                %ul.list-group.list-group-unbordered
-                  %li.list-group-item
-                    %b 
-                      %i.fa.fa-dollar.margin-r-5
-                      Payments
-                    %a.pull-right= "#{@payment_transactions.blank? ? 0 : @payment_transactions.count}"
-                  %li.list-group-item
-                    %b 
-                      %i.fa.fa-qrcode.margin-r-5
-                      Withdrawals
-                    %a.pull-right= "#{@withdrawal_transactions.blank? ? 0 : @withdrawal_transactions.count}"
-                  %li.list-group-item
-                    %b 
-                      %i.fa.fa-comments.margin-r-5
-                      Messages
-                    %a.pull-right= "#{@sms_messages.blank? ? 0 : @sms_messages.count}"
-                - if @account.balance > 0 and not @customer.user.blank? and not @customer.phone.blank?
-                  %a.btn.btn-success.btn-block{href: send_barcode_link_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Link"}}
+              %ul.list-group.list-group-unbordered
+                %li.list-group-item
+                  %b 
+                    %i.fa.fa-dollar.margin-r-5
+                    Payments
+                  %a.pull-right= "#{@payment_transactions.blank? ? 0 : @payment_transactions.count}"
+                %li.list-group-item
+                  %b 
+                    %i.fa.fa-money.margin-r-5
+                    Withdrawals
+                  %a.pull-right= "#{@withdrawal_transactions.blank? ? 0 : @withdrawal_transactions.count}"
+                %li.list-group-item
+                  %b 
+                    %i.fa.fa-comments.margin-r-5
+                    Messages
+                  %a.pull-right= "#{@sms_messages.blank? ? 0 : @sms_messages.count}"
+              - if @account.balance > 0 and not @customer.user.blank? and not @customer.phone.blank?
+                %a.btn.btn-success.btn-block{href: send_barcode_link_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Link"}}
+                  %b 
+                    %i.fa.fa-dollar
+                    Send Payment Link
+              - if current_user.admin?
+                -#
+                  %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
                     %b 
                       %i.fa.fa-dollar
-                      Send Payment Link
-                - if current_user.admin?
-                  -#
-                    %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
-                      %b 
-                        %i.fa.fa-dollar
-                        One Time Payment
-                  - unless @customer.phone.blank?
-                    %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
-                      %b 
-                        %i.fa.fa-comment
-                        Send Message
-                  = render 'one_time_payment'
-                  = render 'sms_message'
-                -#
-                  - if current_user.payee? and @account.balance > 0
-                    %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
-                      %b 
-                        %i.fa.fa-dollar
-                        Get Paid at ATM!
-                    = render 'barcode'
-                  - if current_user.payee? and @account.balance > 0 and not @barcode_access_string.blank?
-                    %a.btn.btn-success.btn-block{href: barcode_customer_path(@barcode_access_string)}
-                      %b 
-                        %i.fa.fa-qrcode
-                        Get Paid at ATM!
-              / /.box-body
-            / /.box
+                      One Time Payment
+                - unless @customer.phone.blank?
+                  %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
+                    %b 
+                      %i.fa.fa-comment
+                      Send Message
+                = render 'one_time_payment'
+                = render 'sms_message'
+              -#
+                - if current_user.payee? and @account.balance > 0
+                  %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
+                    %b 
+                      %i.fa.fa-dollar
+                      Get Paid at ATM!
+                  = render 'barcode'
+                - if current_user.payee? and @account.balance > 0 and not @barcode_access_string.blank?
+                  %a.btn.btn-success.btn-block{href: barcode_customer_path(@barcode_access_string)}
+                    %b 
+                      %i.fa.fa-money
+                      Get Paid at ATM!
+            / /.box-body
+          / /.box
+          - unless browser.device.mobile?
             / Details Box
             .box.box-primary
               .box-header.with-border
@@ -159,7 +160,7 @@
                     = "Payments" unless browser.device.mobile?
                 %li.nav-item
                   %a#withdrawals-tab.nav-link{"aria-controls" => "withdrawals", "aria-selected" => "false", "data-toggle" => "tab", :href => "#withdrawals", :role => "tab"} 
-                    %i.fa.fa-qrcode
+                    %i.fa.fa-money
                     = "Withdrawals" unless browser.device.mobile?
                 %li.nav-item
                   %a#messages-tab.nav-link{"aria-controls" => "messages", "aria-selected" => "false", "data-toggle" => "tab", :href => "#messages", :role => "tab"} 

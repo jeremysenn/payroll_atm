@@ -9,11 +9,17 @@ class BillCount < ActiveRecord::Base
   #############################
   
   def count
-    host_start_count - host_cycle_count
+    host_start_count - host_cycle_count + added_count
   end
   
   def denomination
-    Denom.find_by_dev_id_and_cassette_id(dev_id, cassette_id).denomination
+#    Denom.find_by_dev_id_and_cassette_id(dev_id, cassette_id).denomination
+    denom = device.denoms.find_by(cassette_id: cassette_id)
+    unless denom.blank?
+      denom.denomination
+    else
+      return 0
+    end
   end
   
   def status_description

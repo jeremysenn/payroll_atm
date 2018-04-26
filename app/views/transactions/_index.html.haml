@@ -3,22 +3,28 @@
     %thead
       %tr
         %th{:scope => "col"} #
+        %th{:scope => "col"} Date
+        %th{:scope => "col"} Code
         %th{:scope => "col"} Description
-        %th{:scope => "col"} From
+        %th{:scope => "col"} Amount
         %th{:scope => "col"} To
         %th
     %tbody
       - @transactions.each do |transaction|
         %tr
           %th{:scope => "row"}= transaction.id
+          %td= transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
+          %td
+            %a{"data-content" => "#{transaction.status_long_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{transaction.error_code_long_description}"} 
+              = transaction.error_code_description
           %td= transaction.Description
-          %td
-            = transaction.from_account_customer.full_name unless transaction.from_account_customer.blank?
-            = transaction.from_acct_id
-          %td
-            = transaction.to_account_customer.full_name unless transaction.to_account_customer.blank?
-            = transaction.to_acct_id
+          %td= number_to_currency(transaction.amt_auth)
           %td= link_to 'More', transaction, class: 'btn btn-primary btn-sm'
 - else
   &nbsp;
   None
+
+:javascript
+  $(function() {
+    $('[data-toggle="popover"]').popover();
+  });

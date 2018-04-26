@@ -1,0 +1,17 @@
+- unless @dev_statuses.blank?
+  %table.table.table-striped.table-condensed
+    %thead
+      %tr
+        %th{:scope => "col"} Date
+        %th{:scope => "col"} Status
+        %th{:scope => "col"} Description
+        %th
+    %tbody
+      - @dev_statuses.each do |dev_status|
+        %tr
+          %td= dev_status.date_time.strftime("%-m/%-d/%y %l:%M %p")
+          %td= dev_status.status
+          %td= dev_status.status_description
+- else
+  &nbsp;
+  None
