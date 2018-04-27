@@ -1,29 +1,18 @@
--#
-%table.table.table-striped.table-hover
-  %thead
-    %tr
-      %th= "Cassette"
-      %th= "Denomination"
-      %th= "Status"
-
-  %tbody
-    - BillCount.find_all_by_device_id(@device['dev_id']).each do |bill_count|
-      %tr
-        %td= bill_count['cassette_id']
-        %td= number_to_currency(Denom.denomination(@device['dev_id'], bill_count['cassette_id']))
-        %td= bill_count['status']
-
--#
-  %table.table.table-striped.table-hover
+- unless @denoms.blank?
+  %table.table.table-striped.table-condensed
     %thead
       %tr
-        %th= "Cassette"
-        %th= "Denomination"
-        %th= "Status"
-
+        %th{:scope => "col"} #
+        %th{:scope => "col"} Denom
+        %th{:scope => "col"} Status
+        %th{:scope => "col"} Description
     %tbody
-      - @device.bill_counts.each do |bill_count|
-        %tr
-          %td= bill_count.cassette_id
-          %td= number_to_currency(bill_count.denomination)
-          %td= bill_count.status_description
+      - @denoms.each do |denom|
+        - unless denom.denomination.zero?
+          %tr
+            %td= denom.cassette_id
+            %td= denom.denomination
+            %td= denom.bill_count_status
+            %td= denom.bill_count_status_description
+- else
+  None

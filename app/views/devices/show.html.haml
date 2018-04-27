@@ -36,8 +36,8 @@
                   %a.pull-right And more info
               %a.btn.btn-success.btn-block{href: '#', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something"}}
                 %b 
-                  %i.fa.fa-asterisk
-                  Do Something
+                  %i.fa.fa-refresh
+                  Reset ATM
               %a.btn.bg-orange.btn-block{:href => "#", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something Else"}}
                 %b 
                   %i.fa.fa-archive
@@ -81,26 +81,9 @@
                           .box-title
                             Cassettes
                         .box-body
-                          %table.table.table-striped.table-condensed
-                            %thead
-                              %tr
-                                %th{:scope => "col"} Cassette
-                                %th{:scope => "col"} Denomination
-                                %th{:scope => "col"} Status
-                            %tbody
-                              - @denoms.each do |denom|
-                                - unless denom.denomination.zero?
-                                  %tr
-                                    %td= denom.cassette_id
-                                    %td= denom.denomination
-                                    %td= denom.bill_count_status
-                          -#
-                            - @denoms.each do |denom|
-                              %p= denom.denomination
-                              %p= denom.cassette_id
-                          =# render partial: "bill_counts/index"
+                          = render partial: "cassettes"
                 #cuts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
-                  Cuts
+                  = render partial: "cuts"
                 #accounts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   Accounts
                 

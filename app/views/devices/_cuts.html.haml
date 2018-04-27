@@ -1,137 +1,50 @@
 %br
-=# @wsdl_bill_hists
-
-- @wsdl_bill_hists.each_with_index do |bill_hist, index|
-  .row
-    -panel_color=cycle('default','info')
-    %div.col-xs-12.col-md-12
-      %div{class: "panel panel-#{panel_color}"}
-        .panel-heading
-          %h3.panel-title
-            %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#collapse_details_#{index}"}
-              = "#{bill_hist['cut_dt'].to_datetime.strftime('%-m/%-d/%y %H:%M:%S')} - Current" if index == 0
-              = "#{bill_hist['cut_dt'].to_datetime.strftime('%-m/%-d/%y %H:%M:%S')} - #{@wsdl_bill_hists[index - 1]['cut_dt'].to_datetime.strftime('%-m/%-d/%y %H:%M:%S')}" unless index == 0
-        %div{id: "collapse_details_#{index}", class: "collapse"}
-          %table.table.table-striped.table-hover
-            %thead
-              %tr
-                %th Start
-                %th Added
-                -#
-                  - unless index == 0
-                    %th= link_to "Dispensed", '#', "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "Terminal Dispensed: #{number_to_currency(BillHist.terminal_bill_dispensed(@bill_hists[index - 1].cut_dt))}"
-                  - else
-                    %th= "Dispensed"
-                %th Dispensed
-                %th Remaining
-            %tbody
-              %tr
-                %td= number_to_currency(BillHist.new_start_total(@wsdl_device['dev_id'], bill_hist['cut_dt']))
-                %td= number_to_currency(BillHist.added(@wsdl_device['dev_id'], bill_hist['cut_dt']))
-                - unless index == 0
-                  %td= number_to_currency(BillHist.host_bill_dispensed(@wsdl_device['dev_id'], @wsdl_bill_hists[index - 1]['cut_dt']))
-                - else
-                  %td= Transaction.wsdl_total_amount_authorized_date_span_by_device_id((@wsdl_bill_hists[index]['cut_dt']), Date.today, @wsdl_device['dev_id'])
-                %td
-                  - unless (index + 1) > @wsdl_bill_hists.count
-                    - unless index == 0
-                      = number_to_currency(BillHist.old_start_total(@wsdl_device['dev_id'], @wsdl_bill_hists[index - 1]['cut_dt']) - Transaction.wsdl_total_amount_authorized_date_span_by_device_id(@wsdl_bill_hists[index]['cut_dt'], @wsdl_bill_hists[index - 1]['cut_dt'], @wsdl_device['dev_id']))
-                    - else
-                      = number_to_currency(Device.remaining(@wsdl_device['dev_id']))
 
 - @bill_hists.uniq { |bill_hist| bill_hist.cut_dt }.each_with_index do |bill_hist, index|
-  .row
-    -panel_color=cycle('default','info')
-    %div.col-xs-12.col-md-12
-      %div{class: "panel panel-#{panel_color}"}
-        .panel-heading
-          %h3.panel-title
-            %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#collapse_details_#{index}"}
-              = "#{bill_hist.cut_dt.strftime('%-m/%-d/%y %H:%M:%S')} - Current" if index == 0
-              = "#{bill_hist.cut_dt.strftime('%-m/%-d/%y %H:%M:%S')} - #{@bill_hists[index - 1].cut_dt.strftime('%-m/%-d/%y %H:%M:%S')}" unless index == 0
-        %div{id: "collapse_details_#{index}", class: "collapse"}
-          %table.table.table-striped.table-hover
-            %caption Details
-            %thead
-              %tr
-                %th Start
-                %th Added
+  .box.box-success{"data-widget" => "box-widget"}
+    .box-header.with-border
+      %h3.box-title
+        = "#{bill_hist.cut_dt.strftime('%-m/%-d/%y %H:%M:%S')} - Current" if index == 0
+        = "#{bill_hist.cut_dt.strftime('%-m/%-d/%y %H:%M:%S')} - #{@bill_hists[index - 1].cut_dt.strftime('%-m/%-d/%y %H:%M:%S')}" unless index == 0
+      .box-tools.pull-right
+        %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+          %i.fa.fa-minus
+        %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+          %i.fa.fa-times
+    .box-body.no-padding
+      .table-responsive
+        %table.table.table-striped.table-hover.table_condensed
+          %thead
+            %tr
+              %th Start
+              %th Added
+              %th Dispensed
+              -#
                 - unless index == 0
                   %th= link_to "Dispensed", '#', "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "Terminal Dispensed: #{number_to_currency(BillHist.terminal_bill_dispensed(@bill_hists[index - 1].cut_dt))}"
                 - else
                   %th= "Dispensed"
-                %th Remaining
-              %tr
-                %td= number_to_currency(BillHist.new_start_total(bill_hist.cut_dt))
-                %td= number_to_currency(BillHist.added(bill_hist.cut_dt))
-                - unless index == 0
+              %th Remaining
+            %tr
+              %td= number_to_currency(BillHist.new_start_total(bill_hist.cut_dt))
+              %td= number_to_currency(BillHist.added(bill_hist.cut_dt))
+              - unless index == 0
+                -#
                   %td= number_to_currency(BillHist.host_bill_dispensed(@bill_hists[index - 1].cut_dt))
-                - else
-                  %td= number_to_currency(@device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).strftime("%Y-%m-%d %H:%M:%S"), Date.today))
-                %td
-                  - unless (index + 1) > @bill_hists.count
-                    - unless index == 0
+                %td= number_to_currency(BillHist.device_host_bill_dispensed(@device.id, @bill_hists[index - 1].cut_dt))
+              - else
+                %td= number_to_currency(@device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).strftime("%Y-%m-%d %H:%M:%S"), Date.today))
+              %td
+                - unless (index + 1) > @bill_hists.count
+                  - unless index == 0
+                    -#
                       = number_to_currency(BillHist.old_start_total(@bill_hists[index - 1].cut_dt) - @device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).strftime("%Y-%m-%d %H:%M:%S"), @bill_hists[index - 1].cut_dt))
-                    - else
-                      = number_to_currency(@device.remaining)
-          - unless (index + 1) > @bill_hists.count
-            %table.table.table-striped.table-hover
-              %caption Transactions
-              %thead
-                %tr
-                  %th= "TranID"
-                  %th= "Date"
-                  %th= "Status"
-                  %th= "Error Code"
-                  %th= "Tran Code"
-                  %th= "Receipt"
-                  %th= "Amt Req"
-                  %th= "Amt Auth"
-                  %th= "Images"
-              %tbody
-                - @device.transactions_date_span_search(@bill_hists[index].cut_dt.strftime("%Y-%m-%d %H:%M:%S"), "#{index == 0 ? Date.today.strftime("%Y-%m-%d %H:%M:%S") : @bill_hists[index - 1].cut_dt.strftime("%Y-%m-%d %H:%M:%S")}").reverse.each do |transaction|
-                  %tr
-                    %td= transaction.id
-                    %td= transaction.CreateDate.strftime("%-m/%-d/%y %H:%M:%S")
-                    %td= link_to transaction.status_description, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{transaction.status_long_description}"
-                    - unless transaction.error_code_description == 'Success'
-                      %td= link_to transaction.error_code_description, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{transaction.error_code_long_description}"
-                    - else
-                      %td= "Success"
-                    %td= transaction.tran_code
-                    %td= transaction.receipt_nbr
-                    %td= number_to_currency(transaction.amt_req)
-                    %td= number_to_currency(transaction.amt_auth)
-                    %td
-                      - unless transaction.images.blank?
-                        %a{href: "#cut_transaction_#{transaction.id}_images", "data-toggle" => "modal"}
-                          %i.fa.fa-picture-o
-                        %div{id: "cut_transaction_#{transaction.id}_images", :class => "modal fade", :style => "display:none;"}
-                          .modal-dialog.modal-sm
-                            .modal-content
-                              .modal-header
-                                = link_to "×", '#', :class => "close", "data-dismiss" => "modal"
-                                %strong= "Transaction #{transaction.id}"
-                              .modal-body
-                                - transaction.images.each do |image|
-                                  %div.row
-                                    .col-xs-12.col-md-12
-                                      - if image['tranid'].present?
-                                        %a.thumbnail{:href => "http://#{ENV['SCRAP_YARD_DOG_HOST']}/image_datas/api_ticket_search?q[tranid_eq]=#{transaction.id}", 
-                                          :target => "_blank", :title => "Open in Scrap Yard Dog"}
-                                          %img{:alt => image['capture_seq_nbr'], :src => send_preview_transaction_path(image['capture_seq_nbr'])}
-                                      - if image['receipt_nbr'].present?
-                                        %a.thumbnail{:href => "http://#{ENV['SCRAP_YARD_DOG_HOST']}/image_datas/api_ticket_search?q[receipt_nbr_eq]=#{transaction.receipt_nbr}", 
-                                          :target => "_blank", :title => "Open in Scrap Yard Dog"}
-                                          %img{:alt => image['capture_seq_nbr'], :src => send_preview_transaction_path(image['capture_seq_nbr'])}
-                              .modal-footer
-                                = link_to 'Close', '#', :class => 'btn btn-primary', "data-dismiss" => "modal"
-                      - else
-                        None
+                    = number_to_currency(BillHist.device_old_start_total(@device.id, @bill_hists[index - 1].cut_dt) - @device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).strftime("%Y-%m-%d %H:%M:%S"), @bill_hists[index - 1].cut_dt))
+                  - else
+                    = number_to_currency(@device.remaining)
 
-  =# paginate @bill_hists, :param_name => "bill_hists_page"
 -#
-  - @bill_hists.group_by{ |bh| bh.cut_dt }.each_with_index do |(day, bill_hists), index| 
+  - @wsdl_bill_hists.each_with_index do |bill_hist, index|
     .row
       -panel_color=cycle('default','info')
       %div.col-xs-12.col-md-12
@@ -139,70 +52,67 @@
           .panel-heading
             %h3.panel-title
               %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#collapse_details_#{index}"}
-                = "#{day.strftime('%-m/%-d/%y %H:%M:%S')} - Current" if index == 0
-                = "#{day.strftime('%-m/%-d/%y %H:%M:%S')} - #{@bill_hists[index + 1].cut_dt.strftime('%-m/%-d/%y %H:%M:%S')}" unless index == 0
+                = "#{bill_hist['cut_dt'].to_datetime.strftime('%-m/%-d/%y %H:%M:%S')} - Current" if index == 0
+                = "#{bill_hist['cut_dt'].to_datetime.strftime('%-m/%-d/%y %H:%M:%S')} - #{@wsdl_bill_hists[index - 1]['cut_dt'].to_datetime.strftime('%-m/%-d/%y %H:%M:%S')}" unless index == 0
           %div{id: "collapse_details_#{index}", class: "collapse"}
-            -#
-              %br
-              %dl.dl-horizontal
-                %dt
-                  %strong= "New Start:"
-                %dd= number_to_currency(BillHist.new_start_total(day))
-                %dt
-                  %strong= "Old Start:"
-                %dd= number_to_currency(BillHist.old_start_total(day))
-                %dt
-                  %strong= "Added:"
-                %dd= number_to_currency(BillHist.added(day))
-                %dt
-                  %strong= "Term Bill Disp:"
-                %dd= number_to_currency(BillHist.terminal_bill_dispensed(day))
-                %dt
-                  %strong= "Host Bill Disp:"
-                %dd= number_to_currency(BillHist.host_bill_dispensed(day))
-                %dt
-                  %strong= "Term Remain:"
-                %dd= number_to_currency(BillHist.old_start_total(day) - BillHist.terminal_bill_dispensed(day))
-                %dt
-                  %strong= "Host Remain:"
-                %dd= number_to_currency(BillHist.old_start_total(day) - BillHist.host_bill_dispensed(day))
-                - unless (index + 1) == @bill_hists.group_by{ |bh| bh.cut_dt }.count
-                  %dt
-                    %strong= "Total  Remaining:"
-                  %dd= number_to_currency(BillHist.old_start_total(day) - @device.transactions_total_amount_authorized_date_span((@bill_hists.group_by{ |bh| bh.cut_dt }.keys[index + 1]).strftime("%Y-%m-%d %H:%M:%S"), day))
+            %table.table.table-striped.table-hover
+              %thead
+                %tr
+                  %th Start
+                  %th Added
+                  %th Dispensed
+                  %th Remaining
+              %tbody
+                %tr
+                  %td= number_to_currency(BillHist.new_start_total(@wsdl_device['dev_id'], bill_hist['cut_dt']))
+                  %td= number_to_currency(BillHist.added(@wsdl_device['dev_id'], bill_hist['cut_dt']))
+                  - unless index == 0
+                    %td= number_to_currency(BillHist.host_bill_dispensed(@wsdl_device['dev_id'], @wsdl_bill_hists[index - 1]['cut_dt']))
+                  - else
+                    %td= Transaction.wsdl_total_amount_authorized_date_span_by_device_id((@wsdl_bill_hists[index]['cut_dt']), Date.today, @wsdl_device['dev_id'])
+                  %td
+                    - unless (index + 1) > @wsdl_bill_hists.count
+                      - unless index == 0
+                        = number_to_currency(BillHist.old_start_total(@wsdl_device['dev_id'], @wsdl_bill_hists[index - 1]['cut_dt']) - Transaction.wsdl_total_amount_authorized_date_span_by_device_id(@wsdl_bill_hists[index]['cut_dt'], @wsdl_bill_hists[index - 1]['cut_dt'], @wsdl_device['dev_id']))
+                      - else
+                        = number_to_currency(Device.remaining(@wsdl_device['dev_id']))
 
+  - @bill_hists.uniq { |bill_hist| bill_hist.cut_dt }.each_with_index do |bill_hist, index|
+    .row
+      -panel_color=cycle('default','info')
+      %div.col-xs-12.col-md-12
+        %div{class: "panel panel-#{panel_color}"}
+          .panel-heading
+            %h3.panel-title
+              %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#collapse_details_#{index}"}
+                = "#{bill_hist.cut_dt.strftime('%-m/%-d/%y %H:%M:%S')} - Current" if index == 0
+                = "#{bill_hist.cut_dt.strftime('%-m/%-d/%y %H:%M:%S')} - #{@bill_hists[index - 1].cut_dt.strftime('%-m/%-d/%y %H:%M:%S')}" unless index == 0
+          %div{id: "collapse_details_#{index}", class: "collapse"}
             %table.table.table-striped.table-hover
               %caption Details
               %thead
                 %tr
-                  -#
-                    %th Old Start
                   %th Start
                   %th Added
-                  -#
-                    %th Term Bill Disp
-                    %th Host Bill Disp
-                  %th= link_to "Dispensed", '#', "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "Terminal Dispensed: #{number_to_currency(BillHist.terminal_bill_dispensed(day))}"
-                  -#
-                    %th Term Remain
-                    %th Host Remain
+                  - unless index == 0
+                    %th= link_to "Dispensed", '#', "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "Terminal Dispensed: #{number_to_currency(BillHist.terminal_bill_dispensed(@bill_hists[index - 1].cut_dt))}"
+                  - else
+                    %th= "Dispensed"
                   %th Remaining
                 %tr
-                  -#
-                    %td= number_to_currency(BillHist.old_start_total(day))
-                  %td= number_to_currency(BillHist.new_start_total(day))
-                  %td= number_to_currency(BillHist.added(day))
-                  -#
-                    %td= number_to_currency(BillHist.terminal_bill_dispensed(day))
-                  %td= number_to_currency(BillHist.host_bill_dispensed(day))
-                  -#
-                    %td= number_to_currency(BillHist.old_start_total(day) - BillHist.terminal_bill_dispensed(day))
-                    %td= number_to_currency(BillHist.old_start_total(day) - BillHist.host_bill_dispensed(day))
+                  %td= number_to_currency(BillHist.new_start_total(bill_hist.cut_dt))
+                  %td= number_to_currency(BillHist.added(bill_hist.cut_dt))
+                  - unless index == 0
+                    %td= number_to_currency(BillHist.host_bill_dispensed(@bill_hists[index - 1].cut_dt))
+                  - else
+                    %td= number_to_currency(@device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).strftime("%Y-%m-%d %H:%M:%S"), Date.today))
                   %td
-                    - unless (index + 1) == @bill_hists.group_by{ |bh| bh.cut_dt }.count
-                      = number_to_currency(BillHist.old_start_total(day) - @device.transactions_total_amount_authorized_date_span((@bill_hists.group_by{ |bh| bh.cut_dt }.keys[index + 1]).strftime("%Y-%m-%d %H:%M:%S"), day))
-
-            - unless (index + 1) == @bill_hists.group_by{ |bh| bh.cut_dt }.count
+                    - unless (index + 1) > @bill_hists.count
+                      - unless index == 0
+                        = number_to_currency(BillHist.old_start_total(@bill_hists[index - 1].cut_dt) - @device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).strftime("%Y-%m-%d %H:%M:%S"), @bill_hists[index - 1].cut_dt))
+                      - else
+                        = number_to_currency(@device.remaining)
+            - unless (index + 1) > @bill_hists.count
               %table.table.table-striped.table-hover
                 %caption Transactions
                 %thead
@@ -217,7 +127,7 @@
                     %th= "Amt Auth"
                     %th= "Images"
                 %tbody
-                  - @device.transactions_date_span_search((@bill_hists.group_by{ |bh| bh.cut_dt }.keys[index + 1]).strftime("%Y-%m-%d %H:%M:%S"), day).reverse.each do |transaction|
+                  - @device.transactions_date_span_search(@bill_hists[index].cut_dt.strftime("%Y-%m-%d %H:%M:%S"), "#{index == 0 ? Date.today.strftime("%Y-%m-%d %H:%M:%S") : @bill_hists[index - 1].cut_dt.strftime("%Y-%m-%d %H:%M:%S")}").reverse.each do |transaction|
                     %tr
                       %td= transaction.id
                       %td= transaction.CreateDate.strftime("%-m/%-d/%y %H:%M:%S")
@@ -256,5 +166,3 @@
                                   = link_to 'Close', '#', :class => 'btn btn-primary', "data-dismiss" => "modal"
                         - else
                           None
-
-  = paginate @bill_hists, :param_name => "bill_hists_page"

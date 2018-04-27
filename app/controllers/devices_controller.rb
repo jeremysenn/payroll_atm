@@ -14,6 +14,13 @@ class DevicesController < ApplicationController
     @dev_statuses = @device.dev_statuses.where(date_time: Date.today.beginning_of_day.last_week..Date.today.end_of_day).order("date_time DESC")
     @bill_counts = @device.bill_counts
     @denoms = @device.denoms
+#    @bill_hists = @device.bill_hists
+    @bill_hists = @device.bill_hists.select(:cut_dt).distinct.order("cut_dt DESC").first(5)
+    ### WSDL Pieces ###
+#    @wsdl_device = Device.find_by_id(params[:id])
+#    @wsdl_transactions = Transaction.wsdl_find_last_20_by_device_id(params[:id])
+#    @wsdl_dev_statuses = DevStatus.wsdl_find_last_20_by_device_id(params[:id])
+#    @wsdl_bill_hists = BillHist.wsdl_find_last_5_distinct_by_device_id(params[:id])
   end
   
   private

@@ -20,6 +20,14 @@ class Denom < ActiveRecord::Base
     end
   end
   
+  def bill_count_status_description
+    unless bill_count.blank?
+      bill_count.status_description
+    else
+      "N/A"
+    end
+  end
+  
   #############################
   #     Class Methods         #
   #############################
