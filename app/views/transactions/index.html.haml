@@ -6,10 +6,11 @@
       %h1
         %i.fa.fa-bolt
         EZcash
-        .pull-right
-          %a{href: transactions_path(format: "csv", :type => @type, 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date,), class: 'btn bg-orange'}
-            %i.fa.fa-download
-            Download CSV
+        - unless @transactions.blank?
+          .pull-right
+            %a{href: transactions_path(format: "csv", :type => @type, 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date,), class: 'btn bg-orange'}
+              %i.fa.fa-download
+              Download CSV
         
     / Main content
     %section.content
