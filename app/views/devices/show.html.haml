@@ -58,10 +58,11 @@
                   %a#cuts-tab.nav-link{"aria-controls" => "cuts", "aria-selected" => "false", "data-toggle" => "tab", :href => "#cuts", :role => "tab"} 
                     %i.fa.fa-credit-card
                     = "Cuts" unless browser.device.mobile?
-                %li.nav-item
-                  %a#accounts-tab.nav-link{"aria-controls" => "accounts", "aria-selected" => "false", "data-toggle" => "tab", :href => "#accounts", :role => "tab"} 
-                    %i.fa.fa-info-circle
-                    = "Acounts" unless browser.device.mobile?
+                -#
+                  %li.nav-item
+                    %a#accounts-tab.nav-link{"aria-controls" => "accounts", "aria-selected" => "false", "data-toggle" => "tab", :href => "#accounts", :role => "tab"} 
+                      %i.fa.fa-info-circle
+                      = "Acounts" unless browser.device.mobile?
               #myTabContent.tab-content
                 #transactions.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   = render partial: "transactions/index"
@@ -84,8 +85,9 @@
                           = render partial: "cassettes"
                 #cuts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   = render partial: "cuts"
-                #accounts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
-                  Accounts
+                -#
+                  #accounts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                    Accounts
                 
 :javascript
   //*** Remember the selected tab on page refresh ***
