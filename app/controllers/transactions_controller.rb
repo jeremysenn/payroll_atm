@@ -23,12 +23,21 @@ class TransactionsController < ApplicationController
     else
       transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
     end
-    @transactions_total = 0
-    @transactions_count = transactions.count
-    transactions.each do |transaction|
-      @transactions_total = @transactions_total + transaction.amt_auth unless transaction.amt_auth.blank?
+    
+    respond_to do |format|
+      format.html {
+        @transactions_total = 0
+        @transactions_count = transactions.count
+        transactions.each do |transaction|
+          @transactions_total = @transactions_total + transaction.amt_auth unless transaction.amt_auth.blank?
+        end
+        @transactions = transactions.order("#{transactions_sort_column} #{transactions_sort_direction}").page(params[:page]).per(20)
+      }
+      format.csv { 
+        @transactions = transactions
+        send_data @transactions.to_csv, filename: "#{@type}_transactions-#{@start_date}-#{@end_date}.csv" 
+        }
     end
-    @transactions = transactions.order("#{transactions_sort_column} #{transactions_sort_direction}").page(params[:page]).per(20)
   end
 
   # GET /transactions/1

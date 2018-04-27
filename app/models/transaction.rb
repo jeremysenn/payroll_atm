@@ -355,4 +355,17 @@ class Transaction < ActiveRecord::Base
     end
   end
   
+  def self.to_csv
+    require 'csv'
+    attributes = %w{tranID date_time dev_id error_code tran_code sec_tran_code from_acct_nbr to_acct_nbr amt_req amt_auth ChpFee}
+    
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.each do |transaction|
+        csv << attributes.map{ |attr| transaction.send(attr) }
+      end
+    end
+  end
+  
 end
