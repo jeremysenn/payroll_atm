@@ -1,25 +1,26 @@
 - unless @transactions.blank?
-  %table.table.table-striped.table-condensed
-    %thead
-      %tr
-        %th{:scope => "col"} #
-        %th{:scope => "col"} Date
-        %th{:scope => "col"} Code
-        %th{:scope => "col"} Description
-        %th{:scope => "col"} Amount
-        %th{:scope => "col"} To
-        %th
-    %tbody
-      - @transactions.each do |transaction|
+  .table-responsive
+    %table.table.table-striped.table-condensed
+      %thead
         %tr
-          %th{:scope => "row"}= transaction.id
-          %td= transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
-          %td
-            %a{"data-content" => "#{transaction.status_long_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{transaction.error_code_long_description}"} 
-              = transaction.error_code_description
-          %td= transaction.Description
-          %td= number_to_currency(transaction.amt_auth)
-          %td= link_to 'More', transaction, class: 'btn btn-primary btn-sm'
+          %th{:scope => "col"} #
+          %th{:scope => "col"} Date
+          %th{:scope => "col"} Code
+          %th{:scope => "col"} Description
+          %th{:scope => "col"} Amount
+          %th{:scope => "col"} To
+          %th
+      %tbody
+        - @transactions.each do |transaction|
+          %tr
+            %th{:scope => "row"}= transaction.id
+            %td= transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
+            %td
+              %a{"data-content" => "#{transaction.status_long_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{transaction.error_code_long_description}"} 
+                = transaction.error_code_description
+            %td= transaction.Description
+            %td= number_to_currency(transaction.amt_auth)
+            %td= link_to 'More', transaction, class: 'btn btn-primary btn-sm'
 - else
   &nbsp;
   None
