@@ -26,7 +26,8 @@
                     %td= payment_batch_csv_mapping.mapped_column_name
                     %td= payment_batch_csv_mapping.column_name
                     %td
-                      = link_to 'More', payment_batch_csv_mapping, class: 'btn btn-primary btn-sm'
+                      =# link_to 'More', payment_batch_csv_mapping, class: 'btn btn-primary btn-sm'
+                      = link_to 'Edit', edit_payment_batch_csv_mapping_path(payment_batch_csv_mapping), class: 'btn btn-primary btn-sm'
                       = link_to 'Delete', payment_batch_csv_mapping, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
                 - @remaining_payment_batch_csv_mappings.each do |remaining_payment_batch_csv_mapping|
                   %tr

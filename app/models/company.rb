@@ -90,10 +90,13 @@ class Company < ActiveRecord::Base
     end
   end
   
+  def payment_batch_csv_columns
+    ["ReferenceNbr", "PayeeNbr", "FirstName", "LastName", "PaymentAmt"]
+  end
+  
   def remaining_payment_batch_csv_mappings
-    mapped_column_names = ["ReferenceNbr", "PayeeNbr", "FirstName", "LastName", "PaymentAmt"]
     custom_mappings = payment_batch_csv_mappings.map(&:mapped_column_name)
-    return mapped_column_names - custom_mappings
+    return payment_batch_csv_columns - custom_mappings
   end
   
   #############################

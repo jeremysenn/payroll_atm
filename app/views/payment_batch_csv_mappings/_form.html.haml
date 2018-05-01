@@ -5,7 +5,10 @@
       .form-inputs
         - if current_user.admin?
           = f.input :company_id, :as => :hidden, :input_html => { :value => "#{@payment_batch_csv_mapping.new_record? ? current_user.company_id : @payment_batch_csv_mapping.company_id}" }
-          = f.input :mapped_column_name, collection: current_user.company.remaining_payment_batch_csv_mappings, prompt: "Choose Column", selected: params[:column], required: true
+          - if @payment_batch_csv_mapping.new_record?
+            = f.input :mapped_column_name, collection: current_user.company.remaining_payment_batch_csv_mappings, prompt: "Choose Column", selected: params[:column], required: true
+          - else
+            = f.input :mapped_column_name, collection: [@payment_batch_csv_mapping.mapped_column_name], prompt: "Choose Column", selected: @payment_batch_csv_mapping.mapped_column_name, required: true
           = f.input :column_name, label: "Your column name", hint: "Case sensitive", :as => :string, :input_html => {autofocus: true}, required: true
       .form-actions
         = link_to 'Cancel', :back, class: 'btn btn-default'
