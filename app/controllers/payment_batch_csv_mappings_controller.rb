@@ -1,7 +1,7 @@
 class PaymentBatchCsvMappingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_payment_batch_csv_mapping, only: [:show, :edit, :update, :destroy]
-#  load_and_authorize_resource
+  load_and_authorize_resource
   
   # GET /payment_batch_csv_mappings
   # GET /payment_batch_csv_mappings.json

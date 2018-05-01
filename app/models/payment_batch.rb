@@ -27,12 +27,12 @@ class PaymentBatch < ActiveRecord::Base
   
   def create_payments_from_csv
     CSV.parse(self.CSVFile, { :headers => true }) do |row| 
-      customer = Customer.find_by(CompanyNumber: self.CompanyNbr, Registration_Source: row['PayeeNbr'])
+      customer = Customer.find_by(CompanyNumber: self.CompanyNbr, Registration_Source: row[company.payee_number_mapping])
       if customer.blank?
-        customer = Customer.find_by(CompanyNumber: self.CompanyNbr, CustomerID: row['PayeeNbr'])
+        customer = Customer.find_by(CompanyNumber: self.CompanyNbr, CustomerID: row[company.payee_number_mapping])
       end
-      Payment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, ReferenceNbr: row['ReferenceNbr'], 
-        CustomerID: customer.blank? ? nil : customer.id, PayeeNbr: row['PayeeNbr'], PaymentAmt: row['PaymentAmt'].to_f.abs)
+      Payment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, ReferenceNbr: row[company.reference_number_mapping], 
+        CustomerID: customer.blank? ? nil : customer.id, PayeeNbr: row[company.payee_number_mapping], PaymentAmt: row[company.payment_amount_mapping].to_f.abs)
     end
   end
   
