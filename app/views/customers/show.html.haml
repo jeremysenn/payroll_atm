@@ -143,11 +143,14 @@
                         %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Invite"}}
                           %i.fa.fa-comment
                           Send Invite
-                %hr/
-                %strong
-                  %i.fa.fa-file-text-o.margin-r-5
-                  Notes
-                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.
+                  %hr/
+                  %strong
+                    %i.fa.fa-file-text-o.margin-r-5
+                    Notes
+                  %p.text-muted
+                    = "ID: #{@customer.id}"
+                    %br
+                    = "Registration Source: #{@customer.Registration_Source}"
               / /.box-body
             / /.box
         .col-md-9
