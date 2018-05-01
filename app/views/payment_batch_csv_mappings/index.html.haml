@@ -1,0 +1,36 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      %h1
+        %i.fa.fa-dollar
+        Payment Batch CSV Mappings
+        - unless @remaining_payment_batch_csv_mappings.blank?
+          %small= link_to 'New', new_payment_batch_csv_mapping_path, class: 'btn btn-default'
+    / Main content
+    %section.content
+      / Default box
+      .box.box-primary
+        .box-body.no-padding
+          - unless @payment_batch_csv_mappings.blank?
+            %table.table
+              %thead
+                %tr
+                  %th{:scope => "col"} Mapped Column Name
+                  %th{:scope => "col"} Your Column Name
+                  %th
+              %tbody
+                - @payment_batch_csv_mappings.each do |payment_batch_csv_mapping|
+                  %tr
+                    %td= payment_batch_csv_mapping.mapped_column_name
+                    %td= payment_batch_csv_mapping.column_name
+                    %td
+                      = link_to 'More', payment_batch_csv_mapping, class: 'btn btn-primary btn-sm'
+                      = link_to 'Delete', payment_batch_csv_mapping, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
+                - @remaining_payment_batch_csv_mappings.each do |remaining_payment_batch_csv_mapping|
+                  %tr
+                    %td= remaining_payment_batch_csv_mapping
+                    %td= "Not yet mapped"
+                    %td= link_to 'Map', new_payment_batch_csv_mapping_path(column: remaining_payment_batch_csv_mapping), class: 'btn bg-orange btn-sm'
+          - else
+            %p.text-center None

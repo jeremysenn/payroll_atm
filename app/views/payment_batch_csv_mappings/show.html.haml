@@ -1,0 +1,16 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      = render 'shared/flash_messages'
+      %h1
+        Payment Batch CSV Mapping
+    / Main content
+    %section.content
+      / Default box
+      .box.box-primary
+        .box-header.with-border
+          %h3.box-title 
+            = @payment_batch_csv_mapping.column_name
+        .box-body
+          = @payment_batch_csv_mapping.mapped_column_name

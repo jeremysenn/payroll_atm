@@ -42,7 +42,7 @@ class PaymentBatchesController < ApplicationController
     respond_to do |format|
       if @payment_batch.save
         format.html { redirect_to @payment_batch, notice: 'PaymentBatch was successfully created.' }
-        format.html { redirect_to :back, notice: 'PaymentBatch was successfully created.' }
+        format.json { render :show, status: :ok, location: @payment_batch }
       else
         format.html { render :new }
         format.json { render json: @payment_batch.errors, status: :unprocessable_entity }

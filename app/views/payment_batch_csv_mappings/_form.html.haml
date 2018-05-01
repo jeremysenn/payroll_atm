@@ -1,0 +1,13 @@
+.box.box-primary
+  .box-body
+    = simple_form_for(@payment_batch_csv_mapping) do |f|
+      = f.error_notification
+      .form-inputs
+        - if current_user.admin?
+          = f.input :company_id, :as => :hidden, :input_html => { :value => "#{@payment_batch_csv_mapping.new_record? ? current_user.company_id : @payment_batch_csv_mapping.company_id}" }
+          = f.input :mapped_column_name, collection: current_user.company.remaining_payment_batch_csv_mappings, prompt: "Choose Column", selected: params[:column], required: true
+          = f.input :column_name, label: "Your column name", hint: "Case sensitive", :as => :string, :input_html => {autofocus: true}, required: true
+      .form-actions
+        = link_to 'Cancel', :back, class: 'btn btn-default'
+        %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Save"}}
+          Save

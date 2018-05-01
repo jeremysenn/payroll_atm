@@ -22,5 +22,6 @@ Rails.application.routes.draw do
   resources :payment_batches
   resources :payments
   resources :devices
+  resources :payment_batch_csv_mappings
   
 end

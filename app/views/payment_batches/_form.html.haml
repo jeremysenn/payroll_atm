@@ -1,14 +1,16 @@
 .box.box-primary
   .box-body
-    %p Format must be the following:
+    %p 
+      Format must be the following
+      = link_to "(you can change column names here)", payment_batch_csv_mappings_path
     %table.table.table-bordered.table-sm
       %thead.thead-dark
         %tr
-          %th{:scope => "col"} ReferenceNbr
-          %th{:scope => "col"} PayeeNbr
-          %th{:scope => "col"} FirstName
-          %th{:scope => "col"} LastName
-          %th{:scope => "col"} PaymentAmt
+          %th{:scope => "col"}= current_user.company.reference_number_mapping.blank? ? 'ReferenceNbr' :  current_user.company.reference_number_mapping
+          %th{:scope => "col"}= current_user.company.payee_number_mapping.blank? ? 'PayeeNbr' :  current_user.company.payee_number_mapping
+          %th{:scope => "col"}= current_user.company.first_name_mapping.blank? ? 'FirstName' :  current_user.company.first_name_mapping
+          %th{:scope => "col"}= current_user.company.last_name_mapping.blank? ? 'LastName' :  current_user.company.last_name_mapping
+          %th{:scope => "col"}= current_user.company.payment_amount_mapping.blank? ? 'PaymentAmt' :  current_user.company.payment_amount_mapping
       %tbody
         %tr
           %td 0010

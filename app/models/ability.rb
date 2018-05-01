@@ -46,6 +46,13 @@ class Ability
       can :manage, Payment
       can :create, :payments
       
+      # PaymentBatchCsvMappings
+      ############
+      can :manage, PaymentBatchCsvMapping do |payment_batch_csv_mapping|
+        user.company == payment_batch_csv_mapping.company
+      end
+      can :create, :payment_batch_csv_mappings
+      
       # SmsMessages
       ############
       can :manage, SmsMessage
