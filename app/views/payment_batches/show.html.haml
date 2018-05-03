@@ -42,6 +42,7 @@
                       %th{:scope => "col"} FirstName
                       %th{:scope => "col"} LastName
                       %th{:scope => "col"} PaymentAmt
+                      %th{:scope => "col"} Description
                       %th{:scope => "col"} Processed
                       - unless @payment_batch.processed?
                         %th
@@ -74,6 +75,7 @@
                           - else
                             Not found
                         %td= number_to_currency(payment.PaymentAmt)
+                        %td= "#{payment.Description.blank? ? N/A : payment.Description}"
                         %td= payment.Processed? ? 'Yes' : 'No'
                         - unless @payment_batch.processed?
                           %td
