@@ -11,6 +11,7 @@
           %th{:scope => "col"}= current_user.company.first_name_mapping.blank? ? 'FirstName' :  current_user.company.first_name_mapping
           %th{:scope => "col"}= current_user.company.last_name_mapping.blank? ? 'LastName' :  current_user.company.last_name_mapping
           %th{:scope => "col"}= current_user.company.payment_amount_mapping.blank? ? 'PaymentAmt' :  current_user.company.payment_amount_mapping
+          %th{:scope => "col"}= current_user.company.description_mapping.blank? ? 'Description' :  current_user.company.description_mapping
       %tbody
         %tr
           %td 0010
