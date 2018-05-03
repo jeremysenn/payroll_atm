@@ -19,21 +19,21 @@
           %td John
           %td Smith
           %td 2345
-          %td Description
+          %td= current_user.company.description_mapping
         %tr
           %td 0011
           %td 1234568
           %td Jane
           %td Doe
           %td 2675
-          %td Description
+          %td= current_user.company.description_mapping
         %tr 
           %td 0012
           %td 1234569
           %td Rick
           %td Williams
           %td 2242
-          %td Description
+          %td= current_user.company.description_mapping
     = simple_form_for(@payment_batch) do |f|
       = f.error_notification
       .form-inputs
