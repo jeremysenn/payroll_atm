@@ -32,7 +32,8 @@ class PaymentBatch < ActiveRecord::Base
         customer = Customer.find_by(CompanyNumber: self.CompanyNbr, CustomerID: row[company.payee_number_mapping])
       end
       Payment.create(CompanyNbr: self.CompanyNbr, BatchNbr: self.BatchNbr, ReferenceNbr: row[company.reference_number_mapping], 
-        CustomerID: customer.blank? ? nil : customer.id, PayeeNbr: row[company.payee_number_mapping], PaymentAmt: row[company.payment_amount_mapping].to_f.abs)
+        CustomerID: customer.blank? ? nil : customer.id, PayeeNbr: row[company.payee_number_mapping], 
+        PaymentAmt: row[company.payment_amount_mapping].to_f.abs, Description: row[company.description_mapping])
     end
   end
   

@@ -90,8 +90,17 @@ class Company < ActiveRecord::Base
     end
   end
   
+  def description_mapping
+    mapping = payment_batch_csv_mappings.find_by(mapped_column_name: "Description")
+    unless mapping.blank?
+      return mapping.column_name
+    else
+      return 'Description'
+    end
+  end
+  
   def payment_batch_csv_columns
-    ["ReferenceNbr", "PayeeNbr", "FirstName", "LastName", "PaymentAmt"]
+    ["ReferenceNbr", "PayeeNbr", "FirstName", "LastName", "PaymentAmt", "Description"]
   end
   
   def remaining_payment_batch_csv_mappings
