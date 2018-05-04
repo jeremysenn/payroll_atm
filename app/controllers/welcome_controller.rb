@@ -17,6 +17,10 @@ class WelcomeController < ApplicationController
         @payees_count = current_user.company.customers.count
         @transfers = current_user.company.transactions.transfers
         @transfers_count = @transfers.count
+        @transfers_amount = 0
+        @transfers.each do |transfer_transaction|
+          @transfers_amount = @transfers_amount + transfer_transaction.amt_auth unless transfer_transaction.amt_auth.blank?
+        end
         @withdrawals = current_user.company.transactions.withdrawals
         @withdrawals_count = @withdrawals.count
         @withdrawals_amount = 0

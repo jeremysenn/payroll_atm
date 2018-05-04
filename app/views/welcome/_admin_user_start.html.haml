@@ -121,7 +121,7 @@
 
       / Info boxes
       .row
-        .col-md-3.col-sm-6.col-xs-12
+        .col-md-4.col-sm-6.col-xs-12
           .info-box
             %span.info-box-icon.bg-aqua
               %i.fa.fa-male.fa-lg
@@ -132,35 +132,36 @@
             / /.info-box-content
           / /.info-box
         / /.col
-        .col-md-3.col-sm-6.col-xs-12
+        .col-md-4.col-sm-6.col-xs-12
           .info-box
-            %span.info-box-icon.bg-red
+            %span.info-box-icon.bg-blue
               %i.fa.fa-dollar.fa-lg
             .info-box-content
-              %span.info-box-text TRANSFERS
-              %span.info-box-number= @transfers_count
+              %span.info-box-text TRANSFERS / AMOUNT
+              %span.info-box-number= "#{@transfers_count} / #{number_to_currency(@transfers_amount)}"
             / /.info-box-content
           / /.info-box
         / /.col
         / fix for small devices only
         .clearfix.visible-sm-block
-        .col-md-3.col-sm-6.col-xs-12
+        -#
+          .col-md-4.col-sm-6.col-xs-12
+            .info-box
+              %span.info-box-icon.bg-red
+                %i.fa.fa-qrcode.fa-lg
+              .info-box-content
+                %span.info-box-text WITHDRAWALS
+                %span.info-box-number= @withdrawals_count
+              / /.info-box-content
+            / /.info-box
+          / /.col
+        .col-md-4.col-sm-6.col-xs-12
           .info-box
             %span.info-box-icon.bg-green
-              %i.fa.fa-qrcode.fa-lg
-            .info-box-content
-              %span.info-box-text WITHDRAWALS
-              %span.info-box-number= @withdrawals_count
-            / /.info-box-content
-          / /.info-box
-        / /.col
-        .col-md-3.col-sm-6.col-xs-12
-          .info-box
-            %span.info-box-icon.bg-yellow
               %i.fa.fa-money.fa-lg
             .info-box-content
-              %span.info-box-text WITHDRAWN
-              %span.info-box-number= number_to_currency(@withdrawals_amount)
+              %span.info-box-text WITHDRAWALS / AMOUNT
+              %span.info-box-number= "#{@withdrawals_count} / #{number_to_currency(@withdrawals_amount)}"
             / /.info-box-content
           / /.info-box
         / /.col
@@ -189,11 +190,9 @@
     },
   };
 
-  const loggedIn = [26, 36, 42, 38, 40, 30, 12];
-  const available = [34, 44, 33, 24, 25, 28, 25];
-  const availableForExisting = [16, 13, 25, 33, 40, 33, 45];
-  const unavailable = [5, 9, 10, 9, 18, 19, 20];
-  const xData = [13, 14, 15, 16, 17, 18, 19];
+  const transferred = [26, 36, 42, 38, 40, 30, 12];
+  const withdrawn = [16, 13, 25, 33, 40, 33, 45];
+  const xData = ["5/1", "5/2", "5/3", "5/4", "5/5", "5/6", "5/7"];
 
   const myChart = new Chart(ctx, {
     type: 'line',
@@ -202,20 +201,20 @@
       datasets: [{
         label: "Withdrawn",
         fill: true,
-        backgroundColor: colors.darkBlue.fill,
-        pointBackgroundColor: colors.darkBlue.stroke,
-        borderColor: colors.darkBlue.stroke,
-        pointHighlightStroke: colors.darkBlue.stroke,
-        borderCapStyle: 'butt',
-        data: availableForExisting,
-      }, {
-        label: "Transferred",
-        fill: true,
         backgroundColor: colors.green.fill,
         pointBackgroundColor: colors.green.stroke,
         borderColor: colors.green.stroke,
         pointHighlightStroke: colors.green.stroke,
-        data: loggedIn,
+        borderCapStyle: 'butt',
+        data: withdrawn,
+      }, {
+        label: "Transferred",
+        fill: true,
+        backgroundColor: colors.darkBlue.fill,
+        pointBackgroundColor: colors.darkBlue.stroke,
+        borderColor: colors.darkBlue.stroke,
+        pointHighlightStroke: colors.darkBlue.stroke,
+        data: transferred,
       }]
     },
     options: {
