@@ -48,60 +48,77 @@
                 -#
                   .pull-right= paginate @customers, param_name: 'result1'
         .col-md-6
-          .box.box-success{"data-widget" => "box-widget"}
+          / ATM Cash Chart
+          .box.box-primary
             .box-header.with-border
-              %h3.box-title
-                %i.fa.fa-dollar
-                Recent Payments
+              %h3.box-title ATM Cash
               .box-tools.pull-right
-                = form_tag payment_batches_path, id: 'payment_batches_search_form', method: 'get', class: 'form-inline' do |f|
-                  .input-group.input-group-sm
-                    = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
-                    .input-group-append
-                      %button.btn.btn-success{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
-                        %i.fa.fa-search
+                %button.btn.btn-box-tool{"data-widget" => "collapse", :type => "button"}
+                  %i.fa.fa-minus
+                %button.btn.btn-box-tool{"data-widget" => "remove", :type => "button"}
+                  %i.fa.fa-times
+            .box-body
+              .chart
+                %canvas#myChart{:style => "height:250px"}
+            / /.box-body
+          / /.box
+
+          -#
+            .box.box-success{"data-widget" => "box-widget"}
+              .box-header.with-border
+                %h3.box-title
+                  %i.fa.fa-dollar
+                  Recent Payments
+                .box-tools.pull-right
+                  = form_tag payment_batches_path, id: 'payment_batches_search_form', method: 'get', class: 'form-inline' do |f|
+                    .input-group.input-group-sm
+                      = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
+                      .input-group-append
+                        %button.btn.btn-success{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                          %i.fa.fa-search
+                  -#
+                    %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+                      %i.fa.fa-minus
+                    %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+                      %i.fa.fa-times
+              .box-body.no-padding
+                -# .text-success= payment_batch.processed_status
+                - unless @processed_payment_batches.blank?
+                  .table-responsive
+                    %table.table.table-striped.table-condensed
+                      %thead
+                        %tr
+                          %th{:scope => "col"} Date
+                          %th{:scope => "col"} First
+                          %th{:scope => "col"} Last
+                          %th{:scope => "col"} Amt
+                          %th{:scope => "col"} Processed
+                          %th
+                      %tbody
+                        - @processed_payment_batches.each do |payment_batch|
+                          - payment_batch.payments.each do |payment|
+                            %tr{class: "#{payment.customer.blank? ? 'table-danger' : ''}"}
+                              %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                              %td
+                                - unless payment.customer.blank?
+                                  = payment.customer.first_name
+                                - else
+                                  Not found
+                              %td
+                                - unless payment.customer.blank?
+                                  = payment.customer.last_name
+                                - else
+                                  Not found
+                              %td= number_to_currency(payment.PaymentAmt)
+                              %td= payment.Processed? ? 'Yes' : 'No'
+                              %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
+                - else
+                  &nbsp;
+                  None
+              .box-footer
                 -#
-                  %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
-                    %i.fa.fa-minus
-                  %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
-                    %i.fa.fa-times
-            .box-body.no-padding
-              -# .text-success= payment_batch.processed_status
-              - unless @processed_payment_batches.blank?
-                .table-responsive
-                  %table.table.table-striped.table-condensed
-                    %thead
-                      %tr
-                        %th{:scope => "col"} Date
-                        %th{:scope => "col"} First
-                        %th{:scope => "col"} Last
-                        %th{:scope => "col"} Amt
-                        %th{:scope => "col"} Processed
-                        %th
-                    %tbody
-                      - @processed_payment_batches.each do |payment_batch|
-                        - payment_batch.payments.each do |payment|
-                          %tr{class: "#{payment.customer.blank? ? 'table-danger' : ''}"}
-                            %td= payment_batch.created_at.strftime("%B %-d, %Y")
-                            %td
-                              - unless payment.customer.blank?
-                                = payment.customer.first_name
-                              - else
-                                Not found
-                            %td
-                              - unless payment.customer.blank?
-                                = payment.customer.last_name
-                              - else
-                                Not found
-                            %td= number_to_currency(payment.PaymentAmt)
-                            %td= payment.Processed? ? 'Yes' : 'No'
-                            %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
-              - else
-                &nbsp;
-                None
-            .box-footer
-              -#
-                .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'
+                  .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'
+
       / Info boxes
       .row
         .col-md-3.col-sm-6.col-xs-12
@@ -148,3 +165,69 @@
           / /.info-box
         / /.col
       / /.row
+
+    
+
+:javascript
+  var ctx = document.getElementById("myChart").getContext("2d");
+
+  const colors = {
+    green: {
+      fill: '#e0eadf',
+      stroke: '#5eb84d',
+    },
+    lightBlue: {
+      stroke: '#6fccdd',
+    },
+    darkBlue: {
+      fill: '#92bed2',
+      stroke: '#3282bf',
+    },
+    purple: {
+      fill: '#8fa8c8',
+      stroke: '#75539e',
+    },
+  };
+
+  const loggedIn = [26, 36, 42, 38, 40, 30, 12];
+  const available = [34, 44, 33, 24, 25, 28, 25];
+  const availableForExisting = [16, 13, 25, 33, 40, 33, 45];
+  const unavailable = [5, 9, 10, 9, 18, 19, 20];
+  const xData = [13, 14, 15, 16, 17, 18, 19];
+
+  const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: xData,
+      datasets: [{
+        label: "Withdrawn",
+        fill: true,
+        backgroundColor: colors.darkBlue.fill,
+        pointBackgroundColor: colors.darkBlue.stroke,
+        borderColor: colors.darkBlue.stroke,
+        pointHighlightStroke: colors.darkBlue.stroke,
+        borderCapStyle: 'butt',
+        data: availableForExisting,
+      }, {
+        label: "Transferred",
+        fill: true,
+        backgroundColor: colors.green.fill,
+        pointBackgroundColor: colors.green.stroke,
+        borderColor: colors.green.stroke,
+        pointHighlightStroke: colors.green.stroke,
+        data: loggedIn,
+      }]
+    },
+    options: {
+      responsive: false,
+      // Can't just just `stacked: true` like the docs say
+      scales: {
+        yAxes: [{
+          stacked: true,
+        }]
+      },
+      animation: {
+        duration: 750,
+      },
+    }
+  });
