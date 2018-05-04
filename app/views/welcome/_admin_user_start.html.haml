@@ -102,3 +102,41 @@
             .box-footer
               -#
                 .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'
+
+  %footer.main-footer
+    .text-center
+      %h4 Private ATM Network Stats
+      %ul.list-inline
+        &nbsp;
+        %li.list-inline-item 
+          %i.fa.fa-male.fa-lg
+          %br
+          = @payees_count
+          %br
+          Payees
+        &nbsp;
+        %li.list-inline-item 
+          %i.fa.fa-dollar.fa-lg
+          %i.fa.fa-arrow-right.fa-sm
+          %i.fa.fa-male.fa-lg
+          %br
+          = @transfers_count
+          %br
+          Transfers
+        &nbsp;
+        %li.list-inline-item 
+          %i.fa.fa-dollar.fa-lg
+          %i.fa.fa-arrow-right.fa-sm
+          %i.fa.fa-hand-paper-o.fa-lg
+          %br
+          = @withdrawals_count
+          %br
+          Withdrawals
+        &nbsp;
+        %li.list-inline-item 
+          %i.fa.fa-money.fa-lg
+          %br
+          = number_to_currency(@withdrawals_amount)
+          %br
+          Withdrawn
+        &nbsp;

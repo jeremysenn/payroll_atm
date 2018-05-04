@@ -14,6 +14,14 @@ class WelcomeController < ApplicationController
       if current_user.admin?
         @devices = current_user.company.devices
         @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC").first(3)
+        @payees_count = current_user.company.customers.count
+        @transfers_count = current_user.company.transactions.transfers.count
+        @withdrawals = current_user.company.transactions.withdrawals
+        @withdrawals_count = @withdrawals.count
+        @withdrawals_amount = 0
+        @withdrawals.each do |withdrawal_transaction|
+          @withdrawals_amount = @withdrawals_amount + withdrawal_transaction.amt_auth
+        end
       end
     end
   end
