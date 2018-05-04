@@ -15,7 +15,8 @@ class WelcomeController < ApplicationController
         @devices = current_user.company.devices
         @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC").first(3)
         @payees_count = current_user.company.customers.count
-        @transfers_count = current_user.company.transactions.transfers.count
+        @transfers = current_user.company.transactions.transfers
+        @transfers_count = @transfers.count
         @withdrawals = current_user.company.transactions.withdrawals
         @withdrawals_count = @withdrawals.count
         @withdrawals_amount = 0

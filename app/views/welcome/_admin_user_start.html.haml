@@ -102,41 +102,49 @@
             .box-footer
               -#
                 .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'
-
-  %footer.main-footer
-    .text-center
-      %h4 Private ATM Network Stats
-      %ul.list-inline
-        &nbsp;
-        %li.list-inline-item 
-          %i.fa.fa-male.fa-lg
-          %br
-          = @payees_count
-          %br
-          Payees
-        &nbsp;
-        %li.list-inline-item 
-          %i.fa.fa-dollar.fa-lg
-          %i.fa.fa-arrow-right.fa-sm
-          %i.fa.fa-male.fa-lg
-          %br
-          = @transfers_count
-          %br
-          Transfers
-        &nbsp;
-        %li.list-inline-item 
-          %i.fa.fa-dollar.fa-lg
-          %i.fa.fa-arrow-right.fa-sm
-          %i.fa.fa-hand-paper-o.fa-lg
-          %br
-          = @withdrawals_count
-          %br
-          Withdrawals
-        &nbsp;
-        %li.list-inline-item 
-          %i.fa.fa-money.fa-lg
-          %br
-          = number_to_currency(@withdrawals_amount)
-          %br
-          Withdrawn
-        &nbsp;
+      / Info boxes
+      .row
+        .col-md-3.col-sm-6.col-xs-12
+          .info-box
+            %span.info-box-icon.bg-aqua
+              %i.fa.fa-male.fa-lg
+            .info-box-content
+              %span.info-box-text PAYEES
+              %span.info-box-number
+                = @payees_count
+            / /.info-box-content
+          / /.info-box
+        / /.col
+        .col-md-3.col-sm-6.col-xs-12
+          .info-box
+            %span.info-box-icon.bg-red
+              %i.fa.fa-dollar.fa-lg
+            .info-box-content
+              %span.info-box-text TRANSFERS
+              %span.info-box-number= @transfers_count
+            / /.info-box-content
+          / /.info-box
+        / /.col
+        / fix for small devices only
+        .clearfix.visible-sm-block
+        .col-md-3.col-sm-6.col-xs-12
+          .info-box
+            %span.info-box-icon.bg-green
+              %i.fa.fa-qrcode.fa-lg
+            .info-box-content
+              %span.info-box-text WITHDRAWALS
+              %span.info-box-number= @withdrawals_count
+            / /.info-box-content
+          / /.info-box
+        / /.col
+        .col-md-3.col-sm-6.col-xs-12
+          .info-box
+            %span.info-box-icon.bg-yellow
+              %i.fa.fa-money.fa-lg
+            .info-box-content
+              %span.info-box-text WITHDRAWN
+              %span.info-box-number= number_to_currency(@withdrawals_amount)
+            / /.info-box-content
+          / /.info-box
+        / /.col
+      / /.row
