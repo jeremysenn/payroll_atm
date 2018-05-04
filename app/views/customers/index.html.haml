@@ -11,7 +11,7 @@
           .pull-right
             %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
               %i.fa.fa-comment
-              Send Message
+              Message
           = render 'group_sms_message'
         
     / Main content
@@ -37,21 +37,29 @@
                     %i.fa.fa-search
 
         .box-body.no-padding
-          %table.table.table-striped.table-condensed
-            %thead
-              %tr
-                %th{:scope => "col"} #
-                %th{:scope => "col"} First
-                %th{:scope => "col"} Last
-                %th{:scope => "col"} Phone
-                %th
-            %tbody
-              - @customers.each do |customer|
+          .table-responsive
+            %table.table.table-striped.table-condensed
+              %thead
                 %tr
-                  %th{:scope => "row"}= customer.id
-                  %td= customer.first_name
-                  %td= customer.last_name
-                  %td= customer.phone
-                  %td= link_to 'More', customer, class: 'btn btn-primary btn-sm'
+                  %th{:scope => "col"} #
+                  %th{:scope => "col"} First
+                  %th{:scope => "col"} Last
+                  %th{:scope => "col"} Phone
+                  %th
+              %tbody
+                - @customers.each do |customer|
+                  %tr
+                    %th{:scope => "row"}= customer.id
+                    %td= customer.first_name
+                    %td= customer.last_name
+                    %td= customer.phone
+                    %td
+                      = link_to 'More', customer, class: 'btn btn-primary btn-sm'
+                      -# unless customer.user.blank?
+                      %a.btn.btn-secondary.btn-sm{"data-content" => "#{render partial: 'user_details', locals: {customer: customer}}", "data-placement" => 'left', "data-html" => "true", "data-toggle" => "popover", "data-trigger" => "focus", :role => "button", :tabindex => "0", title: "Portal User Details"}
+                        %i.fa.fa-user
         .box-footer
           .pull-right= paginate @customers, param_name: 'result1'
+
+:javascript
+  $('[data-toggle="popover"]').popover();
