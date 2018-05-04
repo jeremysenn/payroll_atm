@@ -1,31 +1,43 @@
 %nav.navbar.navbar-expand-lg.navbar-light.bg-light
   %a.navbar-brand{:href => root_path} 
     -# <b>Payment</b>ATM
-    = image_tag(image_path("tranact_logo_30x30.png"))
+    = image_tag(image_path("tranact_logo_50.png"))
   %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarSupportedContent", "data-toggle" => "collapse", :type => "button"}
     %span.navbar-toggler-icon
   #navbarSupportedContent.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
       %li.nav-item{:class => (current_page? root_path) ? "active" : ""} 
-        %a.nav-link{:href => root_path}
-          %i.fa.fa-dashboard
-          Home
-      %li.nav-item{:class => params[:controller] == 'customers' ?  "active" : ""}
-        %a.nav-link{:href => customers_path}
-          %i.fa.fa-male
-          Payees
-      %li.nav-item{:class => params[:controller] == 'payment_batches' ?  "active" : ""}
-        %a.nav-link{:href => payment_batches_path}
-          %i.fa.fa-dollar
-          Payments
+        .text-center
+          %a.nav-link{:href => root_path}
+            %i.fa.fa-dashboard.fa-lg
+            %br
+            Home
       %li.nav-item{:class => params[:controller] == 'devices' ?  "active" : ""}
-        %a.nav-link{:href => devices_path}
-          %i.fa.fa-money
-          ATMs
+        .text-center
+          %a.nav-link{:href => devices_path}
+            %i.fa.fa-money.fa-lg
+            %br
+            ATMs
+      %li.nav-item{:class => params[:controller] == 'customers' ?  "active" : ""}
+        .text-center
+          %a.nav-link{:href => customers_path}
+            %i.fa.fa-male.fa-lg
+            %br
+            Payees
+      %li.nav-item{:class => params[:controller] == 'payment_batches' ?  "active" : ""}
+        .text-center
+          %a.nav-link{:href => payment_batches_path}
+            %i.fa.fa-dollar.fa-lg
+            %i.fa.fa-arrow-right.fa-sm
+            %i.fa.fa-male.fa-lg
+            %br
+            Transfer
       %li.nav-item{:class => params[:controller] == 'transactions' ?  "active" : ""}
-        %a.nav-link{:href => transactions_path}
-          %i.fa.fa-bolt
-          EZcash
+        .text-center
+          %a.nav-link{:href => transactions_path}
+            %i.fa.fa-bolt.fa-lg
+            %br
+            EZcash
     %form.form-inline.my-2.my-lg-0
       .my-2.my-sm-0.dropdown
         %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}

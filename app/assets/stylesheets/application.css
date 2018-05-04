@@ -15,3 +15,13 @@
  *= require bootstrap-datepicker
  *= require_self
  */
+
+.nav-item {
+ border-right: 1px solid silver;
+ padding-left: 15px;
+ padding-right: 15px; 
+}   
+.nav-item:first-child {
+  border-left: 1px solid silver;
+  padding-left: 15px;
+}  
