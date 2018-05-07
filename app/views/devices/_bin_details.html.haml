@@ -78,12 +78,5 @@
   - else
     %td{class: 'bin'}= device.bin_8_count
 
-- if @bin_a_column_count > 0
-  - if (device.bill_count_a.present? and device.bill_count_a.status == 1)
-    %td{class: 'danger bin'}= link_to device.bin_a_count.abs, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_a.status_description}"
-  - elsif (device.bill_count_a.present? and device.bill_count_a.status == 2)
-    %td{class: 'danger bin'}= link_to device.bin_a_count.abs, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_a.status_description}"
-  - elsif (device.bill_count_a.present? and device.bill_count_a.status == 4)
-    %td{class: 'warning bin'}= link_to device.bin_a_count.abs, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_a.status_description}"
-  - else
-    %td{class: 'bin'}= device.bin_a_count.abs unless device.bin_a_count.blank?
+:javascript
+  $('[data-toggle="tooltip"]').tooltip()

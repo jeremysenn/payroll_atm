@@ -48,6 +48,44 @@
               .box-footer
                 -#
                   .pull-right= paginate @customers, param_name: 'result1'
+
+          .box.box-primary{"data-widget" => "box-widget"}
+            .box-header.with-border
+              %h3.box-title 
+                %i.fa.fa-bolt
+                ATM Bins
+              .box-tools.pull-right
+            .box-body.no-padding
+              - unless @devices.blank?
+                .table-responsive
+                  %table.table.table-striped.table-condensed
+                    %thead
+                      %tr
+                        - if @bin_1_column_count > 0
+                          %th{:scope => "col"} Bin 1
+                        - if @bin_2_column_count > 0
+                          %th{:scope => "col"} Bin 2
+                        - if @bin_3_column_count > 0
+                          %th{:scope => "col"} Bin 3
+                        - if @bin_4_column_count > 0
+                          %th{:scope => "col"} Bin 4
+                        - if @bin_5_column_count > 0
+                          %th{:scope => "col"} Bin 5
+                        - if @bin_6_column_count > 0
+                          %th{:scope => "col"} Bin 6
+                        - if @bin_7_column_count > 0
+                          %th{:scope => "col"} Bin 7
+                        - if @bin_8_column_count > 0
+                          %th{:scope => "col"} Bin 8
+                    %tbody
+                      = render partial: "devices/bin_details", locals: {device: @device}
+              - else
+                &nbsp;
+                None
+              .box-footer
+                -#
+                  .pull-right= paginate @customers, param_name: 'result1'
+
         .col-md-6
           / ATM Cash Chart
           .box.box-primary

@@ -13,6 +13,7 @@ class WelcomeController < ApplicationController
       end
       if current_user.admin?
         @devices = current_user.company.devices
+        @device = @devices.last
 #        @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC").first(3)
         @payees_count = current_user.company.customers.count
         
@@ -39,8 +40,6 @@ class WelcomeController < ApplicationController
         
         # Withdrawals Info
         @withdrawals = current_user.company.transactions.withdrawals.where(date_time: 1.week.ago.beginning_of_day..Date.today.end_of_day).order("date_time DESC")
-#        @withdrawals_week_data = @withdrawals.map{|t| t.amt_auth.to_f}
-        
         @withdrawals_week_data = []
         grouped_withdrawals = @withdrawals.group_by{ |t| t.date_time.day }
         (1.week.ago.to_date..Date.today).each do |date|
@@ -54,7 +53,6 @@ class WelcomeController < ApplicationController
           end
           @withdrawals_week_data << withdrawals_group_total
         end
-        
         @withdrawals_count = @withdrawals.count
         @withdrawals_amount = 0
         @withdrawals.each do |withdrawal_transaction|
@@ -62,6 +60,16 @@ class WelcomeController < ApplicationController
         end
         
         @week_of_dates_data = (1.week.ago.to_date..Date.today).map{ |date| date.strftime('%-m/%-d') }
+        
+        # Bin Info
+        @bin_1_column_count = @devices.select{ |device| device.bin_1_count != 0 }.select{ |device| device.bin_1_count != nil }.count
+        @bin_2_column_count = @devices.select{ |device| device.bin_2_count != 0 }.select{ |device| device.bin_2_count != nil }.count
+        @bin_3_column_count = @devices.select{ |device| device.bin_3_count != 0 }.select{ |device| device.bin_3_count != nil }.count
+        @bin_4_column_count = @devices.select{ |device| device.bin_4_count != 0 }.select{ |device| device.bin_4_count != nil }.count
+        @bin_5_column_count = @devices.select{ |device| device.bin_5_count != 0 }.select{ |device| device.bin_5_count != nil }.count
+        @bin_6_column_count = @devices.select{ |device| device.bin_6_count != 0 }.select{ |device| device.bin_6_count != nil }.count
+        @bin_7_column_count = @devices.select{ |device| device.bin_7_count != 0 }.select{ |device| device.bin_7_count != nil }.count
+        @bin_8_column_count = @devices.select{ |device| device.bin_8_count != 0 }.select{ |device| device.bin_8_count != nil }.count
       end
     end
   end
