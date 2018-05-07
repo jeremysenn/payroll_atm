@@ -13,15 +13,16 @@
           .box.box-primary{"data-widget" => "box-widget"}
             .box-header.with-border
               %h3.box-title 
-                %i.fa.fa-money
-                ATMs
+                %i.fa.fa-bolt
+                ATM Status
               .box-tools.pull-right
-                = form_tag devices_path, id: 'devices_search_form', method: 'get', class: 'form-inline' do |f|
-                  .input-group.input-group-sm
-                    = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
-                    .input-group-append
-                      %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
-                        %i.fa.fa-search
+                -#
+                  = form_tag devices_path, id: 'devices_search_form', method: 'get', class: 'form-inline' do |f|
+                    .input-group.input-group-sm
+                      = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
+                      .input-group-append
+                        %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                          %i.fa.fa-search
             .box-body.no-padding
               - unless @devices.blank?
                 .table-responsive
@@ -51,7 +52,9 @@
           / ATM Cash Chart
           .box.box-primary
             .box-header.with-border
-              %h3.box-title ATM Cash
+              %h3.box-title 
+                %i.fa.fa-money
+                ATM Cash
               .box-tools.pull-right
                 %button.btn.btn-box-tool{"data-widget" => "collapse", :type => "button"}
                   %i.fa.fa-minus
@@ -137,7 +140,7 @@
             %span.info-box-icon.bg-blue
               %i.fa.fa-dollar.fa-lg
             .info-box-content
-              %span.info-box-text TRANSFERS / AMOUNT
+              %span.info-box-text WEEKLY TRANSFERS / AMOUNT
               %span.info-box-number= "#{@transfers_count} / #{number_to_currency(@transfers_amount)}"
             / /.info-box-content
           / /.info-box
@@ -160,7 +163,7 @@
             %span.info-box-icon.bg-green
               %i.fa.fa-money.fa-lg
             .info-box-content
-              %span.info-box-text WITHDRAWALS / AMOUNT
+              %span.info-box-text WEEKLY WITHDRAWALS / AMOUNT
               %span.info-box-number= "#{@withdrawals_count} / #{number_to_currency(@withdrawals_amount)}"
             / /.info-box-content
           / /.info-box
@@ -190,9 +193,9 @@
     },
   };
 
-  const transferred = [120, 140, 110, 90, 115, 130, 99];
-  const withdrawn = [92, 110, 90, 52, 90, 92, 65];
-  const xData = ["5/1", "5/2", "5/3", "5/4", "5/5", "5/6", "5/7"];
+  const transferred = #{@transfers_week_data};
+  const withdrawn = #{@withdrawals_week_data};
+  const xData = #{raw @week_of_dates_data};
 
   const myChart = new Chart(ctx, {
     type: 'line',
@@ -218,8 +221,8 @@
       }]
     },
     options: {
-      responsive: false,
-      // Can't just just `stacked: true` like the docs say
+      responsive: true,
+      // Can't just use `stacked: true` like the docs say
       scales: {
         yAxes: [{
           //stacked: true,
