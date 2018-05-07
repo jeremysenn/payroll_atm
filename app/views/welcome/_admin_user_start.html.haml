@@ -54,7 +54,7 @@
             .box-header.with-border
               %h3.box-title 
                 %i.fa.fa-money
-                ATM Cash
+                ATM Cash Week
               .box-tools.pull-right
                 %button.btn.btn-box-tool{"data-widget" => "collapse", :type => "button"}
                   %i.fa.fa-minus
@@ -195,7 +195,7 @@
 
   const transferred = #{@transfers_week_data};
   const withdrawn = #{@withdrawals_week_data};
-  const xData = #{raw @week_of_dates_data};
+  const xData = #{raw @week_of_dates_data.uniq};
 
   const myChart = new Chart(ctx, {
     type: 'line',
