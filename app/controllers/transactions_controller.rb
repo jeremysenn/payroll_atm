@@ -11,17 +11,20 @@ class TransactionsController < ApplicationController
     @type = params[:type] ||= 'Withdrawal'
     @start_date = transaction_params[:start_date] ||= Date.today.to_s
     @end_date = transaction_params[:end_date] ||= Date.today.to_s
-    
-    if @type == 'Withdrawal'
-      transactions = current_user.company.transactions.withdrawals.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
-    elsif @type == 'Transfer'
-      transactions = current_user.company.transactions.transfers.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
-    elsif @type == 'Balance'
-      transactions = current_user.company.transactions.one_sided_credits.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
-    elsif @type == 'Fee'
-      transactions = current_user.company.transactions.fees.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+    if params[:transaction_id].blank?
+      if @type == 'Withdrawal'
+        transactions = current_user.company.transactions.withdrawals.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+      elsif @type == 'Transfer'
+        transactions = current_user.company.transactions.transfers.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+      elsif @type == 'Balance'
+        transactions = current_user.company.transactions.one_sided_credits.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+      elsif @type == 'Fee'
+        transactions = current_user.company.transactions.fees.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+      else
+        transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+      end
     else
-      transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+      transactions = current_user.company.transactions.where(tranID: params[:transaction_id])
     end
     
     respond_to do |format|

@@ -13,15 +13,20 @@ class WelcomeController < ApplicationController
       end
       if current_user.admin?
         @devices = current_user.company.devices
-        @device = @devices.last
+        @start_date = params[:start_date] ||= (Date.today - 1.week).to_s
+        @end_date = params[:end_date] ||= Date.today.to_s
+        if params[:device_id].blank?
+          @device = @devices.first
+        else
+          @device = @devices.find_by(dev_id: params[:device_id])
+        end
 #        @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC").first(3)
-        @payees_count = current_user.company.customers.count
         
         # Transfers Info
-        @transfers = current_user.company.transactions.transfers.where(date_time: 1.week.ago.beginning_of_day..Date.today.end_of_day).order("date_time DESC")
+        @transfers = @device.transactions.transfers.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
         @transfers_week_data = []
         grouped_transfers = @transfers.group_by{ |t| t.date_time.day }
-        (1.week.ago.to_date..Date.today).each do |date|
+        (@start_date.to_date..@end_date.to_date).each do |date|
           transfers_group_total = 0
           grouped_transfers.each do |group, transfers|
             if date.day == group
@@ -38,11 +43,14 @@ class WelcomeController < ApplicationController
           @transfers_amount = @transfers_amount + transfer_transaction.amt_auth unless transfer_transaction.amt_auth.blank?
         end
         
+#        @payees_count = current_user.company.customers.count
+        @payees_count = @transfers.group_by{ |t| t.to_account_id}.count
+        
         # Withdrawals Info
-        @withdrawals = current_user.company.transactions.withdrawals.where(date_time: 1.week.ago.beginning_of_day..Date.today.end_of_day).order("date_time DESC")
+        @withdrawals = @device.transactions.withdrawals.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
         @withdrawals_week_data = []
         grouped_withdrawals = @withdrawals.group_by{ |t| t.date_time.day }
-        (1.week.ago.to_date..Date.today).each do |date|
+        (@start_date.to_date..@end_date.to_date).each do |date|
           withdrawals_group_total = 0
           grouped_withdrawals.each do |group, withdrawals|
             if date.day == group
@@ -59,7 +67,8 @@ class WelcomeController < ApplicationController
           @withdrawals_amount = @withdrawals_amount + withdrawal_transaction.amt_auth
         end
         
-        @week_of_dates_data = (1.week.ago.to_date..Date.today).map{ |date| date.strftime('%-m/%-d') }
+#        @week_of_dates_data = (1.week.ago.to_date..Date.today).map{ |date| date.strftime('%-m/%-d') }
+        @week_of_dates_data = (@start_date.to_date..@end_date.to_date).map{ |date| date.strftime('%-m/%-d') }
         
         # Bin Info
         @bin_1_column_count = @devices.select{ |device| device.bin_1_count != 0 }.select{ |device| device.bin_1_count != nil }.count

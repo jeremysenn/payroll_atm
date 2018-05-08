@@ -6,45 +6,61 @@
       %h1
         = current_user.company.name
         %small Dashboard
+        .pull-right
+          = form_tag transactions_path, id: 'transfers_search_form', method: 'get', class: 'form-inline' do |f|
+            .input-group
+              = hidden_field_tag :type, 'Transfer'
+              = search_field_tag :transaction_id, params[:transaction_id], :placeholder => "Search Transfer ID", class: "form-control", autofocus: true
+              .input-group-append
+                %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                  %i.fa.fa-search
     / Main content
     %section.content
+      .row
+        - @devices.each do |device|
+          .col-lg-3.col-xs-6
+            / small box
+            .small-box{class: @device == device ? 'bg-green' : 'bg-gray disabled'}
+              .inner
+                %h3= device.id
+                %p= device.description
+              .icon
+                %i.fa.fa-money
+              - unless @device == device
+                %a.small-box-footer{:href => root_path(device_id: device.id)}
+                  Show
+                  %i.fa.fa-arrow-circle-right
+              - else
+                .small-box-footer= @device.online.blank? ? 'N/A' : "#{device_state_descriptions[@device.online.to_i].truncate(15)}"
+      / /.row
+
       .row
         .col-md-6
           .box.box-primary{"data-widget" => "box-widget"}
             .box-header.with-border
               %h3.box-title 
                 %i.fa.fa-bolt
-                ATM Status
+                = "#{@device.description} - Status"
               .box-tools.pull-right
-                -#
-                  = form_tag devices_path, id: 'devices_search_form', method: 'get', class: 'form-inline' do |f|
-                    .input-group.input-group-sm
-                      = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
-                      .input-group-append
-                        %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
-                          %i.fa.fa-search
             .box-body.no-padding
-              - unless @devices.blank?
-                .table-responsive
-                  %table.table.table-striped.table-condensed
-                    %thead
-                      %tr
-                        %th{:scope => "col"} ID
-                        %th{:scope => "col"} State
-                        %th{:scope => "col"} Status
-                        %th{:scope => "col"} Remaining
-                        %th
-                    %tbody
-                      - @devices.each do |device|
-                        %tr
-                          %td= device.id
-                          %td= device.online.blank? ? 'N/A' : "#{device_state_descriptions[device.online.to_i].truncate(15)}"
-                          %td= device.status_string
-                          %td= number_to_currency(device.remaining)
-                          %td= link_to 'More', device, class: 'btn btn-primary btn-sm'
-              - else
-                &nbsp;
-                None
+              .table-responsive
+                %table.table.table-striped.table-condensed
+                  %thead
+                    %tr
+                      %th{:scope => "col"} ID
+                      %th{:scope => "col"} Name
+                      %th{:scope => "col"} State
+                      %th{:scope => "col"} Status
+                      %th{:scope => "col"} Remaining
+                      %th
+                  %tbody
+                    %tr
+                      %td= @device.id
+                      %td= @device.description
+                      %td= @device.online.blank? ? 'N/A' : "#{device_state_descriptions[@device.online.to_i].truncate(15)}"
+                      %td= @device.status_string
+                      %td= number_to_currency(@device.remaining)
+                      %td= link_to 'More', @device, class: 'btn btn-primary btn-sm'
               .box-footer
                 -#
                   .pull-right= paginate @customers, param_name: 'result1'
@@ -53,7 +69,7 @@
             .box-header.with-border
               %h3.box-title 
                 %i.fa.fa-bolt
-                ATM Bins
+                = "#{@device.description} - Bins"
               .box-tools.pull-right
             .box-body.no-padding
               - unless @devices.blank?
@@ -92,12 +108,21 @@
             .box-header.with-border
               %h3.box-title 
                 %i.fa.fa-money
-                ATM Cash Week
+                Cash
               .box-tools.pull-right
-                %button.btn.btn-box-tool{"data-widget" => "collapse", :type => "button"}
-                  %i.fa.fa-minus
-                %button.btn.btn-box-tool{"data-widget" => "remove", :type => "button"}
-                  %i.fa.fa-times
+                = form_tag root_path, :method => 'get', :class => "form-inline" do
+                  = hidden_field_tag 'device_id', @device.id
+                  = text_field_tag :start_date, nil, :placeholder => "Start", value: @start_date, class: "input-sm", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+                  To
+                  = text_field_tag :end_date, nil, :placeholder => "End", value: @end_date, class: "input-sm", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+                  &nbsp;
+                  = button_tag(:type => 'submit', :class => 'btn btn-primary btn-sm', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}) do
+                    Go
+                -#
+                  %button.btn.btn-box-tool{"data-widget" => "collapse", :type => "button"}
+                    %i.fa.fa-minus
+                  %button.btn.btn-box-tool{"data-widget" => "remove", :type => "button"}
+                    %i.fa.fa-times
             .box-body
               .chart
                 %canvas#myChart{:style => "height:250px"}
@@ -178,30 +203,19 @@
             %span.info-box-icon.bg-blue
               %i.fa.fa-dollar.fa-lg
             .info-box-content
-              %span.info-box-text WEEKLY TRANSFERS / AMOUNT
+              %span.info-box-text TRANSFERS / AMOUNT
               %span.info-box-number= "#{@transfers_count} / #{number_to_currency(@transfers_amount)}"
             / /.info-box-content
           / /.info-box
         / /.col
         / fix for small devices only
         .clearfix.visible-sm-block
-        -#
-          .col-md-4.col-sm-6.col-xs-12
-            .info-box
-              %span.info-box-icon.bg-red
-                %i.fa.fa-qrcode.fa-lg
-              .info-box-content
-                %span.info-box-text WITHDRAWALS
-                %span.info-box-number= @withdrawals_count
-              / /.info-box-content
-            / /.info-box
-          / /.col
         .col-md-4.col-sm-6.col-xs-12
           .info-box
             %span.info-box-icon.bg-green
               %i.fa.fa-money.fa-lg
             .info-box-content
-              %span.info-box-text WEEKLY WITHDRAWALS / AMOUNT
+              %span.info-box-text WITHDRAWALS / AMOUNT
               %span.info-box-number= "#{@withdrawals_count} / #{number_to_currency(@withdrawals_amount)}"
             / /.info-box-content
           / /.info-box
@@ -211,64 +225,66 @@
     
 
 :javascript
-  var ctx = document.getElementById("myChart").getContext("2d");
+  $(document).on("turbolinks:load", function() {
+    var ctx = document.getElementById("myChart").getContext("2d");
 
-  const colors = {
-    green: {
-      fill: '#e0eadf',
-      stroke: '#5eb84d',
-    },
-    lightBlue: {
-      stroke: '#6fccdd',
-    },
-    darkBlue: {
-      fill: '#92bed2',
-      stroke: '#3282bf',
-    },
-    purple: {
-      fill: '#8fa8c8',
-      stroke: '#75539e',
-    },
-  };
+    const colors = {
+      green: {
+        fill: '#e0eadf',
+        stroke: '#5eb84d',
+      },
+      lightBlue: {
+        stroke: '#6fccdd',
+      },
+      darkBlue: {
+        fill: '#92bed2',
+        stroke: '#3282bf',
+      },
+      purple: {
+        fill: '#8fa8c8',
+        stroke: '#75539e',
+      },
+    };
 
-  const transferred = #{@transfers_week_data};
-  const withdrawn = #{@withdrawals_week_data};
-  const xData = #{raw @week_of_dates_data.uniq};
+    const transferred = #{@transfers_week_data};
+    const withdrawn = #{@withdrawals_week_data};
+    const xData = #{raw @week_of_dates_data.uniq};
 
-  const myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: xData,
-      datasets: [{
-        label: "Withdrawn",
-        fill: true,
-        backgroundColor: colors.green.fill,
-        pointBackgroundColor: colors.green.stroke,
-        borderColor: colors.green.stroke,
-        pointHighlightStroke: colors.green.stroke,
-        borderCapStyle: 'butt',
-        data: withdrawn,
-      }, {
-        label: "Transferred",
-        fill: true,
-        backgroundColor: colors.darkBlue.fill,
-        pointBackgroundColor: colors.darkBlue.stroke,
-        borderColor: colors.darkBlue.stroke,
-        pointHighlightStroke: colors.darkBlue.stroke,
-        data: transferred,
-      }]
-    },
-    options: {
-      responsive: true,
-      // Can't just use `stacked: true` like the docs say
-      scales: {
-        yAxes: [{
-          //stacked: true,
-          stacked: false,
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: xData,
+        datasets: [{
+          label: "Withdrawn",
+          fill: true,
+          backgroundColor: colors.green.fill,
+          pointBackgroundColor: colors.green.stroke,
+          borderColor: colors.green.stroke,
+          pointHighlightStroke: colors.green.stroke,
+          borderCapStyle: 'butt',
+          data: withdrawn,
+        }, {
+          label: "Transferred",
+          fill: true,
+          backgroundColor: colors.darkBlue.fill,
+          pointBackgroundColor: colors.darkBlue.stroke,
+          borderColor: colors.darkBlue.stroke,
+          pointHighlightStroke: colors.darkBlue.stroke,
+          data: transferred,
         }]
       },
-      animation: {
-        duration: 750,
-      },
-    }
+      options: {
+        responsive: true,
+        // Can't just use `stacked: true` like the docs say
+        scales: {
+          yAxes: [{
+            //stacked: true,
+            stacked: false,
+          }]
+        },
+        animation: {
+          duration: 750,
+        },
+      }
+    });
   });

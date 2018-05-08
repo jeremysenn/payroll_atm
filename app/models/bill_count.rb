@@ -9,7 +9,11 @@ class BillCount < ActiveRecord::Base
   #############################
   
   def count
-    host_start_count - host_cycle_count + added_count
+    unless added_count.blank?
+      host_start_count - host_cycle_count + added_count
+    else
+      host_start_count - host_cycle_count
+    end
   end
   
   def denomination
