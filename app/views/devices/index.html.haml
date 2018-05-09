@@ -2,22 +2,29 @@
   .container
     / Content Header (Page header)
     %section.content-header
+      = render 'shared/flash_messages'
       %h1
         %i.fa.fa-money
         ATMs
+        %small
+          = form_tag devices_path, id: 'devices_refresh_form', method: 'get', class: 'form-inline' do |f|
+            .input-group
+              %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-refresh fa-spin'></i>"}}
+                %i.fa.fa-refresh
+          =# link_to "<i class='fa fa-refresh'></i>".html_safe, devices_path, class: 'btn btn-default', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}
     / Main content
     %section.content
       .box.box-primary{"data-widget" => "box-widget"}
         .box-header.with-border
           %h3.box-title 
-
-          .box-tools.pull-right
-            = form_tag devices_path, id: 'devices_search_form', method: 'get', class: 'form-inline' do |f|
-              .input-group.input-group-sm
-                = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
-                .input-group-append
-                  %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
-                    %i.fa.fa-search
+          -#
+            .box-tools.pull-right
+              = form_tag devices_path, id: 'devices_search_form', method: 'get', class: 'form-inline' do |f|
+                .input-group.input-group-sm
+                  = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
+                  .input-group-append
+                    %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                      %i.fa.fa-search
         .box-body.no-padding
           - unless @devices.blank?
             .table-responsive
@@ -25,16 +32,35 @@
                 %thead
                   %tr
                     %th{:scope => "col"} ID
+                    %th{:scope => "col"} Name
                     %th{:scope => "col"} State
                     %th{:scope => "col"} Status
+                    - if @bin_1_column_count > 0
+                      %th{:scope => "col"} Bin 1
+                    - if @bin_2_column_count > 0
+                      %th{:scope => "col"} Bin 2
+                    - if @bin_3_column_count > 0
+                      %th{:scope => "col"} Bin 3
+                    - if @bin_4_column_count > 0
+                      %th{:scope => "col"} Bin 4
+                    - if @bin_5_column_count > 0
+                      %th{:scope => "col"} Bin 5
+                    - if @bin_6_column_count > 0
+                      %th{:scope => "col"} Bin 6
+                    - if @bin_7_column_count > 0
+                      %th{:scope => "col"} Bin 7
+                    - if @bin_8_column_count > 0
+                      %th{:scope => "col"} Bin 8
                     %th{:scope => "col"} Remaining
                     %th
                 %tbody
                   - @devices.each do |device|
                     %tr
                       %td= device.id
+                      %td= device.description
                       %td= device.online.blank? ? 'N/A' : "#{device_state_descriptions[device.online.to_i].truncate(15)}"
                       %td= device.status_string
+                      = render partial: "devices/bin_details", locals: {device: device}
                       %td= number_to_currency(device.remaining)
                       %td= link_to 'More', device, class: 'btn btn-primary btn-sm'
           - else
