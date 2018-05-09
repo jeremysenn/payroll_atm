@@ -44,7 +44,7 @@ class WelcomeController < ApplicationController
         end
         
 #        @payees_count = current_user.company.customers.count
-        @payees_count = @transfers.group_by{ |t| t.to_account_id}.count
+        @payees_count = @transfers.group_by{ |t| t.to_acct_id}.count
         
         # Withdrawals Info
         @withdrawals = @device.transactions.withdrawals.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
