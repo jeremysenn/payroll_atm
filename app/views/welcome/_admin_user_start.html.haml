@@ -16,23 +16,31 @@
                   %i.fa.fa-search
     / Main content
     %section.content
-      .row
-        - @devices.each do |device|
-          .col-lg-3.col-xs-6
-            / small box
-            .small-box{class: @device == device ? 'bg-green' : 'bg-gray disabled'}
-              .inner
-                %h3= device.id
-                %p= device.description
-              .icon
-                %i.fa.fa-money
-              - unless @device == device
-                %a.small-box-footer{:href => root_path(device_id: device.id)}
-                  Show
-                  %i.fa.fa-arrow-circle-right
-              - else
-                .small-box-footer= @device.online.blank? ? 'N/A' : "#{device_state_descriptions[@device.online.to_i].truncate(15)}"
-      / /.row
+      = form_tag root_path, id: 'device_selection_form', method: 'get', class: 'form-inline' do |f|
+        .input-group
+          %p= select_tag :device_id, options_for_select(@devices.map{ |device| ["#{device.id} - #{device.description}", device.id] }, @device.id), onchange: "this.form.submit();", class: "form-control input-lg"
+          -#
+            .input-group-append
+              %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                Go
+      -#
+        .row
+          - @devices.each do |device|
+            .col-lg-3.col-xs-6
+              / small box
+              .small-box{class: @device == device ? 'bg-green' : 'bg-gray disabled'}
+                .inner
+                  %h3= device.id
+                  %p= device.description
+                .icon
+                  %i.fa.fa-money
+                - unless @device == device
+                  %a.small-box-footer{:href => root_path(device_id: device.id)}
+                    Show
+                    %i.fa.fa-arrow-circle-right
+                - else
+                  .small-box-footer= @device.online.blank? ? 'N/A' : "#{device_state_descriptions[@device.online.to_i].truncate(15)}"
+        / /.row
 
       .row
         .col-md-6
@@ -40,7 +48,7 @@
             .box-header.with-border
               %h3.box-title 
                 %i.fa.fa-bolt
-                = "#{@device.description} - Status"
+                Status
               .box-tools.pull-right
             .box-body.no-padding
               .table-responsive
@@ -69,7 +77,7 @@
             .box-header.with-border
               %h3.box-title 
                 %i.fa.fa-bolt
-                = "#{@device.description} - Bins"
+                Bins
               .box-tools.pull-right
             .box-body.no-padding
               - unless @devices.blank?
