@@ -56,7 +56,7 @@
                 %tbody
                   - @devices.each do |device|
                     %tr
-                      %td= device.id
+                      %td= link_to device.id, device
                       %td= device.description
                       %td= device.online.blank? ? 'N/A' : "#{device_state_descriptions[device.online.to_i].truncate(15)}"
                       %td= device.status_string
