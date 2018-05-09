@@ -82,7 +82,7 @@
             .box-body.no-padding
               - unless @devices.blank?
                 .table-responsive
-                  %table.table.table-striped.table-condensed.table-bordered
+                  %table.table.table-condensed.table-bordered
                     %thead
                       %tr
                         - if @bin_1_column_count > 0
@@ -159,7 +159,7 @@
                 -# .text-success= payment_batch.processed_status
                 - unless @processed_payment_batches.blank?
                   .table-responsive
-                    %table.table.table-striped.table-condensed
+                    %table.table.table-condensed
                       %thead
                         %tr
                           %th{:scope => "col"} Date
