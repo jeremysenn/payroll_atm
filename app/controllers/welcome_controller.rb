@@ -23,7 +23,7 @@ class WelcomeController < ApplicationController
 #        @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC").first(3)
         
         # Transfers Info
-        @transfers = @device.transactions.transfers.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
+        @transfers = current_user.company.transactions.transfers.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
         @transfers_week_data = []
         grouped_transfers = @transfers.group_by{ |t| t.date_time.day }
         (@start_date.to_date..@end_date.to_date).each do |date|
