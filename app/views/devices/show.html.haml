@@ -6,6 +6,11 @@
       %h1
         %i.fa.fa-money
         = @device.description
+        %small
+          = form_tag @device, id: 'device_refresh_form', method: 'get', class: 'form-inline' do |f|
+            .input-group
+              %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-refresh fa-spin'></i>"}}
+                %i.fa.fa-refresh
       %p.text-muted
         Remaining:
         = number_to_currency(@device.remaining)
@@ -34,14 +39,67 @@
                     %i.fa.fa-info-circle.margin-r-5
                     Some Info
                   %a.pull-right And more info
-              %a.btn.btn-success.btn-block{href: '#', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something"}}
-                %b 
-                  %i.fa.fa-refresh
-                  Reset ATM
-              %a.btn.bg-orange.btn-block{:href => "#", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something Else"}}
-                %b 
-                  %i.fa.fa-archive
-                  Do Something Else
+
+              %a.btn.btn-default.btn-block{"data-target" => "#commands-modal", "data-toggle" => "modal", :type => "button"}
+                %b
+                  %i.fa.fa-arrows-alt
+                  ATM Commands
+              #commands-modal.modal.fade
+                .modal-dialog.modal-sm
+                  .modal-content
+                    .modal-header
+                      -#
+                        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+                          %span{"aria-hidden" => "true"} ×
+                      %h5.modal-title
+                        %i.fa.fa-arrows-alt
+                        ATM Commands
+                    .modal-body
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_reset"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Reset
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_load"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Load
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_config"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Config
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_up"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Up
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_down"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Down
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_keyA"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Key A
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_keyB"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Key B
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_totals"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Totals
+                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_disconnect"}
+                        %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                        Disconnect
+                    .modal-footer
+                      %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Done
+              -#
+                #modal-default.modal.fade
+                  .modal-dialog
+                    .modal-content
+                      .modal-header
+                        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+                          %span{"aria-hidden" => "true"} ×
+                        %h4.modal-title Default Modal
+                      .modal-body
+                        %p One fine body…
+                      .modal-footer
+                        %button.btn.btn-default.pull-left{"data-dismiss" => "modal", :type => "button"} Close
+                        %button.btn.btn-primary{:type => "button"} Save changes
+                    / /.modal-content
+                  / /.modal-dialog
+                / /.modal
         .col-md-9
           .box.box-primary
             .box-body

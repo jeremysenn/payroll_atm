@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_device, only: [:show, :edit, :update, :destroy]
+  before_action :set_device, only: [:show, :edit, :update, :destroy, :send_atm_command]
   load_and_authorize_resource
   
   # GET /devices
@@ -25,6 +25,20 @@ class DevicesController < ApplicationController
     @bill_counts = @device.bill_counts
     @denoms = @device.denoms
     @bill_hists = @device.bill_hists.select(:cut_dt).distinct.order("cut_dt DESC").first(5)
+  end
+  
+  def send_atm_command
+    respond_to do |format|
+      format.json {
+        command = params[:command]
+        if command == "atm_reset"
+          response = @device.send_atm_reset_command
+        elsif command == "atm_load"
+          response = @device.send_atm_load_command
+        end
+        render json: { "response" => response }, :status => :ok 
+      }
+    end
   end
   
   private

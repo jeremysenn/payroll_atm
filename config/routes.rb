@@ -21,7 +21,11 @@ Rails.application.routes.draw do
   resources :sms_messages
   resources :payment_batches
   resources :payments
-  resources :devices
+  resources :devices do 
+    member do
+      get 'send_atm_command'
+    end
+  end
   resources :payment_batch_csv_mappings
   
 end

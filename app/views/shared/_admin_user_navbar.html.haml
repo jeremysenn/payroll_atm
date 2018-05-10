@@ -6,25 +6,25 @@
     %span.navbar-toggler-icon
   #navbarSupportedContent.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
-      %li.nav-item
+      %li.nav-item.bordered
         .text-center
           %a.nav-link{:href => root_path, :class => (current_page? root_path) ? "text-light-blue" : ""}
             %i.fa.fa-dashboard.fa-lg
             %br
             Home
-      %li.nav-item
+      %li.nav-item.bordered
         .text-center
           %a.nav-link{:href => devices_path, :class => (params[:controller] == 'devices') ?  "text-light-blue" : ""}
             %i.fa.fa-money.fa-lg
             %br
             ATMs
-      %li.nav-item
+      %li.nav-item.bordered
         .text-center
           %a.nav-link{:href => customers_path, :class => (params[:controller] == 'customers') ?  "text-light-blue" : ""}
             %i.fa.fa-male.fa-lg
             %br
             Payees
-      %li.nav-item
+      %li.nav-item.bordered
         .text-center
           %a.nav-link{:href => payment_batches_path, :class => (params[:controller] == 'payment_batches') ?  "text-light-blue" : ""}
             %i.fa.fa-dollar.fa-lg
@@ -33,7 +33,7 @@
               %i.fa.fa-male.fa-lg
             %br
             Transfer
-      %li.nav-item
+      %li.nav-item.bordered
         .text-center
           %a.nav-link{:href => transactions_path, :class => (params[:controller] == 'transactions') ?  "text-light-blue" : ""}
             %i.fa.fa-bolt.fa-lg

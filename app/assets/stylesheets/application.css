@@ -16,12 +16,12 @@
  *= require_self
  */
 
-.nav-item {
+.nav-item.bordered {
  border-right: thin solid silver;
  padding-left: 15px;
  padding-right: 15px; 
 }   
-.nav-item:first-child {
+.nav-item.bordered:first-child {
   border-left: thin solid silver;
   padding-left: 15px;
 }  

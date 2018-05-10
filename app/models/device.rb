@@ -376,6 +376,18 @@ class Device < ActiveRecord::Base
 #    end
 #    return total
 #  end
+
+  def send_atm_reset_command
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:send_atm_command, message: {DevID: self.id, Command: "atmReset"})
+    Rails.logger.debug "** device.send_atm_reset_command response body: #{response.body}"
+  end
+  
+  def send_atm_load_command
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:send_atm_command, message: {DevID: self.id, Command: "atmLoad"})
+    Rails.logger.debug "** device.send_atm_load_command response body: #{response.body}"
+  end
   
   #############################
   #     Class Methods      #
