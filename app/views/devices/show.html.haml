@@ -61,19 +61,19 @@
                         %i.fa.fa-arrows-alt
                         ATM Commands
                     .modal-body
-                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_reset"}
+                      %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_reset"), "data-device-id" => @device.id, "data-command" => "atm_reset", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Reset"}}
                         %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
                         Reset
-                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_load"}
+                      %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_load"), "data-device-id" => @device.id, "data-command" => "atm_load", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Load"}}
                         %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
                         Load
-                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_up"}
+                      %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_up"), "data-device-id" => @device.id, "data-command" => "atm_up", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Up"}}
                         %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
                         Up
-                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_down"}
+                      %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_down"), "data-device-id" => @device.id, "data-command" => "atm_down", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Down"}}
                         %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
                         Down
-                      %a.btn.btn-primary.btn-block.atm_command_button{href: "#", "data-device-id" => @device.id, "data-command" => "atm_disconnect"}
+                      %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_disconnect"), "data-device-id" => @device.id, "data-command" => "atm_disconnect", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Disconnect"}}
                         %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
                         Disconnect
                     .modal-footer
