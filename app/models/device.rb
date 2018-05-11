@@ -389,6 +389,24 @@ class Device < ActiveRecord::Base
     Rails.logger.debug "** device.send_atm_load_command response body: #{response.body}"
   end
   
+  def send_atm_up_command
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:send_atm_command, message: {DevID: self.id, Command: "atmUp"})
+    Rails.logger.debug "** device.send_atm_up_command response body: #{response.body}"
+  end
+  
+  def send_atm_down_command
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:send_atm_command, message: {DevID: self.id, Command: "atmDown"})
+    Rails.logger.debug "** device.send_atm_down_command response body: #{response.body}"
+  end
+  
+  def send_atm_disconnect_command
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:send_atm_command, message: {DevID: self.id, Command: "atmDisconnect"})
+    Rails.logger.debug "** device.send_atm_disconnect_command response body: #{response.body}"
+  end
+  
   #############################
   #     Class Methods      #
   #############################

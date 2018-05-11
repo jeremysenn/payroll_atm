@@ -29,12 +29,33 @@ class DevicesController < ApplicationController
   
   def send_atm_command
     respond_to do |format|
+      format.html {
+        command = params[:command]
+        if command == "atm_reset"
+          response = @device.send_atm_reset_command
+        elsif command == "atm_load"
+          response = @device.send_atm_load_command
+        elsif command == "atm_up"
+          response = @device.send_atm_up_command
+        elsif command == "atm_down"
+          response = @device.send_atm_down_command
+        elsif command == "atm_disconnect"
+          response = @device.send_atm_disconnect_command
+        end
+        redirect_back fallback_location: @device, notice: "Command #{command} sent."
+      }
       format.json {
         command = params[:command]
         if command == "atm_reset"
           response = @device.send_atm_reset_command
         elsif command == "atm_load"
           response = @device.send_atm_load_command
+        elsif command == "atm_up"
+          response = @device.send_atm_up_command
+        elsif command == "atm_down"
+          response = @device.send_atm_down_command
+        elsif command == "atm_disconnect"
+          response = @device.send_atm_disconnect_command
         end
         render json: { "response" => response }, :status => :ok 
       }
