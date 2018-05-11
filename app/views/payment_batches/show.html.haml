@@ -75,7 +75,7 @@
                           - else
                             Not found
                         %td= number_to_currency(payment.PaymentAmt)
-                        %td= "#{payment.Description.blank? ? N/A : payment.Description}"
+                        %td= "#{payment.Description.blank? ? 'N/A' : payment.Description}"
                         %td= payment.Processed? ? 'Yes' : 'No'
                         - unless @payment_batch.processed?
                           %td
