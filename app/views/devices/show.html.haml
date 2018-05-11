@@ -5,6 +5,7 @@
       = render 'shared/flash_messages'
       %h1
         %i.fa.fa-money
+        = @device.id
         = @device.description
         %small
           = form_tag @device, id: 'device_refresh_form', method: 'get', class: 'form-inline' do |f|
