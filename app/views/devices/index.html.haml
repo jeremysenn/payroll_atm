@@ -59,7 +59,13 @@
                       %td= link_to device.id, device
                       %td= device.description
                       %td= device.online.blank? ? 'N/A' : "#{device_state_descriptions[device.online.to_i].truncate(15)}"
-                      %td= device.status_string
+                      %td
+                        - if device.critical_status?
+                          %a.btn.btn-xs.btn-danger{"data-content" => "#{device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{device.caution_status_description}"} 
+                        - elsif device.caution_status?
+                          %a.btn.btn-xs.btn-warning{"data-content" => "#{device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{device.caution_status_description}"} 
+                        - else
+                          = device.status_string
                       = render partial: "devices/bin_details", locals: {device: device}
                       %td= number_to_currency(device.remaining)
                       %td= link_to 'More', device, class: 'btn btn-primary btn-sm'
