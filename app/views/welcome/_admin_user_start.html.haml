@@ -69,7 +69,7 @@
                       %td
                         - if @device.critical_status?
                           %a.btn.btn-xs.btn-danger{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
-                        - elsif device.caution_status?
+                        - elsif @device.caution_status?
                           %a.btn.btn-xs.btn-warning{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
                         - else
                           = @device.status_string
