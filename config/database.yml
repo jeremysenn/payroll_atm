@@ -30,3 +30,10 @@ ez_cash:
   database: <%= ENV['EZCASH_DATABASE'] %>
   username: <%= ENV['EZCASH_USERNAME'] %>
   password: <%= ENV['EZCASH_PASSWORD'] %>
+  
+jpegger:
+  adapter: sqlserver
+  host: <%= ENV['JPEGGER_HOST'] %>
+  database: <%= ENV['JPEGGER_DATABASE'] %>
+  username: <%= ENV['JPEGGER_USERNAME'] %>
+  password: <%= ENV['JPEGGER_PASSWORD'] %>

@@ -60,5 +60,8 @@
           %p.lead
             Description:
             = @transaction.Description
+          - @transaction.images.each do |image|
+            .col-xs-12.col-sm-6.col-md-4
+              %img.img-responsive{:alt => image.id, :src => image.preview_data_uri}
         .box-footer
           = link_to 'Back', :back, class: 'btn btn-default'
