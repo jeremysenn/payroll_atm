@@ -107,10 +107,14 @@ class CustomersController < ApplicationController
   
   def barcode
     @customer = Customer.find_by(barcode_access_string: params[:id]) # ID is random and unique urlsafe_base64 string
-    unless @customer.blank?
-      @base64_barcode_string = Transaction.ezcash_get_barcode_png_web_service_call(@customer.CustomerID, current_user.company_id, 5)
+    if current_user.customer == @customer
+      unless @customer.blank?
+        @base64_barcode_string = Transaction.ezcash_get_barcode_png_web_service_call(@customer.CustomerID, current_user.company_id, 5)
+      else
+        redirect_to root_path, alert: 'There was a problem getting barcode.'
+      end
     else
-      redirect_to root_path, alert: 'There was a problem getting barcode.'
+      redirect_back fallback_location: root_path, alert: 'Only the payee has access to that page.'
     end
   end
   
