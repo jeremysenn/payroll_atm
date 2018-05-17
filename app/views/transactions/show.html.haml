@@ -60,8 +60,15 @@
           %p.lead
             Description:
             = @transaction.Description
-          - @transaction.images.each do |image|
-            .col-xs-12.col-sm-6.col-md-4
-              %img.img-responsive{:alt => image.id, :src => image.preview_data_uri}
+          %p
+            - @transaction.images.each do |image|
+              .col-xs-12.col-sm-2.col-md-2
+                %a{href: "#image_popup_#{image.id}", "data-toggle" => "modal"}
+                  %img.img-fluid.img-thumbnail{:alt => image.id, :src => image.preview_data_uri}
+              %div{:id => "image_popup_#{image.id}", :class => "modal fade", :tabindex => "-1", :style => "display:none;"}
+                .modal-dialog.modal-lg
+                  .modal-content
+                    .modal-body
+                      %img.img-fluid{:alt => image.id, :src => image.jpeg_image_data_uri}
         .box-footer
           = link_to 'Back', :back, class: 'btn btn-default'
