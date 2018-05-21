@@ -78,6 +78,9 @@ gem 'bootstrap-datepicker-rails'
 # Chart.js for Rails Asset Pipeline
 gem 'chart-js-rails'
 
+# Provide a clear syntax for writing and deploying cron jobs.
+gem 'whenever', :require => false
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
