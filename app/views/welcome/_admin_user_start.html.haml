@@ -67,7 +67,7 @@
                       %td= @device.description
                       %td= @device.online.blank? ? 'N/A' : "#{device_state_descriptions[@device.online.to_i].truncate(15)}"
                       %td
-                        %a.btn.btn-sm.bg-green{"data-content" => "#{@device.dev_statuses.first.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.dev_statuses.first.status}"} 
+                        %a.btn.btn-sm.bg-green{"data-content" => "#{@device.dev_statuses.last.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.dev_statuses.last.status}"} 
                           = @device.dev_statuses.first.status
                         -#
                           - if @device.critical_status?
