@@ -68,7 +68,7 @@
                       %td= @device.online.blank? ? 'N/A' : "#{device_state_descriptions[@device.online.to_i].truncate(15)}"
                       %td
                         - if @device.critical_status?
-                          %a.btn.btn-xs.btn-danger{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0"} 
+                          %a.btn.btn-xs.bg-red{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0"} 
                             Critical
                         - elsif @device.caution_status?
                           %a.btn.btn-xs.bg-orange{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0"}
