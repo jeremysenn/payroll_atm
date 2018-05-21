@@ -34,7 +34,7 @@
                     %th{:scope => "col"} ID
                     %th{:scope => "col"} Name
                     %th{:scope => "col"} State
-                    %th{:scope => "col"} Status
+                    %th{:scope => "col"} Recent Status
                     - if @bin_1_column_count > 0
                       %th{:scope => "col"} Bin 1
                     - if @bin_2_column_count > 0
@@ -60,14 +60,17 @@
                       %td= device.description
                       %td= device.online.blank? ? 'N/A' : "#{device_state_descriptions[device.online.to_i].truncate(15)}"
                       %td
-                        - if device.critical_status?
-                          %a.btn.btn-xs.bg-red{"data-content" => "#{device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus", :tabindex => "0"} 
-                            Critical
-                        - elsif device.caution_status?
-                          %a.btn.btn-xs.bg-orange{"data-content" => "#{device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus", :tabindex => "0"}
-                            Caution
-                        - else
-                          = device.status_string
+                        %a.btn.btn-sm.bg-green{"data-content" => "#{device.dev_statuses.first.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{device.dev_statuses.first.status}"} 
+                          = device.dev_statuses.first.status
+                        -#
+                          - if device.critical_status?
+                            %a.btn.btn-xs.bg-red{"data-content" => "#{device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus", :tabindex => "0"} 
+                              Critical
+                          - elsif device.caution_status?
+                            %a.btn.btn-xs.bg-orange{"data-content" => "#{device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus", :tabindex => "0"}
+                              Caution
+                          - else
+                            = device.status_string
                       = render partial: "devices/bin_details", locals: {device: device}
                       %td= number_to_currency(device.remaining)
                       %td= link_to 'More', device, class: 'btn btn-primary btn-sm'
