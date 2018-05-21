@@ -69,8 +69,10 @@
                       %td
                         - if @device.critical_status?
                           %a.btn.btn-xs.btn-danger{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
+                            Critical
                         - elsif @device.caution_status?
-                          %a.btn.btn-xs.btn-warning{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
+                          %a.btn.btn-xs.bg-orange{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"}
+                            Caution
                         - else
                           = @device.status_string
                       %td= number_to_currency(@device.remaining)
@@ -239,6 +241,8 @@
     
 
 :javascript
+  $('[data-toggle="popover"]').popover();
+
   $(document).on("turbolinks:load", function() {
     var ctx = document.getElementById("myChart").getContext("2d");
 
