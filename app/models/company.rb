@@ -34,7 +34,11 @@ class Company < ActiveRecord::Base
   end
   
   def account
-    Account.where(CompanyNumber: self.CompanyNumber, CustomerID: nil).last
+    accounts.where(CustomerID: nil).last
+  end
+  
+  def transaction_accounts
+    accounts.where(CustomerID: nil)
   end
   
   def perform_one_sided_credit_transaction(amount)

@@ -15,27 +15,48 @@
     / Main content
     %section.content
       / Default box
-      .box.box-primary
-        .box-header.with-border
-          %h3.box-title 
-            Transactions
-          .box-tools
-            = form_tag transactions_path, :method => 'get', :class => "form-inline" do
-              = select_tag :type, options_for_select(["All", "Balance", "Fee", "Transfer", "Withdrawal"], @type), class: "form-control"
-              &nbsp;
-              = text_field_tag 'transaction[start_date]', nil, :placeholder => "Start Date", value: "#{@start_date.blank? ? Date.today : @start_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
-              To
-              = text_field_tag 'transaction[end_date]', nil, :placeholder => "End Date", value: "#{@end_date.blank? ? Date.today : @end_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
-              &nbsp;
-              = button_tag(:type => 'submit', :class => 'btn btn-primary', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}) do
-                %i.fa.fa-search
-            -#
+      .row
+        .col-md-3
+          / Profile Image
+          .box.box-primary
+            .box-body.box-profile
+              %h3.profile-username.text-center  
+                %i.fa.fa-building
+                = current_user.company.CompanyName
+              %ul.list-group.list-group-unbordered
+                - current_user.company.transaction_accounts.each do |account|
+                  %li.list-group-item
+                    %b 
+                      Account
+                      = account.ActID
+                    %a.pull-right= number_to_currency(account.Balance)
+              %a.btn.btn-success.btn-block{href: transactions_path, data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something"}}
+                %b 
+                  %i.fa.fa-check-circle
+                  Do Something
+              
+        .col-md-9
+          .box.box-primary
+            .box-header.with-border
+              %h3.box-title 
+                Transactions
+              .box-tools
+                = form_tag transactions_path, :method => 'get', :class => "form-inline" do
+                  = select_tag :type, options_for_select(["All", "Balance", "Fee", "Transfer", "Withdrawal"], @type), class: "form-control"
+                  &nbsp;
+                  = text_field_tag 'transaction[start_date]', nil, :placeholder => "Start Date", value: "#{@start_date.blank? ? Date.today : @start_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+                  To
+                  = text_field_tag 'transaction[end_date]', nil, :placeholder => "End Date", value: "#{@end_date.blank? ? Date.today : @end_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+                  &nbsp;
+                  = button_tag(:type => 'submit', :class => 'btn btn-primary', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}) do
+                    %i.fa.fa-search
+                -#
 
-        .box-body.no-padding
-          = render partial: "transactions/index"
-        .box-footer
-          -#
-            .pull-right= paginate @customers, param_name: 'result1'
+            .box-body.no-padding
+              = render partial: "transactions/index"
+            .box-footer
+              -#
+                .pull-right= paginate @customers, param_name: 'result1'
 -#
   .container-fluid
     %br
