@@ -3,7 +3,6 @@ class AccountType < ActiveRecord::Base
   self.primary_key = 'AccountTypeID'
   self.table_name= 'AccountTypes'
   
-#  belongs_to :device, :foreign_key => 'dev_id'
   has_many :accounts
   
   #############################
