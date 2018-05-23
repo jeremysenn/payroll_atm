@@ -27,8 +27,7 @@
                 - current_user.company.transaction_accounts.each do |account|
                   %li.list-group-item
                     %b 
-                      Account
-                      = account.ActID
+                      = account.description
                     %a.pull-right= number_to_currency(account.Balance)
               %a.btn.btn-success.btn-block{href: transactions_path, data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something"}}
                 %b 

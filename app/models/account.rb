@@ -8,6 +8,7 @@ class Account < ActiveRecord::Base
   belongs_to :customer, :foreign_key => "CustomerID", optional: true
   has_many :transactions, :foreign_key => :from_acct_id
   belongs_to :company, :foreign_key => "CompanyNumber"
+  belongs_to :account_type, :foreign_key => "ActTypeID"
   
   attr_accessor :last_4_of_pan
   
@@ -292,6 +293,14 @@ class Account < ActiveRecord::Base
   
   def balance
     self.Balance
+  end
+  
+  def description
+    unless account_type.blank?
+      return account_type.AccountTypeDesc
+    else
+      return ""
+    end
   end
   
   #############################

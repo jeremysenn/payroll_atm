@@ -97,22 +97,25 @@
                   %table.table.table-condensed.table-bordered
                     %thead
                       %tr
-                        - if @bin_1_column_count > 0
-                          %th{:scope => "col"} Bin 1
-                        - if @bin_2_column_count > 0
-                          %th{:scope => "col"} Bin 2
-                        - if @bin_3_column_count > 0
-                          %th{:scope => "col"} Bin 3
-                        - if @bin_4_column_count > 0
-                          %th{:scope => "col"} Bin 4
-                        - if @bin_5_column_count > 0
-                          %th{:scope => "col"} Bin 5
-                        - if @bin_6_column_count > 0
-                          %th{:scope => "col"} Bin 6
-                        - if @bin_7_column_count > 0
-                          %th{:scope => "col"} Bin 7
-                        - if @bin_8_column_count > 0
-                          %th{:scope => "col"} Bin 8
+                        - @device.denoms.each do |denom|
+                          %th{:scope => "col"}= denom.denomination
+                        -#
+                          - if @bin_1_column_count > 0
+                            %th{:scope => "col"} Bin 1
+                          - if @bin_2_column_count > 0
+                            %th{:scope => "col"} Bin 2
+                          - if @bin_3_column_count > 0
+                            %th{:scope => "col"} Bin 3
+                          - if @bin_4_column_count > 0
+                            %th{:scope => "col"} Bin 4
+                          - if @bin_5_column_count > 0
+                            %th{:scope => "col"} Bin 5
+                          - if @bin_6_column_count > 0
+                            %th{:scope => "col"} Bin 6
+                          - if @bin_7_column_count > 0
+                            %th{:scope => "col"} Bin 7
+                          - if @bin_8_column_count > 0
+                            %th{:scope => "col"} Bin 8
                     %tbody
                       = render partial: "devices/bin_details", locals: {device: @device}
               - else
