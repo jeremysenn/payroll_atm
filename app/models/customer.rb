@@ -558,7 +558,8 @@ class Customer < ActiveRecord::Base
   end
   
   def create_payee_user
-    temporary_password = Devise.friendly_token.first(10)
+#    temporary_password = Devise.friendly_token.first(10)
+    temporary_password = SecureRandom.hex.first(6)
     User.create(first_name: first_name, last_name: last_name, email: email, company_id: company_id, customer_id: id, role: "payee", phone: phone,
     password: temporary_password, password_confirmation: temporary_password, temporary_password: temporary_password)
   end
