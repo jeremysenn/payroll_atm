@@ -6,6 +6,11 @@
       %h1
         = current_user.company.name
         %small Dashboard
+        .btn-group
+          - @devices.each do |device|
+            %a.btn{href: root_path(device_id: device.id), class: "#{@device.id == device.id ? 'btn-info' : 'btn-default'}", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> #{device.description}"}}
+              %i.fa.fa-bolt
+              = device.description
         .pull-right
           = form_tag transactions_path, id: 'transfers_search_form', method: 'get', class: 'form-inline' do |f|
             .input-group
@@ -16,13 +21,14 @@
                   %i.fa.fa-search
     / Main content
     %section.content
-      = form_tag root_path, id: 'device_selection_form', method: 'get', class: 'form-inline' do |f|
-        .input-group
-          %p= select_tag :device_id, options_for_select(@devices.map{ |device| ["#{device.id} - #{device.description}", device.id] }, @device.id), onchange: "this.form.submit();", class: "form-control input-lg"
-          -#
-            .input-group-append
-              %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
-                Go
+      -#
+        = form_tag root_path, id: 'device_selection_form', method: 'get', class: 'form-inline' do |f|
+          .input-group
+            %p= select_tag :device_id, options_for_select(@devices.map{ |device| ["#{device.id} - #{device.description}", device.id] }, @device.id), onchange: "this.form.submit();", class: "form-control input-lg"
+            -#
+              .input-group-append
+                %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                  Go
       -#
         .row
           - @devices.each do |device|
@@ -47,8 +53,8 @@
           .box.box-primary{"data-widget" => "box-widget"}
             .box-header.with-border
               %h3.box-title 
-                %i.fa.fa-bolt
-                Status
+                %i.fa.fa-bars
+                Details
               .box-tools.pull-right
             .box-body.no-padding
               .table-responsive
@@ -58,7 +64,7 @@
                       %th{:scope => "col"} ID
                       %th{:scope => "col"} Name
                       %th{:scope => "col"} State
-                      %th{:scope => "col"} Recent Status
+                      %th{:scope => "col"} Status
                       %th{:scope => "col"} Remaining
                       %th
                   %tbody
@@ -68,7 +74,7 @@
                       %td= @device.online.blank? ? 'N/A' : "#{device_state_descriptions[@device.online.to_i].truncate(15)}"
                       %td
                         - dev_status = @device.dev_statuses.order("date_time DESC").first
-                        %a.btn.btn-sm.bg-green{"data-content" => "#{dev_status.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{dev_status.status}"} 
+                        %a.btn.btn-sm.bg-green{"data-content" => "#{dev_status.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0"} 
                           = dev_status.status
                         -#
                           - if @device.critical_status?
@@ -84,11 +90,11 @@
               .box-footer
                 -#
                   .pull-right= paginate @customers, param_name: 'result1'
-
+        .col-md-6
           .box.box-warning{"data-widget" => "box-widget"}
             .box-header.with-border
               %h3.box-title 
-                %i.fa.fa-bolt
+                %i.fa.fa-inbox
                 Bins
               .box-tools.pull-right
             .box-body.no-padding
@@ -98,7 +104,7 @@
                     %thead
                       %tr
                         - @device.denoms.each do |denom|
-                          %th{:scope => "col"}= denom.denomination
+                          %th{:scope => "col"}= number_to_currency(denom.denomination, strip_insignificant_zeros: true)
                         -#
                           - if @bin_1_column_count > 0
                             %th{:scope => "col"} Bin 1
@@ -124,8 +130,8 @@
               .box-footer
                 -#
                   .pull-right= paginate @customers, param_name: 'result1'
-
-        .col-md-6
+      .row  
+        .col-md-12
           / ATM Cash Chart
           .box.box-success
             .box-header.with-border
@@ -209,41 +215,42 @@
                   .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'
 
       / Info boxes
-      .row
-        .col-md-4.col-sm-6.col-xs-12
-          .info-box
-            %span.info-box-icon.bg-aqua
-              %i.fa.fa-male.fa-lg
-            .info-box-content
-              %span.info-box-text PAYEES
-              %span.info-box-number
-                = @payees_count
-            / /.info-box-content
-          / /.info-box
-        / /.col
-        .col-md-4.col-sm-6.col-xs-12
-          .info-box
-            %span.info-box-icon.bg-blue
-              %i.fa.fa-dollar.fa-lg
-            .info-box-content
-              %span.info-box-text TRANSFERS / AMOUNT
-              %span.info-box-number= "#{@transfers_count} / #{number_to_currency(@transfers_amount)}"
-            / /.info-box-content
-          / /.info-box
-        / /.col
-        / fix for small devices only
-        .clearfix.visible-sm-block
-        .col-md-4.col-sm-6.col-xs-12
-          .info-box
-            %span.info-box-icon.bg-green
-              %i.fa.fa-money.fa-lg
-            .info-box-content
-              %span.info-box-text WITHDRAWALS / AMOUNT
-              %span.info-box-number= "#{@withdrawals_count} / #{number_to_currency(@withdrawals_amount)}"
-            / /.info-box-content
-          / /.info-box
-        / /.col
-      / /.row
+      - unless @transfers.blank? and @withdrawals.blank?
+        .row
+          .col-md-4.col-sm-6.col-xs-12
+            .info-box
+              %span.info-box-icon.bg-aqua
+                %i.fa.fa-male.fa-lg
+              .info-box-content
+                %span.info-box-text PAYEES
+                %span.info-box-number
+                  = @payees_count
+              / /.info-box-content
+            / /.info-box
+          / /.col
+          .col-md-4.col-sm-6.col-xs-12
+            .info-box
+              %span.info-box-icon.bg-blue
+                %i.fa.fa-dollar.fa-lg
+              .info-box-content
+                %span.info-box-text TRANSFERS / AMOUNT
+                %span.info-box-number= "#{@transfers_count} / #{number_to_currency(@transfers_amount)}"
+              / /.info-box-content
+            / /.info-box
+          / /.col
+          / fix for small devices only
+          .clearfix.visible-sm-block
+          .col-md-4.col-sm-6.col-xs-12
+            .info-box
+              %span.info-box-icon.bg-green
+                %i.fa.fa-money.fa-lg
+              .info-box-content
+                %span.info-box-text WITHDRAWALS / AMOUNT
+                %span.info-box-number= "#{@withdrawals_count} / #{number_to_currency(@withdrawals_amount)}"
+              / /.info-box-content
+            / /.info-box
+          / /.col
+        / /.row
 
     
 

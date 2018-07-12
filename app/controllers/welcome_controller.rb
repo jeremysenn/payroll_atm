@@ -25,11 +25,11 @@ class WelcomeController < ApplicationController
         # Transfers Info
         @transfers = current_user.company.transactions.transfers.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
         @transfers_week_data = []
-        grouped_transfers = @transfers.group_by{ |t| t.date_time.day }
+        grouped_transfers = @transfers.group_by{ |t| t.date_time.beginning_of_day }
         (@start_date.to_date..@end_date.to_date).each do |date|
           transfers_group_total = 0
           grouped_transfers.each do |group, transfers|
-            if date.day == group
+            if date.beginning_of_day == group
               transfers.each do |transfer|
                 transfers_group_total = transfers_group_total + transfer.amt_auth.to_f
               end
@@ -49,11 +49,11 @@ class WelcomeController < ApplicationController
         # Withdrawals Info
         @withdrawals = @device.transactions.withdrawals.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
         @withdrawals_week_data = []
-        grouped_withdrawals = @withdrawals.group_by{ |t| t.date_time.day }
+        grouped_withdrawals = @withdrawals.group_by{ |t| t.date_time.beginning_of_day }
         (@start_date.to_date..@end_date.to_date).each do |date|
           withdrawals_group_total = 0
           grouped_withdrawals.each do |group, withdrawals|
-            if date.day == group
+            if date.beginning_of_day == group
               withdrawals.each do |withdrawals|
                 withdrawals_group_total = withdrawals_group_total + withdrawals.amt_auth.to_f
               end

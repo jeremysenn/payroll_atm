@@ -34,7 +34,7 @@
                   %b 
                     %i.fa.fa-signal.margin-r-5
                     Recent Status
-                  %a.btn.btn-sm.bg-green.pull-right{"data-content" => "#{@dev_statuses.first.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@dev_statuses.first.status}"} 
+                  %a.btn.btn-sm.bg-green.pull-right{"data-content" => "#{@dev_statuses.first.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0"} 
                     = @dev_statuses.first.status
                     -#
                       - if @device.critical_status?
