@@ -25,8 +25,9 @@ class Customer < ActiveRecord::Base
   
 #  validates :NameF, :NameL, :user_name, :PhoneMobile, :Answer1, :Answer2, :Answer3, presence: true
   validates :NameF, :NameL, presence: true
-  validates :Email, :PhoneMobile, uniqueness: true, presence: true
-  validates :Registration_Source, uniqueness: {allow_blank: true}, presence: true
+  validates :PhoneMobile, uniqueness: true, presence: true
+  validates :Email, uniqueness: true
+  validates :Registration_Source, uniqueness: {allow_blank: true}#, presence: true
 #  validates :PhoneMobile, presence: true
 #  validates_uniqueness_of :Email
 #  validates_uniqueness_of :PhoneMobile
