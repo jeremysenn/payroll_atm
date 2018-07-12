@@ -6,7 +6,8 @@
   - elsif (device.bill_count_1.present? and device.bill_count_1.status == 4)
     %td{class: 'bg-warning disabled'}= link_to device.bin_1_count, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_1.status_description}"
   - else
-    %td{class: 'bin'}= device.bin_1_count
+    - unless device.bin_1_count.zero?
+      %td{class: 'bin'}= device.bin_1_count
 
 - if @bin_2_column_count > 0
   - if (device.bill_count_2.present? and device.bill_count_2.status == 1)
@@ -16,7 +17,8 @@
   - elsif (device.bill_count_2.present? and device.bill_count_2.status == 4)
     %td{class: 'bg-warning disabled'}= link_to device.bin_2_count, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_2.status_description}"
   - else
-    %td{class: 'bin'}= device.bin_2_count
+    - unless device.bin_2_count.zero?
+      %td{class: 'bin'}= device.bin_2_count
 
 - if @bin_3_column_count > 0
   - if (device.bill_count_3.present? and device.bill_count_3.status == 1)
@@ -26,7 +28,8 @@
   - elsif (device.bill_count_3.present? and device.bill_count_3.status == 4)
     %td{class: 'bg-warning disabled'}= link_to device.bin_3_count, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_3.status_description}"
   - else
-    %td{class: 'bin'}= device.bin_3_count
+    - unless device.bin_3_count.zero?
+      %td{class: 'bin'}= device.bin_3_count
 
 - if @bin_4_column_count > 0
   - if (device.bill_count_4.present? and device.bill_count_4.status == 1)
@@ -36,7 +39,8 @@
   - elsif (device.bill_count_4.present? and device.bill_count_4.status == 4)
     %td{class: 'bg-warning disabled'}= link_to device.bin_4_count, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_4.status_description}"
   - else
-    %td{class: 'bin'}= device.bin_4_count
+    - unless device.bin_4_count.zero?
+      %td{class: 'bin'}= device.bin_4_count
 
 - if @bin_5_column_count > 0
   - if (device.bill_count_5.present? and device.bill_count_5.status == 1)
@@ -46,7 +50,8 @@
   - elsif (device.bill_count_5.present? and device.bill_count_5.status == 4)
     %td{class: 'bg-warning disabled'}= link_to device.bin_5_count, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_5.status_description}"
   - else
-    %td{class: 'bin'}= device.bin_5_count
+    - unless device.bin_5_count.zero?
+      %td{class: 'bin'}= device.bin_5_count
 
 - if @bin_6_column_count > 0
   - if (device.bill_count_6.present? and device.bill_count_6.status == 1)
@@ -56,7 +61,8 @@
   - elsif (device.bill_count_6.present? and device.bill_count_6.status == 4)
     %td{class: 'bg-warning disabled'}= link_to device.bin_6_count, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_6.status_description}"
   - else
-    %td{class: 'bin'}= device.bin_6_count
+    - unless device.bin_6_count.zero?
+      %td{class: 'bin'}= device.bin_6_count
 
 - if @bin_7_column_count > 0
   - if (device.bill_count_7.present? and device.bill_count_7.status == 1)
@@ -66,7 +72,8 @@
   - elsif (device.bill_count_7.present? and device.bill_count_7.status == 4)
     %td{class: 'bg-warning disabled'}= link_to device.bin_7_count, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_7.status_description}"
   - else
-    %td{class: 'bin'}= device.bin_7_count
+    - unless device.bin_7_count.zero?
+      %td{class: 'bin'}= device.bin_7_count
 
 - if @bin_8_column_count > 0
   - if (device.bill_count_8.present? and device.bill_count_8.status == 1)
@@ -76,7 +83,8 @@
   - elsif (device.bill_count_8.present? and device.bill_count_8.status == 4)
     %td{class: 'bg-warning disabled'}= link_to device.bin_8_count, '#', "data-toggle" => "tooltip", "data-placement" => "right", "title" => "#{device.bill_count_8.status_description}"
   - else
-    %td{class: 'bin'}= device.bin_8_count
+    - unless device.bin_8_count.zero?
+      %td{class: 'bin'}= device.bin_8_count
 
 :javascript
   $('[data-toggle="tooltip"]').tooltip()
