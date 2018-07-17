@@ -34,15 +34,16 @@
                   %b 
                     %i.fa.fa-signal.margin-r-5
                     Recent Status
-                  %a.btn.btn-sm.bg-green.pull-right{"data-content" => "#{@dev_statuses.first.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0"} 
-                    = @dev_statuses.first.status
-                    -#
-                      - if @device.critical_status?
-                        %a.btn.btn-xs.btn-danger{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
-                      - elsif @device.caution_status?
-                        %a.btn.btn-xs.btn-warning{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
-                      - else
-                        = @device.status_string
+                  - unless @most_recent_dev_status.blank?
+                    %a.btn.btn-sm.bg-green.pull-right{"data-content" => "#{@most_recent_dev_status.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0"} 
+                      = @most_recent_dev_status.status
+                      -#
+                        - if @device.critical_status?
+                          %a.btn.btn-xs.btn-danger{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
+                        - elsif @device.caution_status?
+                          %a.btn.btn-xs.btn-warning{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
+                        - else
+                          = @device.status_string
                 %li.list-group-item
                   %b 
                     %i.fa.fa-info-circle.margin-r-5
