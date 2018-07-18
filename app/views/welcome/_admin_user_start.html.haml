@@ -1,5 +1,5 @@
 .content-wrapper
-  .container
+  .container-fluid
     / Content Header (Page header)
     %section.content-header
       = render 'shared/flash_messages'
@@ -9,7 +9,7 @@
         .btn-group
           - @devices.each do |device|
             %a.btn{href: root_path(device_id: device.id), class: "#{@device.id == device.id ? 'btn-info' : 'btn-default'}", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> #{device.description}"}}
-              %i.fa.fa-bolt
+              %i.fa.fa-money
               = device.description
         .pull-right
           = form_tag transactions_path, id: 'transfers_search_form', method: 'get', class: 'form-inline' do |f|
@@ -86,48 +86,102 @@
                           - else
                             = @device.status_string
                       %td= number_to_currency(@device.remaining)
-                      %td= link_to 'More', @device, class: 'btn btn-primary btn-sm'
+                      %td
+                        =# link_to 'More', @device, class: 'btn btn-primary btn-sm'
+                        %a.btn.btn-default.btn-sm{:href => "#", "data-toggle" => "modal", "data-target" => "#video"}
+                          %i.fa.fa-video-camera
+                        #video.modal.fade
+                          .modal-dialog
+                            .modal-content
+                              .modal-body
+                                .embed-responsive.embed-responsive-16by9
+                                  %iframe{:allow => "autoplay; encrypted-media", :allowfullscreen => "", :frameborder => "0", :height => "480", :src => "https://www.youtube.com/embed/qghQ5eKGcyE?ecver=1", :width => "854"}
+                        %a.btn.btn-primary.btn-sm{href: '#', "data-target" => "#commands-modal", "data-toggle" => "modal"}
+                          %i.fa.fa-arrows-alt
+                        #commands-modal.modal.fade
+                          .modal-dialog.modal-sm
+                            .modal-content
+                              .modal-header
+                                %h5.modal-title
+                                  %i.fa.fa-arrows-alt
+                                  ATM Commands
+                              .modal-body
+                                %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_reset"), "data-device-id" => @device.id, "data-command" => "atm_reset", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Reset"}}
+                                  %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                                  Reset
+                                %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_load"), "data-device-id" => @device.id, "data-command" => "atm_load", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Load"}}
+                                  %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                                  Load
+                                %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_up"), "data-device-id" => @device.id, "data-command" => "atm_up", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Up"}}
+                                  %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                                  Up
+                                %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_down"), "data-device-id" => @device.id, "data-command" => "atm_down", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Down"}}
+                                  %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                                  Down
+                                %a.btn.btn-primary.btn-block{href: send_atm_command_device_path(@device, command: "atm_disconnect"), "data-device-id" => @device.id, "data-command" => "atm_disconnect", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Disconnect"}}
+                                  %i.fa.fa-spinner.fa-spin{style: 'display:none;'}
+                                  Disconnect
+                              .modal-footer
+                                %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Done
               .box-footer
                 -#
                   .pull-right= paginate @customers, param_name: 'result1'
         .col-md-6
           .box.box-warning{"data-widget" => "box-widget"}
-            .box-header.with-border
-              %h3.box-title 
-                %i.fa.fa-inbox
-                Bins
-              .box-tools.pull-right
-            .box-body.no-padding
-              - unless @devices.blank?
-                .table-responsive
-                  %table.table.table-condensed.table-bordered
-                    %thead
-                      %tr
-                        - @device.denoms.each do |denom|
-                          - unless denom.denomination.zero?
-                            %th{:scope => "col"}= number_to_currency(denom.denomination, strip_insignificant_zeros: true)
-                        -#
-                          - if @bin_1_column_count > 0
-                            %th{:scope => "col"} Bin 1
-                          - if @bin_2_column_count > 0
-                            %th{:scope => "col"} Bin 2
-                          - if @bin_3_column_count > 0
-                            %th{:scope => "col"} Bin 3
-                          - if @bin_4_column_count > 0
-                            %th{:scope => "col"} Bin 4
-                          - if @bin_5_column_count > 0
-                            %th{:scope => "col"} Bin 5
-                          - if @bin_6_column_count > 0
-                            %th{:scope => "col"} Bin 6
-                          - if @bin_7_column_count > 0
-                            %th{:scope => "col"} Bin 7
-                          - if @bin_8_column_count > 0
-                            %th{:scope => "col"} Bin 8
-                    %tbody
-                      = render partial: "devices/bin_details", locals: {device: @device}
-              - else
-                &nbsp;
-                None
+            -#
+              .box-header.with-border
+                %h3.box-title 
+                  %i.fa.fa-inbox
+                  Bins
+                .box-tools.pull-right
+            .box-body
+              %ul#myTab.nav.nav-tabs.nav-fill{:role => "tablist"}
+                %li.nav-item
+                  %a#bins-tab.nav-link.active{"aria-controls" => "bins", "aria-selected" => "true", "data-toggle" => "tab", :href => "#bins", :role => "tab"} 
+                    %i.fa.fa-inbox
+                    Bins
+                %li.nav-item
+                  %a#statuses-tab.nav-link{"aria-controls" => "statuses", "aria-selected" => "false", "data-toggle" => "tab", :href => "#statuses", :role => "tab"} 
+                    %i.fa.fa-signal
+                    = "Statuses"
+                %li.nav-item
+                  %a#cuts-tab.nav-link{"aria-controls" => "cuts", "aria-selected" => "false", "data-toggle" => "tab", :href => "#cuts", :role => "tab"} 
+                    %i.fa.fa-credit-card
+                    = "Cuts"
+              #myTabContent.tab-content
+                #bins.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                  - unless @devices.blank?
+                    .table-responsive
+                      %table.table.table-condensed.table-bordered
+                        %thead
+                          %tr
+                            - @device.denoms.each do |denom|
+                              - unless denom.denomination.zero?
+                                %th{:scope => "col"}= number_to_currency(denom.denomination, strip_insignificant_zeros: true)
+                        %tbody
+                          = render partial: "devices/bin_details", locals: {device: @device}
+                  - else
+                    &nbsp;
+                    None
+                #statuses.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                  %br
+                  .row
+                    .col-md-6
+                      .box.box-success
+                        .box-header.with_border
+                          .box-title
+                            ATM
+                        .box-body
+                          = render partial: "dev_statuses/index"
+                    .col-md-6
+                      .box.box-warning
+                        .box-header.with_border
+                          .box-title
+                            Cassettes
+                        .box-body
+                          = render partial: "devices/cassettes"
+                #cuts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                  = render partial: "devices/cuts"
               .box-footer
                 -#
                   .pull-right= paginate @customers, param_name: 'result1'

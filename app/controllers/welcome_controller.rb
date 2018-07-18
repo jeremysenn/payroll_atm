@@ -21,6 +21,11 @@ class WelcomeController < ApplicationController
           @device = @devices.find_by(dev_id: params[:device_id])
         end
 #        @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC").first(3)
+        # Device Information
+        @dev_statuses = @device.dev_statuses.where(date_time: Date.today.beginning_of_day.last_week..Date.today.end_of_day).order("date_time DESC").first(5)
+        @bill_counts = @device.bill_counts
+        @denoms = @device.denoms
+        @bill_hists = @device.bill_hists.select(:cut_dt).distinct.order("cut_dt DESC").first(5)
         
         # Transfers Info
         @transfers = current_user.company.transactions.transfers.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")

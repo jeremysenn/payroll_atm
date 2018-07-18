@@ -14,12 +14,6 @@
             Home
       %li.nav-item.bordered
         .text-center
-          %a.nav-link{:href => devices_path, :class => (params[:controller] == 'devices') ?  "text-light-blue" : ""}
-            %i.fa.fa-money.fa-lg
-            %br
-            ATMs
-      %li.nav-item.bordered
-        .text-center
           %a.nav-link{:href => customers_path, :class => (params[:controller] == 'customers') ?  "text-light-blue" : ""}
             %i.fa.fa-male.fa-lg
             %br
@@ -33,12 +27,6 @@
               %i.fa.fa-male.fa-lg
             %br
             Transfer
-      %li.nav-item.bordered
-        .text-center
-          %a.nav-link{:href => transactions_path, :class => (params[:controller] == 'transactions') ?  "text-light-blue" : ""}
-            %i.fa.fa-bolt.fa-lg
-            %br
-            EZcash
     %form.form-inline.my-2.my-lg-0
       .my-2.my-sm-0.dropdown
         %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
@@ -46,10 +34,21 @@
           = current_user.full_name
         .dropdown-menu{"aria-labelledby" => "navbarDropdown"}
           %a.dropdown-item{:href => "#"}
+            %i.fa.fa-building
             = current_user.company.name
             %br
-            %small Admin
-          %a.dropdown-item{:href => edit_user_registration_path(current_user)} Edit account
+            %small (Admin)
+          %a.dropdown-item{:href => edit_user_registration_path(current_user)} 
+            %i.fa.fa-edit
+            Edit account
           .dropdown-divider
-          %a.dropdown-item{:href => users_path} Users
+          %a.dropdown-item{:href => users_path, :class => (params[:controller] == 'users') ?  "text-light-blue" : ""} 
+            %i.fa.fa-users
+            Users
+          %a.dropdown-item{:href => transactions_path, :class => (params[:controller] == 'transactions') ?  "text-light-blue" : ""}
+            %i.fa.fa-bolt
+            Transactions
+          %a.dropdown-item{:href => devices_path, :class => (params[:controller] == 'devices') ?  "text-light-blue" : ""}
+            %i.fa.fa-money
+            ATMs
       .my-2.my-sm-0= link_to 'Log out', destroy_user_session_path, method: :delete, data: { confirm: 'Are you sure you want to sign out?' }, class: 'btn btn-outline-danger'

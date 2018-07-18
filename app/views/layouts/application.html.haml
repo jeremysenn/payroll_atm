@@ -22,3 +22,12 @@
         = render 'shared/admin_user_navbar' if current_user.admin?
         = render 'shared/customer_user_navbar' if current_user.payee?
       = yield
+      %footer.main-footer
+        %strong= "Copyright © #{Date.today.year}"
+        = link_to "https://www.tranact.com", target: '_blank' do
+          = "Transact Payment Systems"
+        = "All rights reserved."
+        .pull-right
+          = link_to "Terms of Service", '#'
+          •
+          = link_to "Privacy Policy", '#'
