@@ -150,36 +150,37 @@
                     = "Cuts"
               #myTabContent.tab-content
                 #bins.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
-                  - unless @devices.blank?
-                    .table-responsive
-                      %table.table.table-condensed.table-bordered
-                        %thead
-                          %tr
-                            - @device.denoms.each do |denom|
-                              - unless denom.denomination.zero?
-                                %th{:scope => "col"}= number_to_currency(denom.denomination, strip_insignificant_zeros: true)
-                        %tbody
-                          = render partial: "devices/bin_details", locals: {device: @device}
-                  - else
-                    &nbsp;
-                    None
+                  %br
+                  .box.box-success
+                    .box-header.with_border
+                      - unless @devices.blank?
+                        .table-responsive
+                          %table.table.table-condensed.table-bordered
+                            %thead
+                              %tr
+                                - @device.denoms.each do |denom|
+                                  - unless denom.denomination.zero?
+                                    %th{:scope => "col"}= number_to_currency(denom.denomination, strip_insignificant_zeros: true)
+                            %tbody
+                              = render partial: "devices/bin_details", locals: {device: @device}
+                      - else
+                        &nbsp;
+                        None
                 #statuses.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   %br
                   .row
-                    .col-md-6
+                    .col-md-12
                       .box.box-success
                         .box-header.with_border
+                          .box-tools.pull-right
+                            %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+                              %i.fa.fa-minus
+                            %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+                              %i.fa.fa-times
                           .box-title
                             ATM
                         .box-body
                           = render partial: "dev_statuses/index"
-                    .col-md-6
-                      .box.box-warning
-                        .box-header.with_border
-                          .box-title
-                            Cassettes
-                        .box-body
-                          = render partial: "devices/cassettes"
                 #cuts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   = render partial: "devices/cuts"
               .box-footer
