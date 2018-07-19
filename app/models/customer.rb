@@ -508,9 +508,9 @@ class Customer < ActiveRecord::Base
           end
           SmsMessage.create(to: phone, customer_id: self.id, company_id: self.CompanyNumber, body: message_body)
         end
-        return response.body[:ez_cash_txn_response][:tran_id]
+        return response.body[:ez_cash_txn_response]
       else
-        return nil
+        return response.body[:ez_cash_txn_response]
       end
     else
       return nil

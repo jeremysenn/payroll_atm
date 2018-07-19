@@ -84,12 +84,19 @@ class CustomersController < ApplicationController
   def one_time_payment
     amount = params[:amount].to_f.abs unless params[:amount].blank?
     note = params[:note]
-    transaction_id = @customer.one_time_payment(amount, note)
+    response = @customer.one_time_payment(amount, note)
+#    transaction_id = @customer.one_time_payment(amount, note)
+    response_code = response[:return]
+    unless response_code.to_i > 0
+      transaction_id = response[:tran_id]
+    else
+      error_code = response_code
+    end
     Rails.logger.debug "*********************************One time payment transaction ID: #{transaction_id}"
     unless transaction_id.blank?
       redirect_back fallback_location: @customer, notice: 'One time payment submitted.'
     else
-      redirect_back fallback_location: @customer, alert: 'There was a problem creating the one time payment.'
+      redirect_back fallback_location: @customer, alert: "There was a problem creating the one time payment. Error code: #{error_code}"
     end
   end
   
