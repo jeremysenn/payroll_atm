@@ -28,7 +28,7 @@ class WelcomeController < ApplicationController
         @bill_hists = @device.bill_hists.select(:cut_dt).distinct.order("cut_dt DESC").first(5)
         
         # Transfers Info
-        @transfers = current_user.company.transactions.transfers.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
+        @transfers = current_user.company.transactions.transfers.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("date_time DESC")
         @transfers_week_data = []
         grouped_transfers = @transfers.group_by{ |t| t.date_time.beginning_of_day }
         (@start_date.to_date..@end_date.to_date).each do |date|
@@ -52,7 +52,7 @@ class WelcomeController < ApplicationController
         @payees_count = @transfers.group_by{ |t| t.to_acct_id}.count
         
         # Withdrawals Info
-        @withdrawals = @device.transactions.withdrawals.where(date_time: @start_date.to_date..@end_date.to_date).order("date_time DESC")
+        @withdrawals = @device.transactions.withdrawals.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("date_time DESC")
         @withdrawals_week_data = []
         grouped_withdrawals = @withdrawals.group_by{ |t| t.date_time.beginning_of_day }
         (@start_date.to_date..@end_date.to_date).each do |date|
