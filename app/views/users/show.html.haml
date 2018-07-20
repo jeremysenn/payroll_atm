@@ -5,7 +5,8 @@
       %h1
         %i.fa.fa-user
         = @user.full_name
-        %small= link_to 'Payee Account', @user.customer
+        - unless @user.customer.blank?
+          %small= link_to 'Payee Account', @user.customer
       - if @user.confirmed?
         Sign In Count:
         = @user.sign_in_count

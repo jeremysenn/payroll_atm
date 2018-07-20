@@ -8,8 +8,11 @@ class WelcomeController < ApplicationController
           flash[:error] = "You must update your password."
           redirect_to edit_registration_path(current_user)
         else
-#          redirect_to current_user.customer
-          redirect_to current_user
+          unless current_user.customer.blank?
+            redirect_to current_user.customer
+          else
+            redirect_to current_user
+          end
         end
       end
       if current_user.admin?
