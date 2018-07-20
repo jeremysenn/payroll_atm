@@ -65,6 +65,11 @@
                     %b 
                       %i.fa.fa-comment
                       Send Message
+                - if @account.balance > 0 and not @barcode_access_string.blank?
+                  %a.btn.btn-success.btn-block{href: barcode_customer_path(@barcode_access_string)}
+                    %b 
+                      %i.fa.fa-money
+                      ATM Barcode
                 = render 'one_time_payment'
                 = render 'sms_message'
               -#
@@ -79,6 +84,7 @@
                     %b 
                       %i.fa.fa-money
                       Get Paid at ATM!
+                
             / /.box-body
           / /.box
           - unless browser.device.mobile?
