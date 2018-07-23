@@ -36,13 +36,16 @@
                   %thead
                     %tr
                       %th{:scope => "col"} TranID
-                      %th{:scope => "col"} ReferenceNbr
-                      %th{:scope => "col"} PayeeNbr
-                      %th{:scope => "col"} CustomerID
-                      %th{:scope => "col"} FirstName
-                      %th{:scope => "col"} LastName
-                      %th{:scope => "col"} PaymentAmt
-                      %th{:scope => "col"} Description
+                      - unless @payment_batch_csv_mappings.blank?
+                        - @payment_batch_csv_mappings.each do |payment_batch_csv_mapping|
+                          %th{:scope => "col"}= payment_batch_csv_mapping.column_name
+                      - else
+                        %th{:scope => "col"} FirstName
+                        %th{:scope => "col"} LastName
+                        %th{:scope => "col"} ReferenceNbr
+                        %th{:scope => "col"} PayeeNbr
+                        %th{:scope => "col"} PaymentAmt
+                        %th{:scope => "col"} Description
                       %th{:scope => "col"} Processed
                       - unless @payment_batch.processed?
                         %th
@@ -57,13 +60,6 @@
                               = link_to payment.TranID, payment.ezcash_transaction
                           - else
                             N/A
-                        %td= payment.ReferenceNbr
-                        %td= payment.PayeeNbr
-                        %td
-                          - unless payment.customer.blank?
-                            = link_to payment.CustomerID, payment.customer
-                          - else
-                            Not found
                         %td
                           - unless payment.customer.blank?
                             = payment.customer.first_name
@@ -74,6 +70,12 @@
                             = payment.customer.last_name
                           - else
                             Not found
+                        %td= payment.ReferenceNbr
+                        %td
+                          - unless payment.customer.blank?
+                            = link_to payment.PayeeNbr, payment.customer
+                          - else
+                            = payment.PayeeNbr
                         %td= number_to_currency(payment.PaymentAmt)
                         %td= "#{payment.Description.blank? ? 'N/A' : payment.Description}"
                         %td= payment.Processed? ? 'Yes' : 'No'

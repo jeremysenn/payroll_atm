@@ -19,6 +19,7 @@ class PaymentBatchesController < ApplicationController
   # GET /payment_batches/1
   # GET /payment_batches/1.json
   def show
+    @payment_batch_csv_mappings = current_user.company.payment_batch_csv_mappings
   end
 
   # GET /payment_batches/new
