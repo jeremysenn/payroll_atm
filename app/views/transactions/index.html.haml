@@ -24,7 +24,7 @@
                 %i.fa.fa-building
                 = current_user.company.CompanyName
               %ul.list-group.list-group-unbordered
-                - current_user.company.transaction_accounts.each do |account|
+                - current_user.company.transaction_and_fee_accounts.each do |account|
                   %li.list-group-item
                     %b 
                       = account.description

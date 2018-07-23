@@ -49,6 +49,10 @@ class Company < ActiveRecord::Base
     accounts.where(CustomerID: nil, ActTypeID: 7)
   end
   
+  def transaction_and_fee_accounts
+    accounts.where(CustomerID: nil, ActTypeID: [7,19])
+  end
+  
   def perform_one_sided_credit_transaction(amount)
     unless account.blank?
       transaction_id = account.ezcash_one_sided_credit_transaction_web_service_call(amount) 
