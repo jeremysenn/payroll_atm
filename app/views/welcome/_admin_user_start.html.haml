@@ -221,6 +221,11 @@
               #myTabContent.tab-content
                 #transactions.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   %br
+                  - unless @transactions.blank?
+                    %p
+                      %a{href: transactions_path(format: "csv", 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date,), class: 'btn bg-orange'}
+                        %i.fa.fa-download
+                        Download CSV
                   = render partial: "transactions/index"
                 #chart.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   %br
