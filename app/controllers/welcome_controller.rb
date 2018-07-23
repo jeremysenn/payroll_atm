@@ -30,9 +30,10 @@ class WelcomeController < ApplicationController
         @bill_counts = @device.bill_counts
         @denoms = @device.denoms
         @bill_hists = @device.bill_hists.select(:cut_dt).distinct.order("cut_dt DESC").first(5)
+        @transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("date_time DESC")
         
         # Transfers Info
-        @transfers = current_user.company.transactions.transfers.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("date_time DESC")
+        @transfers = @transactions.transfers.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("date_time DESC")
         @transfers_week_data = []
         grouped_transfers = @transfers.group_by{ |t| t.date_time.beginning_of_day }
         (@start_date.to_date..@end_date.to_date).each do |date|

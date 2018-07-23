@@ -188,12 +188,12 @@
                   .pull-right= paginate @customers, param_name: 'result1'
       .row  
         .col-md-12
-          / ATM Cash Chart
+          / Transactions and ATM transfers and withdrawals chart
           .box.box-success
             .box-header.with-border
               %h3.box-title 
-                %i.fa.fa-money
-                Cash
+                %i.fa.fa-bolt
+                EZcash
               .box-tools.pull-right
                 = form_tag root_path, :method => 'get', :class => "form-inline" do
                   = hidden_field_tag 'device_id', @device.id
@@ -209,8 +209,23 @@
                   %button.btn.btn-box-tool{"data-widget" => "remove", :type => "button"}
                     %i.fa.fa-times
             .box-body
-              .chart
-                %canvas#myChart{:style => "height:250px"}
+              %ul#myTab.nav.nav-tabs.nav-fill{:role => "tablist"}
+                %li.nav-item
+                  %a#transactions-tab.nav-link.active{"aria-controls" => "transactions", "aria-selected" => "false", "data-toggle" => "tab", :href => "#transactions", :role => "tab"} 
+                    %i.fa.fa-arrows-h
+                    Transactions
+                %li.nav-item
+                  %a#chart-tab.nav-link{"aria-controls" => "chart", "aria-selected" => "true", "data-toggle" => "tab", :href => "#chart", :role => "tab"} 
+                    %i.fa.fa-area-chart
+                    Chart
+              #myTabContent.tab-content
+                #transactions.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                  %br
+                  = render partial: "transactions/index"
+                #chart.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                  %br
+                  .chart
+                    %canvas#myChart{:style => "height:250px"}
             / /.box-body
           / /.box
 
