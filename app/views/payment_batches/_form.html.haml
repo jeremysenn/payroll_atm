@@ -41,6 +41,6 @@
           = f.input :CompanyNbr, :as => :hidden, :input_html => { :value => "#{@payment_batch.new_record? ? current_user.company_id : @payment_batch.CompanyNbr}" }
           = f.input :CSVFile, :as => :file, label: false, :input_html => {:accept => 'text/csv'}, required: true
       .form-actions
-        = link_to 'Cancel', :back, class: 'btn btn-default'
-        %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Import CSV"}}
+        %button.btn.btn-primary{id: 'payment_batch_submit_button', :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Import CSV"}, disabled: true}
           Import CSV
+        = link_to 'Cancel', :back, class: 'btn btn-default'
