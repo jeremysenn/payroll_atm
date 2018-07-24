@@ -44,7 +44,7 @@
                   %th{:scope => "col"} Phone
                   %th{:scope => "col"} First
                   %th{:scope => "col"} Last
-                  %th{:scope => "col"} ID
+                  -# %th{:scope => "col"} ID
                   %th
               %tbody
                 - @customers.each do |customer|
@@ -52,7 +52,7 @@
                     %th{:scope => "row"}= customer.phone
                     %td= customer.first_name
                     %td= customer.last_name
-                    %td= customer.id
+                    -# %td= customer.id
                     %td
                       = link_to 'More', customer, class: 'btn btn-primary btn-sm'
                       -# unless customer.user.blank?
