@@ -13,16 +13,17 @@
         .box-header.with-border
           %h3.box-title 
             = @payment_batch.created_at.strftime("%B %-d, %Y")
+          - unless @payment_batch.processed?
+            - if current_user.admin?
+              = form_for @payment_batch do |f|
+                = f.hidden_field :Processed, value: 1
+                %button.btn.bg-orange.btn-lg{:type => "submit", data: {disable_with: "<i class='fa fa-refresh fa-spin'></i> Process"}}
+                  %i.fa.fa-retweet
+                  Process
+          - else
+            .text-success= @payment_batch.processed_status
           .box-tools.pull-right
-            - unless @payment_batch.processed?
-              - if current_user.admin?
-                = form_for @payment_batch do |f|
-                  = f.hidden_field :Processed, value: 1
-                  %button.btn.bg-orange{:type => "submit", data: {disable_with: "<i class='fa fa-refresh fa-spin'></i> Process"}}
-                    %i.fa.fa-refresh
-                    Process
-            - else
-              .text-success= @payment_batch.processed_status
+            
         .box-body
           %ul#myTab.nav.nav-tabs{:role => "tablist"}
             %li.nav-item
