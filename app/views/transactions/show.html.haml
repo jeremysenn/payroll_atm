@@ -60,6 +60,9 @@
           %p.lead
             Description:
             = @transaction.Description
+          %p.lead
+            Note:
+            = @transaction.Note
           %p
             - @transaction.images.each do |image|
               .col-xs-12.col-sm-2.col-md-2

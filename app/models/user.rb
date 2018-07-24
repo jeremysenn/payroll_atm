@@ -11,7 +11,10 @@ class User < ApplicationRecord
   
   before_create :search_for_payee_match
   after_create :send_confirmation_sms_message
+  after_update :send_new_phone_number_confirmation_sms_message, if: :phone_changed?
   
+  validates :phone, uniqueness: true, presence: true  
+    
   #############################
   #     Instance Methods      #
   #############################
@@ -46,6 +49,21 @@ class User < ApplicationRecord
       client.call(:send_sms, message: { Phone: phone, Msg: "#{message}"})
 #      SmsMessage.create(to: phone, company_id: company_id, body: "#{message}")
     end
+  end
+  
+  def send_new_phone_number_confirmation_sms_message
+    unless phone.blank?
+      confirmation_link = "#{Rails.application.routes.default_url_options[:host]}/users/confirmation?confirmation_token=#{confirmation_token}"
+      message = "Confirm the change to your PaymentATM account by clicking the link below.  #{confirmation_link}"
+      client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+      client.call(:send_sms, message: { Phone: phone, Msg: "#{message}"})
+      self.confirmed_at = nil
+      self.save
+    end
+  end
+  
+  def phone_changed?
+    saved_change_to_phone?
   end
   
 end

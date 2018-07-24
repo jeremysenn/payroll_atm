@@ -7,6 +7,7 @@
           %th{:scope => "col"} Date
           %th{:scope => "col"} Code
           %th{:scope => "col"} Description
+          %th{:scope => "col"} Note
           %th{:scope => "col"} Amount
           %th
       %tbody
@@ -18,7 +19,8 @@
               %a{"data-content" => "#{transaction.status_long_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{transaction.error_code_long_description}"} 
                 = transaction.error_code_description
             %td= transaction.Description
-            %td= number_to_currency(transaction.amt_auth)
+            %td= "#{transaction.Note.blank? ? 'N/A' : transaction.Note}"
+            %td= "#{transaction.amt_auth.blank? ? number_to_currency(0) : number_to_currency(transaction.amt_auth)}" 
             %td= link_to 'More', transaction, class: 'btn btn-primary btn-sm'
 - else
   &nbsp;

@@ -145,7 +145,7 @@
                     - else
                       Portal user has not been created
                       = form_for(@customer) do |f|
-                        = f.hidden_field :create_payee_user, :value => true
+                        = f.hidden_field :create_payee_user_flag, :value => true
                         %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Invite"}}
                           %i.fa.fa-comment
                           Send Invite
@@ -184,6 +184,7 @@
                           %tr
                             %th Date
                             %th Description
+                            %th Note
                             %th Amount
                             %th
                         %tbody
@@ -191,6 +192,7 @@
                             %tr
                               %td= payment_transaction.date_time.strftime("%^b %d")
                               %td= payment_transaction.Description
+                              %td= "#{payment_transaction.Note.blank? ? 'N/A' : payment_transaction.Note}"
                               %td= number_to_currency(payment_transaction.amt_auth)
                               %td= link_to "More", payment_transaction, class: 'btn btn-primary'
                     .pull-right= paginate @payment_transactions, param_name: 'payments'

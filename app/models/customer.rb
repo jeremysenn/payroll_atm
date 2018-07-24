@@ -19,7 +19,7 @@ class Customer < ActiveRecord::Base
   scope :active, -> { where(Active: true) }
   
   # Virtual Attributes
-  attr_accessor :create_payee_user
+  attr_accessor :create_payee_user_flag
   
   accepts_nested_attributes_for :accounts
   
@@ -36,8 +36,8 @@ class Customer < ActiveRecord::Base
 
   after_commit :create_payee_user, on: [:create]
   after_update :create_payee_user, if: :need_to_create_payee_user?
-  
-  
+  after_update :update_portal_user_phone, if: :phone_changed?, unless: Proc.new { |customer| customer.user.blank?}
+      
   #############################
   #     Instance Methods      #
   #############################
@@ -555,7 +555,7 @@ class Customer < ActiveRecord::Base
   end
   
   def need_to_create_payee_user?
-    create_payee_user == true
+    return create_payee_user_flag == "true"
   end
   
   def create_payee_user
@@ -563,6 +563,14 @@ class Customer < ActiveRecord::Base
     temporary_password = SecureRandom.hex.first(6)
     User.create(first_name: first_name, last_name: last_name, email: email, company_id: company_id, customer_id: id, role: "payee", phone: phone,
     password: temporary_password, password_confirmation: temporary_password, temporary_password: temporary_password)
+  end
+  
+  def phone_changed?
+    saved_change_to_PhoneMobile?
+  end
+  
+  def update_portal_user_phone
+    user.update_attribute(:phone, phone)
   end
   
   #############################
