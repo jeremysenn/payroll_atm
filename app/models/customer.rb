@@ -490,9 +490,9 @@ class Customer < ActiveRecord::Base
     end
   end
   
-  def one_time_payment(amount, note)
+  def one_time_payment(amount, note, reference_number)
     client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
-    response = client.call(:ez_cash_txn, message: { FromActID: company.transaction_account.id, ToActID: account.id, Amount: amount, Fee: 0, FeeActId: company.fee_account.id, Note: note})
+    response = client.call(:ez_cash_txn, message: { FromActID: company.transaction_account.id, ToActID: account.id, Amount: amount, Fee: 0, FeeActId: company.fee_account.id, Note: note, external_ref_nbr: reference_number})
     Rails.logger.debug "************** ezcash_payment_transaction_web_service_call response body: #{response.body}"
     if response.success?
       unless response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0

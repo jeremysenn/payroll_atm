@@ -84,7 +84,8 @@ class CustomersController < ApplicationController
   def one_time_payment
     amount = params[:amount].to_f.abs unless params[:amount].blank?
     note = params[:note]
-    response = @customer.one_time_payment(amount, note)
+    external_reference_number = params[:external_reference_number]
+    response = @customer.one_time_payment(amount, note, external_reference_number)
 #    transaction_id = @customer.one_time_payment(amount, note)
     response_code = response[:return]
     unless response_code.to_i > 0
