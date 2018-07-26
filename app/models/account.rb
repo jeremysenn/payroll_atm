@@ -41,7 +41,7 @@ class Account < ActiveRecord::Base
   def check_transactions
 #    transactions = Transaction.where(from_acct_id: decrypted_account_number, tran_code: 'CHK') + Transaction.where(to_acct_id: decrypted_account_number, tran_code: 'CHK')
 #    transactions = Transaction.where(from_acct_id: id, tran_code: 'CHK') + Transaction.where(to_acct_id: id, tran_code: 'CHK')
-    transactions = Transaction.where(from_acct_id: id, tran_code: ['CHK', 'CHK '], sec_tran_code: ['TFR', 'TFR ']) + Transaction.where(to_acct_id: id, tran_code: ['CHK', 'CHK '], sec_tran_code: ['TFR', 'TFR '])
+    transactions = Transaction.where(from_acct_id: id, tran_code: ['CHK', 'CHK '], sec_tran_code: ['TFR', 'TFR ']).order("date_time DESC") + Transaction.where(to_acct_id: id, tran_code: ['CHK', 'CHK '], sec_tran_code: ['TFR', 'TFR ']).order("date_time DESC")
     
     return transactions
   end
