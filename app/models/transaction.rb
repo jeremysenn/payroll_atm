@@ -13,6 +13,7 @@ class Transaction < ActiveRecord::Base
   scope :transfers, -> { where(tran_code: ["CARD"], sec_tran_code: ["TFR"]) }
   scope :one_sided_credits, -> { where(tran_code: ["DEP"], sec_tran_code: ["REFD"]) }
   scope :fees, -> { where(tran_code: ["FEE"], sec_tran_code: ["TFR"]) }
+  scope :checks, -> { where(tran_code: ["CHK"], sec_tran_code: ["TFR"]) }
   
   #############################
   #     Instance Methods      #

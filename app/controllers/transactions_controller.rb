@@ -20,6 +20,8 @@ class TransactionsController < ApplicationController
         transactions = current_user.company.transactions.one_sided_credits.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       elsif @type == 'Fee'
         transactions = current_user.company.transactions.fees.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+      elsif @type == 'Check'
+        transactions = current_user.company.transactions.checks.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       else
         transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       end

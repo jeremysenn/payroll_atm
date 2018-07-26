@@ -18,7 +18,7 @@
             %td
               %a{"data-content" => "#{transaction.status_long_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{transaction.error_code_long_description}"} 
                 = transaction.error_code_description
-            %td= transaction.Description
+            %td= "#{transaction.Description.blank? ? 'N/A' : transaction.Description}"
             %td= "#{transaction.Note.blank? ? 'N/A' : transaction.Note}"
             %td= "#{transaction.amt_auth.blank? ? number_to_currency(0) : number_to_currency(transaction.amt_auth)}" 
             %td= link_to 'More', transaction, class: 'btn btn-primary btn-sm'
