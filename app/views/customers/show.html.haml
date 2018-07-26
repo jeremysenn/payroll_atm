@@ -168,6 +168,10 @@
                     %i.fa.fa-dollar
                     = "Payments" unless browser.device.mobile?
                 %li.nav-item
+                  %a#checks-tab.nav-link{"aria-controls" => "checks", "aria-selected" => "false", "data-toggle" => "tab", :href => "#checks", :role => "tab"} 
+                    %i.fa.fa-bank
+                    = "Checks" unless browser.device.mobile?
+                %li.nav-item
                   %a#withdrawals-tab.nav-link{"aria-controls" => "withdrawals", "aria-selected" => "false", "data-toggle" => "tab", :href => "#withdrawals", :role => "tab"} 
                     %i.fa.fa-money
                     = "Withdrawals" unless browser.device.mobile?
@@ -198,6 +202,25 @@
                     .pull-right= paginate @payment_transactions, param_name: 'payments'
                   - else
                     %p.text-center None
+
+                #checks.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"}
+                  - unless @check_transactions.blank?
+                    .table-responsive
+                      %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
+                        %thead
+                          %tr
+                            %th Date
+                            %th Amount
+                            %th
+                        %tbody
+                          - @check_transactions.each do |check_transaction|
+                            %tr
+                              %td= check_transaction.date_time.strftime("%^b %d")
+                              %td= number_to_currency(check_transaction.amt_auth)
+                              %td= link_to "More", check_transaction, class: 'btn btn-primary'
+                    .pull-right= paginate @check_transactions, param_name: 'checks'
+                  - else
+                    %p.text-center None 
 
                 #withdrawals.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"}
                   - unless @withdrawal_transactions.blank?
