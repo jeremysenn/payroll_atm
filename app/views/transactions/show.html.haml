@@ -58,8 +58,8 @@
             Fee:
             = number_to_currency(@transaction.ChpFee)
           %p.lead
-            External Reference Number:
-            = "#{@transaction.external_ref_nbr.blank? ? 'N/A' : @transaction.external_ref_nbr}"
+            Receipt Number:
+            = "#{@transaction.receipt_nbr.blank? ? 'N/A' : @transaction.receipt_nbr}"
           %p.lead
             Description:
             = @transaction.Description
