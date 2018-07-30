@@ -5,6 +5,7 @@
         %tr
           %th{:scope => "col"} #
           %th{:scope => "col"} Date
+          %th{:scope => "col"} Ref #
           %th{:scope => "col"} Code
           %th{:scope => "col"} Description
           %th{:scope => "col"} Note
@@ -15,6 +16,7 @@
           %tr{class: transaction.reversed? ? 'table-danger' : ''}
             %th{:scope => "row"}= transaction.id
             %td= transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
+            %td= "#{transaction.receipt_nbr.blank? ? 'N/A' : transaction.receipt_nbr}"
             %td
               %a{"data-content" => "#{transaction.status_long_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{transaction.error_code_long_description}"} 
                 = transaction.error_code_description

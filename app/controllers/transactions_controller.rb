@@ -26,7 +26,8 @@ class TransactionsController < ApplicationController
         transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       end
     else
-      transactions = current_user.company.transactions.where(tranID: params[:transaction_id])
+#      transactions = current_user.company.transactions.where(tranID: params[:transaction_id])
+      transactions = current_user.company.transactions.where(tranID: params[:transaction_id]).or(current_user.company.transactions.where(receipt_nbr: params[:transaction_id]))
     end
     
     respond_to do |format|
