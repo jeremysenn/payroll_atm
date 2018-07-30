@@ -47,8 +47,12 @@
             = @transaction.dev_id
           %p.lead
             From Account:
-            = @transaction.from_account_customer.full_name unless @transaction.from_account_customer.blank?
-            = @transaction.from_acct_id
+            - unless @from_customer.blank?
+              = link_to "#{@from_customer.full_name} (#{@transaction.from_acct_id})", @from_customer
+            - else
+              = @transaction.from_acct_id
+            =# @transaction.from_account_customer.full_name unless @transaction.from_account_customer.blank?
+            =# @transaction.from_acct_id
           %p.lead
             To Account:
             - unless @to_customer.blank?

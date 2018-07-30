@@ -50,6 +50,7 @@ class TransactionsController < ApplicationController
   def show
     @reversal_transaction = @transaction.reversal_transaction
     @original_transaction = @transaction.original_transaction
+    @from_customer = @transaction.from_account_customer
     @to_customer = @transaction.to_account_customer
   end
 
