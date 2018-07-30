@@ -193,7 +193,7 @@
                             %th
                         %tbody
                           - @payment_transactions.each do |payment_transaction|
-                            %tr
+                            %tr{class: payment_transaction.reversed? ? 'table-danger' : ''}
                               %td= payment_transaction.date_time.strftime("%^b %d")
                               %td= payment_transaction.Description
                               %td= "#{payment_transaction.Note.blank? ? 'N/A' : payment_transaction.Note}"
