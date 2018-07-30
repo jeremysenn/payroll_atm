@@ -207,6 +207,8 @@ class Transaction < ActiveRecord::Base
     error_code > 0
   end
   
+  
+  
 #  def account
 ##    Account.where(ActID: self.ActID).last
 #    Account.where(ActID: card_nbr).last
@@ -323,6 +325,11 @@ class Transaction < ActiveRecord::Base
     client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
     response = client.call(:ez_cash_txn, message: { TranID: tranID })
     Rails.logger.debug "Response body: #{response.body}"
+    unless response.blank? or response.body.blank? or response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0
+      return true
+    else
+      return false
+    end
   end
   
   def credit_transaction_transfer
@@ -331,6 +338,22 @@ class Transaction < ActiveRecord::Base
   
   def credit_transaction_for_transfer?
     not credit_transaction_transfer.blank?
+  end
+  
+  def reversal_transaction
+    Transaction.where(OrigTranID: tranID, tran_code: ["CRED", "CRED "], sec_tran_code: ["TFR", "TFR "]).first
+  end
+  
+  def original_transaction
+    unless self.OrigTranID.blank? or self.OrigTranID.zero?
+      Transaction.find(self.OrigTranID)
+    else
+      return nil
+    end
+  end
+  
+  def reversed?
+    reversal_transaction.present?
   end
   
   #############################

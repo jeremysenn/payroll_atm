@@ -2,6 +2,7 @@
   .container
     / Content Header (Page header)
     %section.content-header
+      = render 'shared/flash_messages'
       %h1
         = @transaction.Description
         %small= number_to_currency(@transaction.amt_auth)
@@ -12,6 +13,16 @@
         .box-header.with-border
           %h3.box-title 
             = @transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
+          .box-tools.pull-right
+            - unless @reversal_transaction.blank?
+              .text-danger
+                %i.fa.fa-warning
+                Transaction reversed:
+                = link_to @reversal_transaction.id, @reversal_transaction
+            - unless @original_transaction.blank?
+              .text-warning
+                Original Transaction:
+                = link_to @original_transaction.id, @original_transaction
         .box-body
           %p.lead
             Company:
@@ -78,3 +89,7 @@
                       %img.img-fluid{:alt => image.id, :src => image.jpeg_image_data_uri}
         .box-footer
           = link_to 'Back', :back, class: 'btn btn-default'
+          - if @reversal_transaction.blank? and not @transaction.reversal?
+            %a{href: reverse_transaction_path(@transaction), class: 'btn btn-danger', data: {confirm: 'Are you sure you want to reverse this transaction?', disable_with: "<i class='fa fa-spinner fa-spin'></i> Reverse"}}
+              %i.fa.fa-warning
+              Reverse

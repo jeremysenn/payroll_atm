@@ -17,7 +17,11 @@ Rails.application.routes.draw do
     end
   end
   resources :users
-  resources :transactions
+  resources :transactions do
+    member do
+      get 'reverse'
+    end
+  end
   resources :sms_messages
   resources :payment_batches
   resources :payments

@@ -12,7 +12,7 @@
           %th
       %tbody
         - @transactions.each do |transaction|
-          %tr
+          %tr{class: transaction.reversed? ? 'table-danger' : ''}
             %th{:scope => "row"}= transaction.id
             %td= transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
             %td

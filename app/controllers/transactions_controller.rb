@@ -1,6 +1,6 @@
 class TransactionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_transaction, only: [:show, :edit, :update, :destroy]
+  before_action :set_transaction, only: [:show, :edit, :update, :destroy, :reverse]
   load_and_authorize_resource
   
   helper_method :transactions_sort_column, :transactions_sort_direction
@@ -48,6 +48,8 @@ class TransactionsController < ApplicationController
   # GET /transactions/1
   # GET /transactions/1.json
   def show
+    @reversal_transaction = @transaction.reversal_transaction
+    @original_transaction = @transaction.original_transaction
   end
 
   # GET /transactions/new
@@ -98,6 +100,14 @@ class TransactionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to transactions_url, notice: 'Transaction was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+  
+  def reverse
+    if @transaction.reverse
+      redirect_back fallback_location: root_path, notice: 'Transaction was successfully reversed.'
+    else
+      redirect_back fallback_location: root_path, alert: 'There was a problem reversing the transaction.'
     end
   end
 
