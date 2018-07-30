@@ -4,7 +4,10 @@
     %section.content-header
       = render 'shared/flash_messages'
       %h1
-        = @transaction.Description
+        - unless @to_customer.blank?
+          = link_to @transaction.Description, @to_customer
+        - else
+          = @transaction.Description
         %small= number_to_currency(@transaction.amt_auth)
     / Main content
     %section.content
@@ -48,8 +51,10 @@
             = @transaction.from_acct_id
           %p.lead
             To Account:
-            = @transaction.to_account_customer.full_name unless @transaction.to_account_customer.blank?
-            = @transaction.to_acct_id
+            - unless @to_customer.blank?
+              = link_to "#{@to_customer.full_name} (#{@transaction.to_acct_id})", @to_customer
+            - else
+              = @transaction.to_acct_id
           %p.lead
             DateTime:
             = @transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
