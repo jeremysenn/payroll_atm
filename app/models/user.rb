@@ -44,7 +44,11 @@ class User < ApplicationRecord
     unless phone.blank?
 #      SendCaddySmsWorker.perform_async(cell_phone_number, id, self.CustomerID, self.ClubCompanyNbr, message_body)
       confirmation_link = "#{Rails.application.routes.default_url_options[:host]}/users/confirmation?confirmation_token=#{confirmation_token}"
-      message = "Confirm your PaymentATM account by clicking the link below. Your temporary password is: #{temporary_password} #{confirmation_link}"
+      unless temporary_password.blank?
+        message = "Confirm your PaymentATM account by clicking the link below. Your temporary password is: #{temporary_password} #{confirmation_link}"
+      else
+        message = "Confirm your PaymentATM account by clicking the link below. #{confirmation_link}"
+      end
       client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
       client.call(:send_sms, message: { Phone: phone, Msg: "#{message}"})
 #      SmsMessage.create(to: phone, company_id: company_id, body: "#{message}")
