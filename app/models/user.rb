@@ -9,7 +9,7 @@ class User < ApplicationRecord
   belongs_to :customer, optional: true
   has_many :sms_messages
   
-  before_create :search_for_payee_match, :create_temporary_password
+  before_create :search_for_payee_match
   after_create :send_confirmation_sms_message
   after_update :send_new_phone_number_confirmation_sms_message, if: :phone_changed?
   
@@ -37,6 +37,8 @@ class User < ApplicationRecord
       self.customer_id = payee.id
       self.role = "payee"
       self.company_id = payee.company_id
+    else
+      self.role = "admin"
     end
   end
   
@@ -68,10 +70,6 @@ class User < ApplicationRecord
   
   def phone_changed?
     saved_change_to_phone?
-  end
-  
-  def create_temporary_password
-    self.temporary_password = SecureRandom.hex.first(6)
   end
   
 end
