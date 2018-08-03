@@ -74,6 +74,14 @@ class PaymentBatchesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def csv_template
+    respond_to do |format|
+      format.csv { 
+        send_data current_user.company.payment_batch_csv_template, filename: "payment_batch_csv_template_#{Time.now}.csv" 
+        }
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

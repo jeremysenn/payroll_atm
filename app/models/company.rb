@@ -124,8 +124,20 @@ class Company < ActiveRecord::Base
     return payment_batch_csv_columns - custom_mappings
   end
   
+  def payment_batch_csv_template
+    require 'csv'
+    CSV.generate(headers: true) do |csv|
+      csv << [reference_number_mapping, payee_number_mapping, first_name_mapping, last_name_mapping, payment_amount_mapping, description_mapping]
+      csv << ['', '', '', '', '', '']
+      csv << ['', '', '', '', '', '']
+      csv << ['', '', '', '', '', '']
+      csv << ['', '', '', '', '', '']
+      csv << ['', '', '', '', '', '']
+    end
+  end
+  
   #############################
-  #     Class Methods      #
+  #     Class Methods         #
   #############################
   
 end

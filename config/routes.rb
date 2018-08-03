@@ -23,7 +23,12 @@ Rails.application.routes.draw do
     end
   end
   resources :sms_messages
-  resources :payment_batches
+  resources :payment_batches do
+    collection do
+      get 'csv_template'
+    end
+  end
+  
   resources :payments
   resources :devices do 
     member do

@@ -3,6 +3,10 @@
     %p 
       Format must be the following
       = link_to "(you can change column names here)", payment_batch_csv_mappings_path
+      %span.pull-right
+        %a{href: csv_template_payment_batches_path(format: "csv"), class: 'btn btn-sm bg-orange'}
+          %i.fa.fa-download
+          Download CSV Template
     %table.table.table-bordered.table-sm
       %thead.thead-dark
         %tr
