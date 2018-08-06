@@ -6,10 +6,10 @@
       %h1
         %i.fa.fa-male
         Payees
-        %small= link_to 'New', new_customer_path, class: 'btn btn-default'
+        %small= link_to 'New', new_customer_path, class: 'btn bg-orange'
         - unless @customers.blank?
           .pull-right
-            %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
+            %a.btn.btn-default.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
               %i.fa.fa-comment
               Message
           = render 'group_sms_message'
