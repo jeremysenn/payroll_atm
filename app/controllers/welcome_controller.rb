@@ -16,7 +16,7 @@ class WelcomeController < ApplicationController
         end
       end
       if current_user.admin?
-        @devices = current_user.company.devices
+        @devices = current_user.company.devices.order("description ASC")
         @start_date = params[:start_date] ||= (Date.today - 1.week).to_s
         @end_date = params[:end_date] ||= Date.today.to_s
         if params[:device_id].blank?
