@@ -28,7 +28,8 @@ class CustomersController < ApplicationController
     @barcode_access_string = @customer.barcode_access_string
     if @customer.user.blank?
 #      @temporary_password = Devise.friendly_token.first(10)
-      @temporary_password = SecureRandom.hex.first(6)
+#      @temporary_password = SecureRandom.hex.first(6)
+      @temporary_password = SecureRandom.random_number(10**6).to_s
     end
   end
   
