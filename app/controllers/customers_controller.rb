@@ -91,6 +91,7 @@ class CustomersController < ApplicationController
     response_code = response[:return]
     unless response_code.to_i > 0
       transaction_id = response[:tran_id]
+      @customer.generate_barcode_access_string
     else
       error_code = response_code
     end
