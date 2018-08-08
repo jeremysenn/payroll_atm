@@ -7,6 +7,8 @@ class PaymentBatch < ActiveRecord::Base
   
   scope :processed, -> { where(Processed: 1) }
   scope :unprocessed, -> { where(Processed: [0, nil]) }
+  scope :check, -> { where(IsCheckBatch: 1) }
+  scope :cash, -> { where(IsCheckBatch: [0, nil]) }
   
   has_many :payments, :foreign_key => "BatchNbr"
   belongs_to :company, :foreign_key => "CompanyNbr"
@@ -71,6 +73,14 @@ class PaymentBatch < ActiveRecord::Base
         end
       end
     end
+  end
+  
+  def check?
+    self.IsCheckBatch?
+  end
+  
+  def cash?
+    not check?
   end
   
   #############################

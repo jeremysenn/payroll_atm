@@ -38,13 +38,37 @@
           %td Williams
           %td 2242
           %td= current_user.company.description_mapping
-    = simple_form_for(@payment_batch) do |f|
-      = f.error_notification
-      .form-inputs
-        - if current_user.admin?
-          = f.input :CompanyNbr, :as => :hidden, :input_html => { :value => "#{@payment_batch.new_record? ? current_user.company_id : @payment_batch.CompanyNbr}" }
-          = f.input :CSVFile, :as => :file, label: false, :input_html => {:accept => 'text/csv'}, required: true
-      .form-actions
-        %button.btn.btn-primary{id: 'payment_batch_submit_button', :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Import CSV"}, disabled: true}
-          Import CSV
-        = link_to 'Cancel', :back, class: 'btn btn-default'
+    %br
+    %ul#myTab.nav.nav-pills{:role => "tablist"}
+      %li.nav-item
+        %a#cash-tab.nav-link.active{"aria-controls" => "cash", "aria-selected" => "true", "data-toggle" => "tab", :href => "#cash", :role => "tab"} 
+          %i.fa.fa-money
+          = "Cash" unless browser.device.mobile?
+      %li.nav-item
+        %a#checks-tab.nav-link{"aria-controls" => "checks", "aria-selected" => "false", "data-toggle" => "tab", :href => "#checks", :role => "tab"} 
+          %i.fa.fa-bank
+          = "Check" unless browser.device.mobile?
+    #myTabContent.tab-content
+      #cash.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+        = simple_form_for(@payment_batch) do |f|
+          = f.error_notification
+          .form-inputs
+            - if current_user.admin?
+              = f.input :CompanyNbr, :as => :hidden, :input_html => { :value => "#{@payment_batch.new_record? ? current_user.company_id : @payment_batch.CompanyNbr}" }
+              = f.input :CSVFile, :as => :file, label: false, :input_html => {:accept => 'text/csv'}, required: true
+          .form-actions
+            %button.btn.btn-primary{id: 'cash_payment_batch_submit_button', :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Import CSV"}, disabled: false}
+              Import CSV
+            = link_to 'Cancel', :back, class: 'btn btn-default'
+      #checks.tab-pane.fade{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+        = simple_form_for(@payment_batch) do |f|
+          = f.error_notification
+          .form-inputs
+            - if current_user.admin?
+              = f.input :CompanyNbr, :as => :hidden, :input_html => { :value => "#{@payment_batch.new_record? ? current_user.company_id : @payment_batch.CompanyNbr}" }
+              = f.input :CSVFile, :as => :file, label: false, :input_html => {:accept => 'text/csv'}, required: true
+              = f.input :IsCheckBatch, :as => :hidden, :input_html => { :value => 1}
+          .form-actions
+            %button.btn.btn-primary{id: 'check_payment_batch_submit_button', :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Import CSV"}, disabled: false}
+              Import CSV
+            = link_to 'Cancel', :back, class: 'btn btn-default'

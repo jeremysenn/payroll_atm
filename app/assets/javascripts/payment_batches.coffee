@@ -4,14 +4,14 @@
 
 jQuery ->
 
-  $(document).on 'turbolinks:load', ->
-    $('input:file').on 'change', ->
-      fileName = $(this).val()
-      if fileName == ''
-        $('#payment_batch_submit_button').attr 'disabled', 'disabled'
-      else
-        $('#payment_batch_submit_button').removeAttr 'disabled'
-      return
-  return
+  #$(document).on 'turbolinks:load', ->
+  #  $('input:file').on 'change', ->
+  #    fileName = $(this).val()
+  #    if fileName == ''
+  #      $('#payment_batch_submit_button').attr 'disabled', 'disabled'
+  #    else
+  #      $('#payment_batch_submit_button').removeAttr 'disabled'
+  #    return
+  #return
 
   

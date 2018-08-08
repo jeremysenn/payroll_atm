@@ -9,49 +9,109 @@
         %small= link_to 'New', new_payment_batch_path, class: 'btn bg-orange'
     / Main content
     %section.content
-      / Default box
-      .box.box-primary
-        .box-header.with-border
-          %h3.box-title 
-            Unprocessed
-        .box-body.no-padding
-          - unless @unprocessed_payment_batches.blank?
-            %table.table
-              %thead
-                %tr
-                  %th{:scope => "col"} #
-                  %th{:scope => "col"} Date
-                  %th
-              %tbody
-                - @unprocessed_payment_batches.each do |payment_batch|
-                  %tr
-                    %th{:scope => "row"}= payment_batch.id
-                    %td= payment_batch.created_at.strftime("%B %-d, %Y")
-                    %td
-                      = link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
-                      = link_to 'Delete', payment_batch, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
-          - else
-            %p.text-center None
-      / Default box
-      .box.box-success
-        .box-header.with-border
-          %h3.box-title 
-            Processed
-        .box-body.no-padding
-          - unless @processed_payment_batches.blank?
-            %table.table
-              %thead
-                %tr
-                  %th{:scope => "col"} #
-                  %th{:scope => "col"} Date
-                  %th{:scope => "col"} Status
-                  %th
-              %tbody
-                - @processed_payment_batches.each do |payment_batch|
-                  %tr
-                    %th{:scope => "row"}= payment_batch.id
-                    %td= payment_batch.created_at.strftime("%B %-d, %Y")
-                    %td= payment_batch.processed_status
-                    %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
-          - else
-            %p.text-center None
+      %ul#myTab.nav.nav-tabs{:role => "tablist"}
+        %li.nav-item
+          %a#cash-tab.nav-link.active{"aria-controls" => "cash", "aria-selected" => "true", "data-toggle" => "tab", :href => "#cash", :role => "tab"} 
+            %i.fa.fa-money
+            = "Cash" unless browser.device.mobile?
+        %li.nav-item
+          %a#checks-tab.nav-link{"aria-controls" => "checks", "aria-selected" => "false", "data-toggle" => "tab", :href => "#checks", :role => "tab"} 
+            %i.fa.fa-bank
+            = "Check" unless browser.device.mobile?
+      #myTabContent.tab-content
+        #cash.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+          %br
+          / Default box
+          .box.box-primary
+            .box-header.with-border
+              %h3.box-title 
+                Unprocessed
+            .box-body.no-padding
+              - unless @unprocessed_cash_payment_batches.blank?
+                %table.table
+                  %thead
+                    %tr
+                      %th{:scope => "col"} #
+                      %th{:scope => "col"} Date
+                      %th
+                  %tbody
+                    - @unprocessed_cash_payment_batches.each do |payment_batch|
+                      %tr
+                        %th{:scope => "row"}= payment_batch.id
+                        %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                        %td
+                          = link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
+                          = link_to 'Delete', payment_batch, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
+              - else
+                %p.text-center None
+          / Default box
+          .box.box-success
+            .box-header.with-border
+              %h3.box-title 
+                Processed
+            .box-body.no-padding
+              - unless @processed_cash_payment_batches.blank?
+                %table.table
+                  %thead
+                    %tr
+                      %th{:scope => "col"} #
+                      %th{:scope => "col"} Date
+                      %th{:scope => "col"} Status
+                      %th
+                  %tbody
+                    - @processed_cash_payment_batches.each do |payment_batch|
+                      %tr
+                        %th{:scope => "row"}= payment_batch.id
+                        %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                        %td= payment_batch.processed_status
+                        %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
+              - else
+                %p.text-center None
+        #checks.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+          %br
+          / Default box
+          .box.box-primary
+            .box-header.with-border
+              %h3.box-title 
+                Unprocessed
+            .box-body.no-padding
+              - unless @unprocessed_check_payment_batches.blank?
+                %table.table
+                  %thead
+                    %tr
+                      %th{:scope => "col"} #
+                      %th{:scope => "col"} Date
+                      %th
+                  %tbody
+                    - @unprocessed_check_payment_batches.each do |payment_batch|
+                      %tr
+                        %th{:scope => "row"}= payment_batch.id
+                        %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                        %td
+                          = link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
+                          = link_to 'Delete', payment_batch, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
+              - else
+                %p.text-center None
+          / Default box
+          .box.box-success
+            .box-header.with-border
+              %h3.box-title 
+                Processed
+            .box-body.no-padding
+              - unless @processed_check_payment_batches.blank?
+                %table.table
+                  %thead
+                    %tr
+                      %th{:scope => "col"} #
+                      %th{:scope => "col"} Date
+                      %th{:scope => "col"} Status
+                      %th
+                  %tbody
+                    - @processed_check_payment_batches.each do |payment_batch|
+                      %tr
+                        %th{:scope => "row"}= payment_batch.id
+                        %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                        %td= payment_batch.processed_status
+                        %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
+              - else
+                %p.text-center None

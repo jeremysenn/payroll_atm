@@ -12,8 +12,10 @@ class PaymentBatchesController < ApplicationController
 #    payment_batches = current_user.company.payment_batches.where(created_at: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
 #    @payment_batches = payment_batches.order("created_at DESC").page(params[:page]).per(20)
 
-    @unprocessed_payment_batches = current_user.company.payment_batches.unprocessed.order("created_at DESC")
-    @processed_payment_batches = current_user.company.payment_batches.processed.order("created_at DESC")
+    @unprocessed_cash_payment_batches = current_user.company.payment_batches.cash.unprocessed.order("created_at DESC")
+    @processed_cash_payment_batches = current_user.company.payment_batches.cash.processed.order("created_at DESC")
+    @unprocessed_check_payment_batches = current_user.company.payment_batches.check.unprocessed.order("created_at DESC")
+    @processed_check_payment_batches = current_user.company.payment_batches.check.processed.order("created_at DESC")
   end
 
   # GET /payment_batches/1
@@ -91,7 +93,7 @@ class PaymentBatchesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def payment_batch_params
-      params.fetch(:payment_batch, {}).permit(:CompanyNbr, :CSVFile, :Processed)
+      params.fetch(:payment_batch, {}).permit(:CompanyNbr, :CSVFile, :Processed, :IsCheckBatch)
     end
     
 end
