@@ -557,6 +557,13 @@ class Customer < ActiveRecord::Base
     end
   end
   
+  def send_barcode_sms_message
+    unless phone.blank?
+      client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+      client.call(:send_mms_cust_barcode, message: { CustomerID: self.CustomerID, CompanyNumber: account.CompanyNumber})
+    end
+  end
+  
   def generate_barcode_access_string
     self.barcode_access_string = SecureRandom.urlsafe_base64
     self.save

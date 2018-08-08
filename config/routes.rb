@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       get 'one_time_payment'
       get 'barcode'
       get 'send_barcode_link_sms_message'
+      get 'send_barcode_sms_message'
     end
     collection do
       post 'send_sms_message'
