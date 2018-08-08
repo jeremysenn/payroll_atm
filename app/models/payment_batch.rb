@@ -66,10 +66,10 @@ class PaymentBatch < ActiveRecord::Base
       if payment.processed?
         customer = payment.customer
         unless customer.blank?
-          customer.send_barcode_sms_message
 #          payment.customer.generate_barcode_access_string 
 #          payment.send_customer_text_message_payment_link
-           
+#          customer.send_barcode_sms_message
+          customer.send_barcode_sms_message_with_info("You've just been paid by #{customer.company.name}! Get your cash from the PaymentATM")
         end
       end
     end

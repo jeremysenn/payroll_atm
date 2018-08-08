@@ -505,7 +505,6 @@ class Customer < ActiveRecord::Base
     if response.success?
       unless response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0
         unless phone.blank?
-           send_barcode_sms_message
 #          client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
 #          host = Rails.application.routes.default_url_options[:host]
 #          if user.blank?
@@ -516,6 +515,8 @@ class Customer < ActiveRecord::Base
 #            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
 #          end
 #          SmsMessage.create(to: phone, customer_id: self.id, company_id: self.CompanyNumber, body: message_body)
+#          send_barcode_sms_message
+          send_barcode_sms_message_with_info("You've just been paid by #{company.name}! Get your cash from the PaymentATM")
         end
         return response.body[:ez_cash_txn_response]
       else
@@ -523,6 +524,17 @@ class Customer < ActiveRecord::Base
       end
     else
       return nil
+    end
+  end
+  
+  def barcode
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:get_customer_barcode, message: { CustomerID: self.CustomerID})
+    Rails.logger.debug "barcode response body: #{response.body}"
+    unless response.body[:get_customer_barcode_response].blank? or response.body[:get_customer_barcode_response][:return].blank?
+      return response.body[:get_customer_barcode_response][:return]
+    else
+      return ""
     end
   end
   
@@ -562,6 +574,13 @@ class Customer < ActiveRecord::Base
     unless phone.blank?
       client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
       client.call(:send_mms_cust_barcode, message: { CustomerID: self.CustomerID, CompanyNumber: account.CompanyNumber})
+    end
+  end
+  
+  def send_barcode_sms_message_with_info(message)
+    unless phone.blank?
+      client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+      client.call(:send_mmsqr_barcode, message: { Phone: phone, Msg: message, Barcode: self.barcode})
     end
   end
   
