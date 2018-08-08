@@ -516,7 +516,7 @@ class Customer < ActiveRecord::Base
 #          end
 #          SmsMessage.create(to: phone, customer_id: self.id, company_id: self.CompanyNumber, body: message_body)
 #          send_barcode_sms_message
-          send_barcode_sms_message_with_info("You've just been paid by #{company.name}! Get your cash from the PaymentATM")
+          send_barcode_sms_message_with_info("You've just been paid #{amount} by #{company.name}! Get your cash from the PaymentATM")
         end
         return response.body[:ez_cash_txn_response]
       else
