@@ -62,9 +62,12 @@ class PaymentBatch < ActiveRecord::Base
   def send_payment_text_messages
     payments.each do |payment|
       if payment.processed?
-        unless payment.customer.blank?
-          payment.customer.generate_barcode_access_string 
-          payment.send_customer_text_message_payment_link
+        customer = payment.customer
+        unless customer.blank?
+          customer.send_barcode_sms_message
+#          payment.customer.generate_barcode_access_string 
+#          payment.send_customer_text_message_payment_link
+           
         end
       end
     end

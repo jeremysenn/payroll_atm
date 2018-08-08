@@ -505,16 +505,17 @@ class Customer < ActiveRecord::Base
     if response.success?
       unless response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0
         unless phone.blank?
-          client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
-          host = Rails.application.routes.default_url_options[:host]
-          if user.blank?
-            message_body = "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host} for details."
-            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
-          else
-            message_body = "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host}/customers/#{id} for an ATM withdrawal."
-            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
-          end
-          SmsMessage.create(to: phone, customer_id: self.id, company_id: self.CompanyNumber, body: message_body)
+           send_barcode_sms_message
+#          client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+#          host = Rails.application.routes.default_url_options[:host]
+#          if user.blank?
+#            message_body = "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host} for details."
+#            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
+#          else
+#            message_body = "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host}/customers/#{id} for an ATM withdrawal."
+#            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
+#          end
+#          SmsMessage.create(to: phone, customer_id: self.id, company_id: self.CompanyNumber, body: message_body)
         end
         return response.body[:ez_cash_txn_response]
       else
