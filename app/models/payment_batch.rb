@@ -69,7 +69,7 @@ class PaymentBatch < ActiveRecord::Base
 #          payment.customer.generate_barcode_access_string 
 #          payment.send_customer_text_message_payment_link
 #          customer.send_barcode_sms_message
-          customer.send_barcode_sms_message_with_info("You've just been paid $#{self.PaymentAmt} by #{customer.company.name}! Your current balance is $#{customer.balance}. Get your cash from the PaymentATM")
+          customer.send_barcode_sms_message_with_info("You've just been paid $#{self.PaymentAmt.round(2)} by #{customer.company.name}! Your current balance is $#{customer.balance.round(2)}. Get your cash from the PaymentATM")
         end
       end
     end
