@@ -516,7 +516,7 @@ class Customer < ActiveRecord::Base
 #          end
 #          SmsMessage.create(to: phone, customer_id: self.id, company_id: self.CompanyNumber, body: message_body)
 #          send_barcode_sms_message
-          send_barcode_sms_message_with_info("You've just been paid $#{amount.round(2)} by #{company.name}! Your current balance is $#{balance.round(2)}. Get your cash from the PaymentATM")
+          send_barcode_sms_message_with_info("You've just been paid $#{amount.round(2)} by #{company.name}! Your current balance is $#{balance.round(2)}. Get your cash from the PaymentATM. More information at #{Rails.application.routes.default_url_options[:host]}")
         end
         return response.body[:ez_cash_txn_response]
       else
