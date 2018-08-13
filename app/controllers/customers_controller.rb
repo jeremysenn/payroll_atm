@@ -4,14 +4,24 @@ class CustomersController < ApplicationController
   load_and_authorize_resource
   skip_load_resource only: :barcode
   
+  helper_method :customers_sort_column, :customers_sort_direction
+  
   # GET /customers
   # GET /customers.json
   def index
     unless params[:q].blank?
       @query_string = "%#{params[:q]}%"
-      @all_customers = current_user.company.customers.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string) #.order("customer.NameL")
+      if customers_sort_column == "accounts.Balance"
+        @all_customers = current_user.company.customers.payees.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
+      else
+        @all_customers = current_user.company.customers.payees.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).order("#{customers_sort_column} #{customers_sort_direction}") #.order("customer.NameL")
+      end
     else
-      @all_customers = current_user.company.customers.payees
+      if customers_sort_column == "accounts.Balance"
+        @all_customers = current_user.company.customers.payees.joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
+      else
+        @all_customers = current_user.company.customers.payees.order("#{customers_sort_column} #{customers_sort_direction}")
+      end
     end
     @customers = @all_customers.page(params[:page]).per(20)
     respond_to do |format|
@@ -166,6 +176,16 @@ class CustomersController < ApplicationController
       params.require(:customer).permit(:ParentCustID, :CompanyNumber, :Active, :GroupID, :NameF, :NameL, :NameS, :PhoneMobile, :Email, 
         :LangID, :Registration_Source, :Registration_Source_ext, :create_payee_user_flag,
         accounts_attributes:[:CompanyNumber, :Balance, :MinBalance, :Active, :CustomerID, :ActNbr, :ActTypeID, :BankActNbr, :RoutingNbr, :_destroy,:id])
+    end
+    
+    ### Secure the customeres sort direction ###
+    def customers_sort_direction
+      %w[asc desc].include?(params[:customers_direction]) ?  params[:customers_direction] : "asc"
+    end
+
+    ### Secure the customers sort column name ###
+    def customers_sort_column
+      ["customer.NameL", "customer.NameF", "customer.PhoneMobile", "accounts.Balance"].include?(params[:customers_column]) ? params[:customers_column] : "customer.NameF"
     end
   
 end

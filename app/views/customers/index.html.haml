@@ -44,10 +44,10 @@
             %table.table.table-striped.table-condensed
               %thead
                 %tr
-                  %th{:scope => "col"} Phone
-                  %th{:scope => "col"} First
-                  %th{:scope => "col"} Last
-                  %th{:scope => "col"} Balance
+                  %th{:scope => "col"}= customers_sort_link 'customer.PhoneMobile', "Phone", params[:q]
+                  %th{:scope => "col"}= customers_sort_link 'customer.NameF', "First", params[:q]
+                  %th{:scope => "col"}= customers_sort_link 'customer.NameL', "Last", params[:q]
+                  %th{:scope => "col"}= customers_sort_link 'accounts.Balance', "Balance", params[:q]
                   -# %th{:scope => "col"} ID
                   %th
               %tbody
