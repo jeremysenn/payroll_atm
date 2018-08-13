@@ -618,6 +618,19 @@ class Customer < ActiveRecord::Base
     return customer if customer #&& customer.pwd_hash == customer.encrypt_password(pass)
   end
   
+  def self.to_csv
+    require 'csv'
+    attributes = %w{phone first_name last_name balance}
+    
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.each do |account|
+        csv << attributes.map{ |attr| account.send(attr) }
+      end
+    end
+  end
+  
   private
 
   def encrypt_all_security_question_answers

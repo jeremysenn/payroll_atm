@@ -13,6 +13,7 @@
               %i.fa.fa-comment
               Message
           = render 'group_sms_message'
+
         
     / Main content
     %section.content
@@ -21,13 +22,15 @@
         .box-header.with-border
           %h3.box-title 
             Active
+            %a{href: customers_path(format: "csv", q: params[:q]), class: 'btn btn-info btn-sm'}
+              %i.fa.fa-download
+              Download CSV
           .box-tools
             -#
               .input-group.mb-3
                 %input.form-control{"aria-describedby" => "basic-addon2", "aria-label" => "Recipient's username", :placeholder => "Recipient's username", :type => "text"}/
                 .input-group-append
                   %button.btn.btn-outline-secondary{:type => "button"} Button
-            -#
             = form_tag customers_path, id: 'customers_search_form', method: 'get', class: 'form-inline' do |f|
               .input-group.input-group-sm
                 = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
@@ -44,6 +47,7 @@
                   %th{:scope => "col"} Phone
                   %th{:scope => "col"} First
                   %th{:scope => "col"} Last
+                  %th{:scope => "col"} Balance
                   -# %th{:scope => "col"} ID
                   %th
               %tbody
@@ -52,6 +56,7 @@
                     %th{:scope => "row"}= customer.phone
                     %td= customer.first_name
                     %td= customer.last_name
+                    %td= number_to_currency(customer.balance)
                     -# %td= customer.id
                     %td
                       = link_to 'More', customer, class: 'btn btn-primary btn-sm'

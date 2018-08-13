@@ -223,7 +223,7 @@
                   %br
                   - unless @transactions.blank?
                     %p
-                      %a{href: transactions_path(format: "csv", :type => 'All', 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date,), class: 'btn bg-orange'}
+                      %a{href: transactions_path(format: "csv", :type => 'All', 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date,), class: 'btn btn-info btn-sm'}
                         %i.fa.fa-download
                         Download CSV
                   = render partial: "transactions/index"

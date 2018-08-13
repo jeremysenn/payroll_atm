@@ -14,6 +14,12 @@ class CustomersController < ApplicationController
       @all_customers = current_user.company.customers.payees
     end
     @customers = @all_customers.page(params[:page]).per(20)
+    respond_to do |format|
+      format.html {}
+      format.csv { 
+        send_data @all_customers.to_csv, filename: "payees_#{Time.now}.csv" 
+        }
+    end
   end
   
   # GET /customers/1

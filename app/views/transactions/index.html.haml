@@ -6,12 +6,13 @@
       %h1
         %i.fa.fa-bolt
         EZcash
-        - unless @transactions.blank?
-          .pull-right
-            %a{href: transactions_path(format: "csv", :type => @type, 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date,), class: 'btn bg-orange'}
-              %i.fa.fa-download
-              Download CSV
-        
+        -#
+          - unless @transactions.blank?
+            .pull-right
+              %a{href: transactions_path(format: "csv", :type => @type, 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date), class: 'btn bg-orange'}
+                %i.fa.fa-download
+                Download CSV
+
     / Main content
     %section.content
       / Default box
@@ -39,6 +40,10 @@
             .box-header.with-border
               %h3.box-title 
                 Transactions
+                - unless @transactions.blank?
+                  %a{href: transactions_path(format: "csv", :type => @type, 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date), class: 'btn btn-sm btn-info'}
+                    %i.fa.fa-download
+                    Download CSV
               .box-tools
                 = form_tag transactions_path, :method => 'get', :class => "form-inline" do
                   = select_tag :type, options_for_select(["All", "Balance", "Check", "Fee", "Transfer", "Withdrawal"], @type), class: "form-control"
