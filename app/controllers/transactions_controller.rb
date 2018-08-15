@@ -9,8 +9,10 @@ class TransactionsController < ApplicationController
   # GET /transactions.json
   def index
     @type = params[:type] ||= 'Withdrawal'
-    @start_date = transaction_params[:start_date] ||= Date.today.to_s
-    @end_date = transaction_params[:end_date] ||= Date.today.to_s
+#    @start_date = transaction_params[:start_date] ||= Date.today.to_s
+#    @end_date = transaction_params[:end_date] ||= Date.today.to_s
+    @start_date = params[:start_date] ||= Date.today.to_s
+    @end_date = params[:end_date] ||= Date.today.to_s
     if params[:transaction_id].blank?
       if @type == 'Withdrawal'
         transactions = current_user.company.transactions.withdrawals.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)

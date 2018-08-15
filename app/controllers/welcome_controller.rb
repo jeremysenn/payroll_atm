@@ -1,5 +1,7 @@
 class WelcomeController < ApplicationController
 #  before_action :authenticate_user!
+
+  helper_method :transactions_sort_column, :transactions_sort_direction
   
   def index
     if user_signed_in?
@@ -19,6 +21,7 @@ class WelcomeController < ApplicationController
         @devices = current_user.company.devices.order("description ASC")
         @start_date = params[:start_date] ||= (Date.today - 1.week).to_s
         @end_date = params[:end_date] ||= Date.today.to_s
+        @type = params[:type] ||= 'Transfer'
         if params[:device_id].blank?
           @device = @devices.first
         else
@@ -92,5 +95,16 @@ class WelcomeController < ApplicationController
       end
     end
   end
+  
+  private
+    ### Secure the transactions sort direction ###
+    def transactions_sort_direction
+      %w[asc desc].include?(params[:transactions_direction]) ?  params[:transactions_direction] : "desc"
+    end
+
+    ### Secure the transactions sort column name ###
+    def transactions_sort_column
+      ["tranID", "dev_id", "date_time", "error_code", "tran_status", "amt_auth", "ChpFee"].include?(params[:transactions_column]) ? params[:transactions_column] : "tranID"
+    end
   
 end
