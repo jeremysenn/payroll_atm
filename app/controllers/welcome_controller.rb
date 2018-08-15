@@ -33,7 +33,7 @@ class WelcomeController < ApplicationController
         @bill_counts = @device.bill_counts
         @denoms = @device.denoms
         @bill_hists = @device.bill_hists.select(:cut_dt).distinct.order("cut_dt DESC").first(5)
-        @transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("date_time DESC")
+        @transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("#{transactions_sort_column} #{transactions_sort_direction}")
         
         # Transfers Info
         @transfers = @transactions.transfers.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("date_time DESC")
