@@ -4,6 +4,7 @@
     %section.content-header
       = render 'shared/flash_messages'
       %h1
+        %i.fa.fa-bolt
         - unless @to_customer.blank?
           = link_to @transaction.Description, @to_customer
         - else
