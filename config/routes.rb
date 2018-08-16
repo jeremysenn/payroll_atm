@@ -37,5 +37,6 @@ Rails.application.routes.draw do
     end
   end
   resources :payment_batch_csv_mappings
+  resources :cards
   
 end

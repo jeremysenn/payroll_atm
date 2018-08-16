@@ -9,6 +9,7 @@ class Device < ActiveRecord::Base
   has_many :transactions, :foreign_key => "dev_id"
   has_many :dev_statuses, :foreign_key => 'dev_id'
   has_many :bill_hists, :foreign_key => "dev_id"
+  has_many :cards, :foreign_key => "dev_id"
   
   #############################
   #     Instance Methods      #

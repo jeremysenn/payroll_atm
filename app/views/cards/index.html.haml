@@ -1,0 +1,60 @@
+.content-wrapper
+  .container
+    / Content Header (Page header)
+    %section.content-header
+      = render 'shared/flash_messages'
+      %h1
+        %i.fa.fa-qrcode
+        Barcodes
+        
+    / Main content
+    %section.content
+      / Default box
+      .box.box-primary
+        .box-header.with-border
+          %h3.box-title 
+            Active
+            -#
+              %a{href: cards_path(format: "csv", q: params[:q]), class: 'btn btn-info btn-sm'}
+                %i.fa.fa-download
+                Download CSV
+          .box-tools
+            = form_tag cards_path, id: 'cards_search_form', method: 'get', class: 'form-inline' do |f|
+              .input-group.input-group-sm
+                = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
+                .input-group-append
+                  %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                    %i.fa.fa-search
+
+        .box-body.no-padding
+          .table-responsive
+            %table.table.table-striped.table-condensed
+              %thead
+                %tr
+                  -# %th{:scope => "col"}= customers_sort_link 'customer.PhoneMobile', "Phone", params[:q]
+                  %th{:scope => "col"}= 'Last Used'
+                  %th{:scope => "col"}= 'Issued'
+                  %th{:scope => "col"}= 'Status'
+                  %th{:scope => "col"}= 'Bank ID'
+                  %th{:scope => "col"}= 'Card Nbr'
+                  %th{:scope => "col"}= 'Dev ID'
+                  %th{:scope => "col"}= 'Receipt Nbr'
+                  %th{:scope => "col"}= 'Total Amt'
+                  %th{:scope => "col"}= 'Avail Amt'
+                  %th
+              %tbody
+                - @cards.each do |card|
+                  %tr
+                    %th{:scope => "row"}= card.last_activity_date
+                    %td= card.issued_date
+                    %td= card.card_status
+                    %td= card.bank_id_nbr
+                    %td= card.card_nbr
+                    %td= link_to card.dev_id, devices_path(card.dev_id)
+                    %td= card.receipt_nbr
+                    %td= number_to_currency(card.card_amt)
+                    %td= number_to_currency(card.avail_amt)
+                    %td
+                      = link_to 'More', card, class: 'btn btn-primary btn-sm'
+        .box-footer
+          .pull-right= paginate @cards, :param_name => "cards_page"

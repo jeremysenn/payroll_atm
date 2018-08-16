@@ -77,6 +77,12 @@ class Ability
         user.company == device.company 
       end
       
+      # Cards
+      ############
+      can :manage, Card do |card|
+         user.company == card.device.company
+      end
+      
     elsif user.payee?
       
       # Customers
