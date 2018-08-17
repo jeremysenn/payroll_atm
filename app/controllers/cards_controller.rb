@@ -6,8 +6,17 @@ class CardsController < ApplicationController
   helper_method :cards_sort_column, :cards_sort_direction
   
   def index
+    @start_date = params[:start_date] ||= Date.today.to_s
+    @end_date = params[:end_date] ||= Date.today.to_s
+    @receipt_number = params[:receipt_nbr]
 #    @cards = Kaminari.paginate_array(Card.order(sort_column + ' ' + sort_direction)).page(params[:cards_page]).per(20)
-    @cards = Kaminari.paginate_array(current_user.company.cards.order(cards_sort_column + ' ' + cards_sort_direction)).page(params[:cards_page]).per(20)
+    if @receipt_number.blank?
+      @cards = Kaminari.paginate_array(current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)).page(params[:cards_page]).per(20)
+    else
+      @start_date = nil
+      @end_date = nil
+      @cards = Kaminari.paginate_array(current_user.company.cards.where(receipt_nbr: params[:receipt_nbr]).order(cards_sort_column + ' ' + cards_sort_direction)).page(params[:cards_page]).per(20)
+    end
   end
   
   def show

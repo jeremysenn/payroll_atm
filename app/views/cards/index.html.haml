@@ -6,6 +6,13 @@
       %h1
         %i.fa.fa-qrcode
         Barcodes
+        .pull-right
+          = form_tag cards_path, id: 'cards_search_form', method: 'get', class: 'form-inline' do |f|
+            .input-group
+              = search_field_tag :receipt_nbr, params[:receipt_nbr], :placeholder => "Receipt number", class: "form-control", autofocus: true, style: "width: 200px;"
+              .input-group-append
+                %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                  %i.fa.fa-search
         
     / Main content
     %section.content
@@ -19,12 +26,13 @@
                 %i.fa.fa-download
                 Download CSV
           .box-tools
-            = form_tag cards_path, id: 'cards_search_form', method: 'get', class: 'form-inline' do |f|
-              .input-group.input-group-sm
-                = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
-                .input-group-append
-                  %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
-                    %i.fa.fa-search
+            = form_tag cards_path, :method => 'get', :class => "form-inline" do
+              = text_field_tag :start_date, nil, :placeholder => "Start Date", value: "#{@start_date.blank? ? (@receipt_number.blank? ? Date.today : '') : @start_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+              To
+              = text_field_tag :end_date, nil, :placeholder => "End Date", value: "#{@end_date.blank? ? (@receipt_number.blank? ? Date.today : '') : @end_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+              &nbsp;
+              = button_tag(:type => 'submit', :class => 'btn btn-primary', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}) do
+                %i.fa.fa-search
 
         .box-body.no-padding
           .table-responsive
