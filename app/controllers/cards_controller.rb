@@ -11,11 +11,25 @@ class CardsController < ApplicationController
     @receipt_number = params[:receipt_nbr]
 #    @cards = Kaminari.paginate_array(Card.order(sort_column + ' ' + sort_direction)).page(params[:cards_page]).per(20)
     if @receipt_number.blank?
-      @cards = Kaminari.paginate_array(current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)).page(params[:cards_page]).per(20)
+      if @start_date.blank? or @end_date.blank?
+        @start_date = Date.today.to_s
+        @end_date = Date.today.to_s
+        @all_cards = current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
+      else
+        @all_cards = current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
+      end
+      @cards = @all_cards.page(params[:cards_page]).per(20)
     else
       @start_date = nil
       @end_date = nil
-      @cards = Kaminari.paginate_array(current_user.company.cards.where(receipt_nbr: params[:receipt_nbr]).order(cards_sort_column + ' ' + cards_sort_direction)).page(params[:cards_page]).per(20)
+      @all_cards = current_user.company.cards.where(receipt_nbr: params[:receipt_nbr]).order(cards_sort_column + ' ' + cards_sort_direction)
+      @cards = @all_cards.page(params[:cards_page]).per(20)
+    end
+    respond_to do |format|
+      format.html {}
+      format.csv { 
+        send_data @all_cards.to_csv, filename: "cards-#{@receipt_number}-#{@start_date}-#{@end_date}.csv" 
+        }
     end
   end
   

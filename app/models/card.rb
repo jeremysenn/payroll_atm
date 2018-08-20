@@ -5,4 +5,26 @@ class Card < ActiveRecord::Base
   
   belongs_to :device, :foreign_key => 'dev_id'
   belongs_to :company
+  
+  #############################
+  #     Instance Methods      #
+  #############################
+  
+  #############################
+  #     Class Methods         #
+  #############################
+  
+  def self.to_csv
+    require 'csv'
+    attributes = %w{last_activity_date issued_date card_status bank_id_nbr card_nbr dev_id receipt_nbr card_amt avail_amt}
+    
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.each do |card|
+        csv << attributes.map{ |attr| card.send(attr) }
+      end
+    end
+  end
+  
 end
