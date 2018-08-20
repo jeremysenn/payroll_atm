@@ -13,7 +13,8 @@ class TransactionsController < ApplicationController
 #    @end_date = transaction_params[:end_date] ||= Date.today.to_s
     @start_date = params[:start_date] ||= Date.today.to_s
     @end_date = params[:end_date] ||= Date.today.to_s
-    if params[:transaction_id].blank?
+    @transaction_id_or_receipt_number = params[:transaction_id]
+    if @transaction_id_or_receipt_number.blank?
       if @type == 'Withdrawal'
         transactions = current_user.company.transactions.withdrawals.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       elsif @type == 'Transfer'
@@ -28,8 +29,10 @@ class TransactionsController < ApplicationController
         transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       end
     else
+      @start_date = nil
+      @end_date = nil
 #      transactions = current_user.company.transactions.where(tranID: params[:transaction_id])
-      transactions = current_user.company.transactions.where(tranID: params[:transaction_id]).or(current_user.company.transactions.where(receipt_nbr: params[:transaction_id]))
+      transactions = current_user.company.transactions.where(tranID: @transaction_id_or_receipt_number).or(current_user.company.transactions.where(receipt_nbr: @transaction_id_or_receipt_number))
     end
     
     respond_to do |format|

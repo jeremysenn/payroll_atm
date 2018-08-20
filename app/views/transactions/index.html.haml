@@ -6,6 +6,14 @@
       %h1
         %i.fa.fa-bolt
         EZcash
+        .pull-right
+          = form_tag transactions_path, id: 'transfers_search_form', method: 'get', class: 'form-inline' do |f|
+            .input-group
+              = hidden_field_tag :type, 'Transfer'
+              = search_field_tag :transaction_id, params[:transaction_id], :placeholder => "Transfer ID or Reference #", class: "form-control", autofocus: true, style: "width: 200px;"
+              .input-group-append
+                %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                  %i.fa.fa-search
         -#
           - unless @transactions.blank?
             .pull-right
@@ -48,9 +56,9 @@
                 = form_tag transactions_path, :method => 'get', :class => "form-inline" do
                   = select_tag :type, options_for_select(["All", "Balance", "Check", "Fee", "Transfer", "Withdrawal"], @type), class: "form-control"
                   &nbsp;
-                  = text_field_tag :start_date, nil, :placeholder => "Start Date", value: "#{@start_date.blank? ? Date.today : @start_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+                  = text_field_tag :start_date, nil, :placeholder => "Start Date", value: "#{@start_date.blank? ? (@transaction_id_or_receipt_number.blank? ? Date.today : '') : @start_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
                   To
-                  = text_field_tag :end_date, nil, :placeholder => "End Date", value: "#{@end_date.blank? ? Date.today : @end_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+                  = text_field_tag :end_date, nil, :placeholder => "End Date", value: "#{@end_date.blank? ? (@transaction_id_or_receipt_number.blank? ? Date.today : '') : @end_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
                   &nbsp;
                   = button_tag(:type => 'submit', :class => 'btn btn-primary', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}) do
                     %i.fa.fa-search
