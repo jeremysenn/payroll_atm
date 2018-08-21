@@ -17,55 +17,102 @@
     / Main content
     %section.content
       / Default box
-      .box.box-primary
-        .box-header.with-border
-          %h3.box-title 
-            Active
-            - unless @cards.blank?
-              %a{href: cards_path(format: "csv", start_date: @start_date, end_date: @end_date, receipt_nbr: @receipt_number), class: 'btn btn-info btn-sm'}
-                %i.fa.fa-download
-                Download CSV
-          .box-tools
-            = form_tag cards_path, :method => 'get', :class => "form-inline" do
-              = text_field_tag :start_date, nil, :placeholder => "Start Date", value: "#{@start_date.blank? ? (@receipt_number.blank? ? Date.today : '') : @start_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
-              To
-              = text_field_tag :end_date, nil, :placeholder => "End Date", value: "#{@end_date.blank? ? (@receipt_number.blank? ? Date.today : '') : @end_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
-              &nbsp;
-              = button_tag(:type => 'submit', :class => 'btn btn-primary', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}) do
-                %i.fa.fa-search
+      .row
+        .col-md-3
+          .box.box-primary
+            .box-body.box-profile
+              %h3.profile-username.text-center= "Summary"
+              %p.text-muted.text-center
+                Total Issued:
+                = number_to_currency(@issued_amount_total)
+                %br
+                Total Outstanding:
+                = number_to_currency(@available_amount_total)
 
-        .box-body.no-padding
-          - unless @cards.blank?
-            .table-responsive
-              %table.table.table-striped.table-condensed
-                %thead
-                  %tr
-                    -# %th{:scope => "col"}= customers_sort_link 'customer.PhoneMobile', "Phone", params[:q]
-                    %th{:scope => "col"}= 'Last Used'
-                    %th{:scope => "col"}= 'Issued'
-                    %th{:scope => "col"}= 'Status'
-                    %th{:scope => "col"}= 'Bank ID'
-                    %th{:scope => "col"}= 'Card Nbr'
-                    %th{:scope => "col"}= 'Dev ID'
-                    %th{:scope => "col"}= 'Receipt Nbr'
-                    %th{:scope => "col"}= 'Total Amt'
-                    %th{:scope => "col"}= 'Avail Amt'
-                    %th
-                %tbody
-                  - @cards.each do |card|
-                    %tr
-                      %th{:scope => "row"}= card.last_activity_date
-                      %td= card.issued_date
-                      %td= card.card_status
-                      %td= card.bank_id_nbr
-                      %td= card.card_nbr
-                      %td= link_to card.dev_id, devices_path(card.dev_id)
-                      %td= card.receipt_nbr
-                      %td= number_to_currency(card.card_amt)
-                      %td= number_to_currency(card.avail_amt)
-                      %td
-                        = link_to 'More', card, class: 'btn btn-primary btn-sm'
-          - else
-            %p.lead None
-        .box-footer
-          .pull-right= paginate @cards, :param_name => "cards_page"
+              %ul.list-group.list-group-unbordered
+                %li.list-group-item
+                  %b 
+                    Issued prior, paid in period
+                  %br
+                  %a.pull-right= number_to_currency(0)
+                %li.list-group-item
+                  %b 
+                    Total issued in period
+                  %br
+                  %a.pull-right= number_to_currency(@issued_amount_total)
+                %li.list-group-item
+                  %b 
+                    Issued but not paid in period
+                  %br
+                  %a.pull-right= number_to_currency(@available_amount_total)
+                %li.list-group-item
+                  %b 
+                    Issued and paid/void in period
+                  %br
+                  %a.pull-right= number_to_currency(@issued_amount_total - @available_amount_total)
+        .col-md-9
+          .box.box-primary
+            .box-header.with-border
+              %h3.box-title 
+                Active
+                - unless @cards.blank?
+                  %a{href: cards_path(format: "csv", start_date: @start_date, end_date: @end_date, receipt_nbr: @receipt_number), class: 'btn btn-info btn-sm'}
+                    %i.fa.fa-download
+                    Download CSV
+                  %br
+                  %small.text-muted
+                    = "#{pluralize(number_with_delimiter(@all_cards.count), 'record')} found"
+              .box-tools
+                = form_tag cards_path, :method => 'get', :class => "form-inline" do
+                  = text_field_tag :start_date, nil, :placeholder => "Start Date", value: "#{@start_date.blank? ? (@receipt_number.blank? ? Date.today : '') : @start_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+                  To
+                  = text_field_tag :end_date, nil, :placeholder => "End Date", value: "#{@end_date.blank? ? (@receipt_number.blank? ? Date.today : '') : @end_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
+                  &nbsp;
+                  = button_tag(:type => 'submit', :class => 'btn btn-primary', data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}) do
+                    %i.fa.fa-search
+
+            .box-body.no-padding
+              - unless @cards.blank?
+                .table-responsive
+                  %table.table.table-striped.table-condensed
+                    %thead
+                      %tr
+                        -# %th{:scope => "col"}= customers_sort_link 'customer.PhoneMobile', "Phone", params[:q]
+                        %th{:scope => "col"}= cards_sort_link 'last_activity_date', "Used", @start_date, @end_date, @receipt_number
+                        %th{:scope => "col"}= cards_sort_link 'issued_date', "Issued", @start_date, @end_date, @receipt_number
+                        %th{:scope => "col"}= cards_sort_link 'card_status', "Status", @start_date, @end_date, @receipt_number
+                        %th{:scope => "col"}= cards_sort_link 'bank_id_nbr', "BankID", @start_date, @end_date, @receipt_number
+                        %th{:scope => "col"}= cards_sort_link 'card_nbr', "CardNbr", @start_date, @end_date, @receipt_number
+                        %th{:scope => "col"}= cards_sort_link 'dev_id', "DevID", @start_date, @end_date, @receipt_number
+                        %th{:scope => "col"}= cards_sort_link 'receipt_nbr', "Receipt", @start_date, @end_date, @receipt_number
+                        %th{:scope => "col"}= cards_sort_link 'card_amt', "Total", @start_date, @end_date, @receipt_number
+                        %th{:scope => "col"}= cards_sort_link 'avail_amt', "Avail", @start_date, @end_date, @receipt_number
+                        -#
+                          %th{:scope => "col"}= 'Used'
+                          %th{:scope => "col"}= 'Issued'
+                          %th{:scope => "col"}= 'Status'
+                          %th{:scope => "col"}= 'BankID'
+                          %th{:scope => "col"}= 'CardNbr'
+                          %th{:scope => "col"}= 'DevID'
+                          %th{:scope => "col"}= 'Receipt'
+                          %th{:scope => "col"}= 'Total'
+                          %th{:scope => "col"}= 'Avail'
+                        %th
+                    %tbody
+                      - @cards.each do |card|
+                        %tr
+                          %th{:scope => "row"}= card.last_activity_date.strftime('%-m/%-d/%y')
+                          %td= card.issued_date.strftime('%-m/%-d/%y')
+                          %td= card.card_status
+                          %td= card.bank_id_nbr
+                          %td= card.card_nbr
+                          %td= link_to card.dev_id, devices_path(card.dev_id)
+                          %td= card.receipt_nbr
+                          %td= number_to_currency(card.card_amt)
+                          %td= number_to_currency(card.avail_amt)
+                          %td
+                            = link_to 'More', card, class: 'btn btn-primary btn-sm'
+              - else
+                %p.lead None
+            .box-footer
+              .pull-right= paginate @cards, :param_name => "cards_page"

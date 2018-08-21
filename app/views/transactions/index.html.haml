@@ -52,6 +52,9 @@
                   %a{href: transactions_path(format: "csv", :type => @type, 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date, transaction_id: @transaction_id_or_receipt_number), class: 'btn btn-sm btn-info'}
                     %i.fa.fa-download
                     Download CSV
+                  %br
+                  %small.text-muted
+                    = "#{pluralize(number_with_delimiter(@all_transactions.count), 'record')} found"
               .box-tools
                 = form_tag transactions_path, :method => 'get', :class => "form-inline" do
                   = select_tag :type, options_for_select(["All", "Balance", "Check", "Fee", "Transfer", "Withdrawal"], @type), class: "form-control"
@@ -67,8 +70,7 @@
             .box-body.no-padding
               = render partial: "transactions/index"
             .box-footer
-              -#
-                .pull-right= paginate @customers, param_name: 'result1'
+              .pull-right= paginate @transactions, param_name: 'transactions_page'
 -#
   .container-fluid
     %br

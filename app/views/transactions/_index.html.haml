@@ -3,13 +3,13 @@
     %table.table.table-striped.table-condensed
       %thead
         %tr
-          %th{:scope => "col"}= transactions_sort_link 'tranID', "#", @start_date, @end_date, @type
-          %th{:scope => "col"}= transactions_sort_link 'date_time', "Date", @start_date, @end_date, @type
+          %th{:scope => "col"}= transactions_sort_link 'tranID', "#", @start_date, @end_date, @type, @transaction_id_or_receipt_number
+          %th{:scope => "col"}= transactions_sort_link 'date_time', "Date", @start_date, @end_date, @type, @transaction_id_or_receipt_number
           %th{:scope => "col"} Ref
-          %th{:scope => "col"}= transactions_sort_link 'error_code', "Code", @start_date, @end_date, @type
+          %th{:scope => "col"}= transactions_sort_link 'error_code', "Code", @start_date, @end_date, @type, @transaction_id_or_receipt_number
           %th{:scope => "col"} Desc
           %th{:scope => "col"} Note
-          %th{:scope => "col"}= transactions_sort_link 'amt_auth', "Amt", @start_date, @end_date, @type
+          %th{:scope => "col"}= transactions_sort_link 'amt_auth', "Amt", @start_date, @end_date, @type, @transaction_id_or_receipt_number
           %th
       %tbody
         - @transactions.each do |transaction|

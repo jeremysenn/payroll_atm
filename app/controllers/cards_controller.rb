@@ -14,10 +14,9 @@ class CardsController < ApplicationController
       if @start_date.blank? or @end_date.blank?
         @start_date = Date.today.to_s
         @end_date = Date.today.to_s
-        @all_cards = current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
-      else
-        @all_cards = current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
       end
+#      @all_cards = current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
+      @all_cards = current_user.company.cards.where(issued_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
       @cards = @all_cards.page(params[:cards_page]).per(20)
     else
       @start_date = nil
@@ -26,7 +25,16 @@ class CardsController < ApplicationController
       @cards = @all_cards.page(params[:cards_page]).per(20)
     end
     respond_to do |format|
-      format.html {}
+      format.html {
+        @issued_amount_total = 0
+        @available_amount_total = 0
+        @all_cards.each do |card|
+          @issued_amount_total = @issued_amount_total + card.card_amt
+          unless card.void?
+            @available_amount_total = @available_amount_total + card.avail_amt
+          end
+        end
+        }
       format.csv { 
         send_data @all_cards.to_csv, filename: "cards-#{@receipt_number}-#{@start_date}-#{@end_date}.csv" 
         }
@@ -49,6 +57,6 @@ class CardsController < ApplicationController
 
     ### Secure the cards sort column name ###
     def cards_sort_column
-      ["card_nbr", "bank_id_nbr", "dev_id", "card_amt", "avail_amt", "card_status", "issued_date", "last_activity_date", "receipt_nbr", "barcodeHash", "card_seq"].include?(params[:cards_sort]) ? params[:cards_sort] : "last_activity_date"
+      ["card_nbr", "bank_id_nbr", "dev_id", "card_amt", "avail_amt", "card_status", "issued_date", "last_activity_date", "receipt_nbr", "barcodeHash", "card_seq"].include?(params[:cards_column]) ? params[:cards_column] : "last_activity_date"
     end
 end

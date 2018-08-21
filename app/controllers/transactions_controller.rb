@@ -16,36 +16,36 @@ class TransactionsController < ApplicationController
     @transaction_id_or_receipt_number = params[:transaction_id]
     if @transaction_id_or_receipt_number.blank?
       if @type == 'Withdrawal'
-        transactions = current_user.company.transactions.withdrawals.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+        @all_transactions = current_user.company.transactions.withdrawals.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       elsif @type == 'Transfer'
-        transactions = current_user.company.transactions.transfers.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+        @all_transactions = current_user.company.transactions.transfers.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       elsif @type == 'Balance'
-        transactions = current_user.company.transactions.one_sided_credits.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+        @all_transactions = current_user.company.transactions.one_sided_credits.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       elsif @type == 'Fee'
-        transactions = current_user.company.transactions.fees.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+        @all_transactions = current_user.company.transactions.fees.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       elsif @type == 'Check'
-        transactions = current_user.company.transactions.checks.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+        @all_transactions = current_user.company.transactions.checks.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       else
-        transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+        @all_transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       end
     else
       @start_date = nil
       @end_date = nil
 #      transactions = current_user.company.transactions.where(tranID: params[:transaction_id])
-      transactions = current_user.company.transactions.where(tranID: @transaction_id_or_receipt_number).or(current_user.company.transactions.where(receipt_nbr: @transaction_id_or_receipt_number))
+      @all_transactions = current_user.company.transactions.where(tranID: @transaction_id_or_receipt_number).or(current_user.company.transactions.where(receipt_nbr: @transaction_id_or_receipt_number))
     end
     
     respond_to do |format|
       format.html {
         @transactions_total = 0
-        @transactions_count = transactions.count
-        transactions.each do |transaction|
+        @transactions_count = @all_transactions.count
+        @all_transactions.each do |transaction|
           @transactions_total = @transactions_total + transaction.amt_auth unless transaction.amt_auth.blank?
         end
-        @transactions = transactions.order("#{transactions_sort_column} #{transactions_sort_direction}").page(params[:page]).per(20)
+        @transactions = @all_transactions.order("#{transactions_sort_column} #{transactions_sort_direction}").page(params[:transactions_page]).per(20)
       }
       format.csv { 
-        @transactions = transactions
+        @transactions = @all_transactions
         send_data @transactions.to_csv, filename: "#{@type}_transactions-#{@start_date}-#{@end_date}.csv" 
         }
     end

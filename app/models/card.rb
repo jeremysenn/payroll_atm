@@ -10,6 +10,18 @@ class Card < ActiveRecord::Base
   #     Instance Methods      #
   #############################
   
+  def active?
+    card_status == "AC"
+  end
+  
+  def closed?
+    card_status == "CL"
+  end
+  
+  def void?
+    card_status == "VD"
+  end
+  
   #############################
   #     Class Methods         #
   #############################
