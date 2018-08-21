@@ -3,6 +3,8 @@ class DevicesController < ApplicationController
   before_action :set_device, only: [:show, :edit, :update, :destroy, :send_atm_command]
   load_and_authorize_resource
   
+  helper_method :transactions_sort_column, :transactions_sort_direction
+  
   # GET /devices
   # GET /devices.json
   def index
@@ -68,5 +70,15 @@ class DevicesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_device
       @device = Device.find(params[:id])
+    end
+    
+    ### Secure the transactions sort direction ###
+    def transactions_sort_direction
+      %w[asc desc].include?(params[:transactions_direction]) ?  params[:transactions_direction] : "desc"
+    end
+
+    ### Secure the transactions sort column name ###
+    def transactions_sort_column
+      ["tranID", "dev_id", "date_time", "error_code", "tran_status", "amt_auth", "ChpFee"].include?(params[:transactions_column]) ? params[:transactions_column] : "tranID"
     end
 end
