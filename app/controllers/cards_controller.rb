@@ -15,8 +15,8 @@ class CardsController < ApplicationController
         @start_date = Date.today.to_s
         @end_date = Date.today.to_s
       end
-#      @all_cards = current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
-      @all_cards = current_user.company.cards.where(issued_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
+      @all_cards = current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
+#      @all_cards = current_user.company.cards.where(issued_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
       @cards = @all_cards.page(params[:cards_page]).per(20)
     else
       @start_date = nil
@@ -28,10 +28,14 @@ class CardsController < ApplicationController
       format.html {
         @issued_amount_total = 0
         @available_amount_total = 0
+        @issued_priored_paid_in_period_total = 0
         @all_cards.each do |card|
           @issued_amount_total = @issued_amount_total + card.card_amt
           unless card.void?
             @available_amount_total = @available_amount_total + card.avail_amt
+          end
+          if (card.issued_date < @start_date) and (card.last_activity_date >= @start_date and card.last_activity_date <= @end_date)
+            @issued_priored_paid_in_period_total = @issued_priored_paid_in_period_total + card.card_amt
           end
         end
         }

@@ -34,7 +34,7 @@
                   %b 
                     Issued prior, paid in period
                   %br
-                  %a.pull-right= number_to_currency(0)
+                  %a.pull-right= number_to_currency(@issued_priored_paid_in_period_total)
                 %li.list-group-item
                   %b 
                     Total issued in period
@@ -47,7 +47,7 @@
                   %a.pull-right= number_to_currency(@available_amount_total)
                 %li.list-group-item
                   %b 
-                    Issued and paid/void in period
+                    Issued and paid in period
                   %br
                   %a.pull-right= number_to_currency(@issued_amount_total - @available_amount_total)
         .col-md-9
