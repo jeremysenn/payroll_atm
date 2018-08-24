@@ -64,6 +64,8 @@
                     = "#{pluralize(number_with_delimiter(@all_cards.count), 'record')} found"
               .box-tools
                 = form_tag cards_path, :method => 'get', :class => "form-inline" do
+                  = select_tag :device_id, options_for_select(current_user.devices.map{ |device| ["#{device.id} - #{device.description}", device.id] }, @device_id), class: "form-control input-lg"
+                  &nbsp;
                   = text_field_tag :start_date, nil, :placeholder => "Start Date", value: "#{@start_date.blank? ? (@receipt_number.blank? ? Date.today : '') : @start_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true
                   To
                   = text_field_tag :end_date, nil, :placeholder => "End Date", value: "#{@end_date.blank? ? (@receipt_number.blank? ? Date.today : '') : @end_date}", class: "form-control input-lg", 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", 'data-date-autoclose' => true, readonly: true

@@ -72,4 +72,8 @@ class User < ApplicationRecord
     saved_change_to_phone?
   end
   
+  def devices
+    company.devices
+  end
+  
 end

@@ -9,34 +9,42 @@ class CardsController < ApplicationController
     @start_date = params[:start_date] ||= Date.today.to_s
     @end_date = params[:end_date] ||= Date.today.to_s
     @receipt_number = params[:receipt_nbr]
+    @device_id = params[:device_id] || current_user.devices.first.id
 #    @cards = Kaminari.paginate_array(Card.order(sort_column + ' ' + sort_direction)).page(params[:cards_page]).per(20)
     if @receipt_number.blank?
       if @start_date.blank? or @end_date.blank?
         @start_date = Date.today.to_s
         @end_date = Date.today.to_s
       end
-      @all_cards = current_user.company.cards.where(last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
+      @all_cards = current_user.company.cards.where(dev_id: @device_id, last_activity_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
 #      @all_cards = current_user.company.cards.where(issued_date: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order(cards_sort_column + ' ' + cards_sort_direction)
       @cards = @all_cards.page(params[:cards_page]).per(20)
     else
       @start_date = nil
       @end_date = nil
-      @all_cards = current_user.company.cards.where(receipt_nbr: params[:receipt_nbr]).order(cards_sort_column + ' ' + cards_sort_direction)
+      @all_cards = current_user.company.cards.where(dev_id: current_user.devices.map{ |device| device.id }, receipt_nbr: params[:receipt_nbr]).order(cards_sort_column + ' ' + cards_sort_direction)
       @cards = @all_cards.page(params[:cards_page]).per(20)
     end
     respond_to do |format|
       format.html {
-        @issued_amount_total = 0
-        @available_amount_total = 0
-        @issued_priored_paid_in_period_total = 0
-        @all_cards.each do |card|
-          @issued_amount_total = @issued_amount_total + card.card_amt
-          unless card.void?
-            @available_amount_total = @available_amount_total + card.avail_amt
+        if @receipt_number.blank?
+          @issued_amount_total = 0
+          @available_amount_total = 0
+          @issued_priored_paid_in_period_total = 0
+          @all_cards.each do |card|
+            @issued_amount_total = @issued_amount_total + card.card_amt
+            unless card.void?
+              @available_amount_total = @available_amount_total + card.avail_amt
+            end
+            Rails.logger.debug card.issued_date
+            if (card.issued_date < @start_date) and (card.last_activity_date >= @start_date and card.last_activity_date <= @end_date)
+              @issued_priored_paid_in_period_total = @issued_priored_paid_in_period_total + card.card_amt
+            end
           end
-          if (card.issued_date < @start_date) and (card.last_activity_date >= @start_date and card.last_activity_date <= @end_date)
-            @issued_priored_paid_in_period_total = @issued_priored_paid_in_period_total + card.card_amt
-          end
+        else
+          @issued_amount_total = 0
+          @available_amount_total = 0
+          @issued_priored_paid_in_period_total = 0
         end
         }
       format.csv { 
