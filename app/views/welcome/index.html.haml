@@ -1,6 +1,8 @@
 - if user_signed_in?
   =# render 'admin_user_sidebar'
-  = render 'admin_user_start' if current_user.admin?
-  = render 'customer_user_start' if current_user.payee?
+  - if current_user.admin? or current_user.basic?
+    = render 'admin_user_start' 
+  - elsif current_user.payee?
+    = render 'customer_user_start'
 - else
   = render 'no_user_start'

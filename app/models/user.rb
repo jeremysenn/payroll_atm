@@ -3,11 +3,13 @@ class User < ApplicationRecord
   # :registerable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :confirmable
        
-  ROLES = %w[admin payee].freeze
+  ROLES = %w[admin basic payee].freeze
        
   belongs_to :company
   belongs_to :customer, optional: true
   has_many :sms_messages
+  
+  serialize :device_ids, Array
   
   before_create :search_for_payee_match
   after_create :send_confirmation_sms_message
@@ -27,6 +29,10 @@ class User < ApplicationRecord
     role == "admin"
   end
   
+  def basic?
+    role == "basic"
+  end
+  
   def payee?
     role == "payee"
   end
@@ -38,7 +44,7 @@ class User < ApplicationRecord
       self.role = "payee"
       self.company_id = payee.company_id
     else
-      self.role = "admin"
+      self.role = "basic"
     end
   end
   
@@ -73,7 +79,12 @@ class User < ApplicationRecord
   end
   
   def devices
-    company.devices
+#    company.devices
+    if admin?
+      company.devices
+    elsif basic?
+      company.devices.where(dev_id: device_ids)
+    end
   end
   
 end

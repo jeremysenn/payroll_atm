@@ -20,6 +20,7 @@
         = render 'shared/no_user_navbar'
       - else
         = render 'shared/admin_user_navbar' if current_user.admin?
+        = render 'shared/basic_user_navbar' if current_user.basic?
         = render 'shared/customer_user_navbar' if current_user.payee?
       = yield
       %footer.main-footer

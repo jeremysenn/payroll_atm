@@ -80,7 +80,38 @@ class Ability
       # Cards
       ############
       can :manage, Card do |card|
-         user.company == card.device.company
+        user.company == card.device.company
+      end
+      
+    elsif user.basic?
+      
+      # SmsMessages
+      ############
+      can :manage, SmsMessage
+      can :create, :sms_messages
+      
+      # Transactions
+      ############
+      can :manage, Transaction do |transaction|
+         user.company == transaction.company
+      end
+      
+      # Users
+      ############
+      can :manage, User do |user_record|
+        user == user_record 
+      end
+      
+      # Devices
+      ############
+      can :manage, Device do |device|
+        user.company == device.company and user.devices.include? device
+      end
+      
+      # Cards
+      ############
+      can :manage, Card do |card|
+         user.company == card.device.company and user.devices.include? card.device
       end
       
     elsif user.payee?

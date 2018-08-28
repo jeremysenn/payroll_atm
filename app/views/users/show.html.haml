@@ -4,8 +4,10 @@
     %section.content-header
       %h1
         %i.fa.fa-user
-        = @user.full_name
+        = "#{@user.full_name} (#{@user.role})"
+        = link_to 'Edit', edit_user_path(@user), class: 'btn bg-orange'
         - unless @user.customer.blank?
+          %br
           %small= link_to 'Payee Account', @user.customer
       - if @user.confirmed?
         Sign In Count:
@@ -24,6 +26,14 @@
         = @user.last_sign_in_ip
       - else
         .text-danger Waiting for user to confirm account
+      %br
+      Devices:
+      %br
+      - unless @devices.blank?
+        - @devices.each do |device|
+          %p= link_to device.description, device
+      - else
+        None
     -#
       / Main content
       %section.content

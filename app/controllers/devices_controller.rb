@@ -8,7 +8,8 @@ class DevicesController < ApplicationController
   # GET /devices
   # GET /devices.json
   def index
-    @devices = current_user.company.devices
+#    @devices = current_user.company.devices
+    @devices = current_user.devices
     
     # Bin Info
     @bin_1_column_count = @devices.select{ |device| device.bin_1_count != 0 }.select{ |device| device.bin_1_count != nil }.count

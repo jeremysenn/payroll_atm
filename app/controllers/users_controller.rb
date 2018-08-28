@@ -9,12 +9,14 @@ class UsersController < ApplicationController
   def index
     @users = current_user.company.users
     @admin_users = @users.where(role: 'admin')
+    @basic_users = @users.where(role: 'basic')
     @payee_users = @users.where(role: 'payee')
   end
 
   # GET /users/1
   # GET /users/1.json
   def show
+    @devices = @user.devices
   end
 
   # GET /users/new
@@ -74,7 +76,7 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:company_id, :email, :password, :time_zone, :admin, :active, :role, :pin, :phone)
+      params.require(:user).permit(:company_id, :email, :password, :time_zone, :admin, :active, :role, :pin, :phone, device_ids: [])
     end
     
 end
