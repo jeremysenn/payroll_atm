@@ -31,7 +31,8 @@
       %br
       - unless @devices.blank?
         - @devices.each do |device|
-          %p= link_to device.description, device
+          = link_to device.description, device
+          %br
       - else
         None
     -#
