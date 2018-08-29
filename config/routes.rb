@@ -17,7 +17,10 @@ Rails.application.routes.draw do
       post 'send_sms_message'
     end
   end
-  resources :users
+  
+#  resources :users
+  resources :users_admin, :controller => 'users'
+  
   resources :transactions do
     member do
       get 'reverse'

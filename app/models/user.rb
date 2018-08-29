@@ -48,7 +48,9 @@ class User < ApplicationRecord
       self.role = "payee"
       self.company_id = payee.company_id
     else
-      self.role = "basic"
+      if self.role.blank?
+        self.role = "basic"
+      end
     end
   end
   

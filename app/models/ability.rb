@@ -69,7 +69,7 @@ class Ability
       can :manage, User do |user_record|
         user.company == user_record.company 
       end
-      can :create, :users
+      can :create, User
       
       # Devices
       ############

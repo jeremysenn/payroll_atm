@@ -2,10 +2,11 @@
   .container
     / Content Header (Page header)
     %section.content-header
+      = render 'shared/flash_messages'
       %h1
         %i.fa.fa-user
         Users
-        
+        %small= link_to 'New', new_users_admin_path, class: 'btn bg-orange'
     / Main content
     %section.content
       / Default box
@@ -36,7 +37,7 @@
                   %td= admin_user.last_name
                   %td= admin_user.phone
                   %td= admin_user.email
-                  %td= link_to 'More', admin_user, class: 'btn btn-primary btn-sm'
+                  %td= link_to 'More', users_admin_path(admin_user), class: 'btn btn-primary btn-sm'
 
       .box.box-primary
         .box-header.with-border
@@ -65,7 +66,7 @@
                   %td= basic_user.last_name
                   %td= basic_user.phone
                   %td= basic_user.email
-                  %td= link_to 'More', basic_user, class: 'btn btn-primary btn-sm'
+                  %td= link_to 'More', users_admin_path(basic_user), class: 'btn btn-primary btn-sm'
 
       .box.box-primary
         .box-header.with-border
@@ -94,4 +95,4 @@
                   %td= payee_user.last_name
                   %td= payee_user.phone
                   %td= payee_user.email
-                  %td= link_to 'More', payee_user, class: 'btn btn-primary btn-sm'
+                  %td= link_to 'More', users_admin_path(payee_user), class: 'btn btn-primary btn-sm'

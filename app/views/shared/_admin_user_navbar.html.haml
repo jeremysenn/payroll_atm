@@ -48,7 +48,7 @@
             %i.fa.fa-edit
             Edit account
           .dropdown-divider
-          %a.dropdown-item{:href => users_path, :class => (params[:controller] == 'users') ?  "text-light-blue" : ""} 
+          %a.dropdown-item{:href => users_admin_index_path, :class => (params[:controller] == 'users') ?  "text-light-blue" : ""} 
             %i.fa.fa-users
             Users
           %a.dropdown-item{:href => transactions_path, :class => (params[:controller] == 'transactions') ?  "text-light-blue" : ""}

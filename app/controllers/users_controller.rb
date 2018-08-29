@@ -32,10 +32,13 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
-
+    temporary_password = SecureRandom.random_number(10**6).to_s
+    @user.temporary_password = temporary_password
+    @user.password = temporary_password
+    @user.password_confirmation = temporary_password
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
+        format.html { redirect_to users_admin_path(@user), notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new }
@@ -49,7 +52,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to users_admin_path(@user), notice: 'User was successfully updated.' }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit }
@@ -76,7 +79,7 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:company_id, :email, :password, :time_zone, :admin, :active, :role, :pin, :phone, device_ids: [])
+      params.require(:user).permit(:first_name, :last_name, :company_id, :email, :password, :time_zone, :admin, :active, :role, :pin, :phone, device_ids: [])
     end
     
 end

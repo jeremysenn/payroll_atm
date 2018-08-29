@@ -4,8 +4,9 @@
     %section.content-header
       %h1
         %i.fa.fa-user
-        = "#{@user.full_name} (#{@user.role})"
-        = link_to 'Edit', edit_user_path(@user), class: 'btn bg-orange'
+        = "#{@user.full_name}"
+        %small.text-muted= "(#{@user.role})"
+        = link_to 'Edit', edit_users_admin_path(@user), class: 'btn bg-orange'
         - unless @user.customer.blank?
           %br
           %small= link_to 'Payee Account', @user.customer
