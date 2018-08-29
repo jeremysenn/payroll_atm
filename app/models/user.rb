@@ -11,6 +11,10 @@ class User < ApplicationRecord
   
   serialize :device_ids, Array
   
+  scope :admin, -> { where(role: "admin") }
+  scope :basic, -> { where(role: "basic") }
+  scope :payee, -> { where(role: "payee") }
+  
   before_create :search_for_payee_match
   after_create :send_confirmation_sms_message
   after_update :send_new_phone_number_confirmation_sms_message, if: :phone_changed?
