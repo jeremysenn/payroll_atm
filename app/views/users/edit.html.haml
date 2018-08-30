@@ -18,11 +18,13 @@
                 .form-inputs
                   - if current_user.admin?
                     = f.input :company_id, :as => :hidden, :input_html => { :value => "#{@user.new_record? ? current_user.company_id : @user.company_id}" }
-                    = f.input :role, as: :radio_buttons, collection: [['admin', 'Admin'], ['basic', 'Basic']], label_method: :second, value_method: :first, label: false
+                    - unless @user.payee?
+                      = f.input :role, as: :radio_buttons, collection: [['admin', 'Admin'], ['basic', 'Basic']], label_method: :second, value_method: :first, label: false
                     = f.input :first_name, label: 'First Name'
                     = f.input :last_name, label: 'First Name'
                     = f.input :email, label: 'Email'  
                     = f.input :phone, label: 'Phone'
+                    = f.input :time_zone, priority: /US/, collection: ActiveSupport::TimeZone.us_zones, required: true, as: :time_zone
                     #user_devices.form-group{style: "#{@user.basic? ? 'display: block;' : 'display: none;'}"}
                       = f.label "Devices"
                       - current_user.company.devices.each do |device|

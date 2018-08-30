@@ -38,7 +38,7 @@
                     - @unprocessed_cash_payment_batches.each do |payment_batch|
                       %tr
                         %th{:scope => "row"}= payment_batch.id
-                        %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                        %td= payment_batch.created_at.in_time_zone(current_user.time_zone).strftime("%B %-d, %Y")
                         %td
                           = link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
                           = link_to 'Delete', payment_batch, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
@@ -62,7 +62,7 @@
                     - @processed_cash_payment_batches.each do |payment_batch|
                       %tr
                         %th{:scope => "row"}= payment_batch.id
-                        %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                        %td= payment_batch.created_at.in_time_zone(current_user.time_zone).strftime("%B %-d, %Y")
                         %td= payment_batch.processed_status
                         %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
               - else
@@ -86,7 +86,7 @@
                     - @unprocessed_check_payment_batches.each do |payment_batch|
                       %tr
                         %th{:scope => "row"}= payment_batch.id
-                        %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                        %td= payment_batch.created_at.in_time_zone(current_user.time_zone).strftime("%B %-d, %Y")
                         %td
                           = link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
                           = link_to 'Delete', payment_batch, :method => :delete, class: 'btn btn-danger btn-sm', :data => { :confirm => 'Are you sure?' }
@@ -110,7 +110,7 @@
                     - @processed_check_payment_batches.each do |payment_batch|
                       %tr
                         %th{:scope => "row"}= payment_batch.id
-                        %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                        %td= payment_batch.created_at.in_time_zone(current_user.time_zone).strftime("%B %-d, %Y")
                         %td= payment_batch.processed_status
                         %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
               - else

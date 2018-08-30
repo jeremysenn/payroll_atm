@@ -4,8 +4,8 @@
     .box.box-success{"data-widget" => "box-widget"}
       .box-header.with-border
         %h3.box-title
-          = "#{bill_hist.cut_dt.strftime('%-m/%-d/%y %H:%M:%S')} - Current" if index == 0
-          = "#{bill_hist.cut_dt.strftime('%-m/%-d/%y %H:%M:%S')} - #{@bill_hists[index - 1].cut_dt.strftime('%-m/%-d/%y %H:%M:%S')}" unless index == 0
+          = "#{bill_hist.cut_dt.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%y %H:%M:%S')} - Current" if index == 0
+          = "#{bill_hist.cut_dt.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%y %H:%M:%S')} - #{@bill_hists[index - 1].cut_dt.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%y %H:%M:%S')}" unless index == 0
         .box-tools.pull-right
           %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
             %i.fa.fa-minus
@@ -26,11 +26,11 @@
                 - unless index == 0
                   %td= number_to_currency(BillHist.device_host_bill_dispensed(@device.id, @bill_hists[index - 1].cut_dt))
                 - else
-                  %td= number_to_currency(@device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).strftime("%Y-%m-%d %H:%M:%S"), Date.today))
+                  %td= number_to_currency(@device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S"), Date.today))
                 %td
                   - unless (index + 1) > @bill_hists.count
                     - unless index == 0
-                      = number_to_currency(BillHist.device_old_start_total(@device.id, @bill_hists[index - 1].cut_dt) - @device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).strftime("%Y-%m-%d %H:%M:%S"), @bill_hists[index - 1].cut_dt))
+                      = number_to_currency(BillHist.device_old_start_total(@device.id, @bill_hists[index - 1].cut_dt) - @device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S"), @bill_hists[index - 1].cut_dt))
                     - else
                       = number_to_currency(@device.remaining)
 - else

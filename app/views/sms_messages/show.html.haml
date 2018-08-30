@@ -10,11 +10,11 @@
       .box.box-primary
         .box-header.with-border
           %h3.box-title 
-            = @sms_message.created_at.strftime("%-m/%-d/%y %l:%M %p")
+            = @sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
         .box-body
           %p.lead
             Date/Time of text message:
-            = @sms_message.created_at.strftime("%-m/%-d/%y %l:%M %p")
+            = @sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
           %p.lead
             To:
             = @sms_message.customer.full_name

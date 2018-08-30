@@ -15,7 +15,7 @@
         - @transactions.each do |transaction|
           %tr{class: transaction.reversed? ? 'table-danger' : ''}
             %th{:scope => "row"}= transaction.id
-            %td= transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
+            %td= transaction.date_time.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
             %td= "#{transaction.receipt_nbr.blank? ? 'N/A' : transaction.receipt_nbr}"
             %td
               %a{"data-content" => "#{transaction.status_long_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{transaction.error_code_long_description}"} 

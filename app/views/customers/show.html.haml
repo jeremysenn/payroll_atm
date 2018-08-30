@@ -28,7 +28,7 @@
                 %img.profile-user-img.img-responsive.img-circle{:alt => "User profile picture", :src => "../../dist/img/user4-128x128.jpg"}/
               %h3.profile-username.text-center= @customer.full_name
               %p.text-muted.text-center
-                = "Created #{@customer.CreateDate.strftime('%-m/%-d/%Y')}"
+                = "Created #{@customer.CreateDate.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')}"
                 %br
                 Balance
                 = number_to_currency(@account.balance)
@@ -131,10 +131,10 @@
                         = @customer.user.sign_in_count
                         %br
                         Current Sign In At:
-                        = @customer.user.current_sign_in_at.strftime('%-m/%-d/%Y')
+                        = @customer.user.current_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
                         %br
                         Last Sign In At:
-                        = @customer.user.last_sign_in_at.strftime('%-m/%-d/%Y')
+                        = @customer.user.last_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
                         %br
                         Current Sign In IP:
                         = @customer.user.current_sign_in_ip
@@ -195,7 +195,7 @@
                         %tbody
                           - @payment_transactions.each do |payment_transaction|
                             %tr{class: payment_transaction.reversed? ? 'table-danger' : ''}
-                              %td= payment_transaction.date_time.strftime("%^b %d")
+                              %td= payment_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
                               %td= payment_transaction.Description
                               %td= "#{payment_transaction.Note.blank? ? 'N/A' : payment_transaction.Note}"
                               %td= number_to_currency(payment_transaction.amt_auth)
@@ -216,7 +216,7 @@
                         %tbody
                           - @check_transactions.each do |check_transaction|
                             %tr
-                              %td= check_transaction.date_time.strftime("%^b %d")
+                              %td= check_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
                               %td= number_to_currency(check_transaction.amt_auth)
                               %td= link_to "More", check_transaction, class: 'btn btn-primary'
                     .pull-right= paginate @check_transactions, param_name: 'checks'
@@ -236,7 +236,7 @@
                         %tbody
                           - @withdrawal_transactions.each do |withdrawal_transaction|
                             %tr
-                              %td= withdrawal_transaction.date_time.strftime("%^b %d")
+                              %td= withdrawal_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
                               %td= withdrawal_transaction.Description
                               %td= number_to_currency(withdrawal_transaction.amt_auth)
                               %td= link_to "More", withdrawal_transaction, class: 'btn btn-primary'
@@ -257,7 +257,7 @@
                         %tbody
                           - @sms_messages.each do |sms_message|
                             %tr
-                              %td= sms_message.created_at.strftime("%-m/%-d/%y %l:%M %p")
+                              %td= sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
                               %td
                                 - unless sms_message.user.blank?
                                   = sms_message.user.full_name unless sms_message.user.blank?

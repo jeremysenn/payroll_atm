@@ -12,7 +12,7 @@
       .box.box-primary
         .box-header.with-border
           %h3.box-title 
-            = @card.last_activity_date.strftime("%-m/%-d/%y %l:%M %p")
+            = @card.last_activity_date.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
           .box-tools.pull-right
             -#
               .text-warning

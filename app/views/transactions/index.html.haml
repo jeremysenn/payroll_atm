@@ -132,7 +132,7 @@
                   %td
                     = transaction.to_account_customer.full_name unless transaction.to_account_customer.blank?
                     = transaction.to_acct_id
-                  %td= transaction.date_time.strftime("%-m/%-d/%y %l:%M %p")
+                  %td= transaction.date_time.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
                   %td= transaction.error_code_description
                   %td= transaction.status_description
                   %td= transaction.tran_code

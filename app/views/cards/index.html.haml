@@ -103,8 +103,8 @@
                     %tbody
                       - @cards.each do |card|
                         %tr
-                          %th{:scope => "row"}= card.last_activity_date.strftime('%-m/%-d/%y')
-                          %td= card.issued_date.strftime('%-m/%-d/%y')
+                          %th{:scope => "row"}= card.last_activity_date.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%y')
+                          %td= card.issued_date.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%y')
                           %td= card.card_status
                           %td= card.bank_id_nbr
                           %td= card.card_nbr

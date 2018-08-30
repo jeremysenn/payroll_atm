@@ -16,7 +16,7 @@
       .box.box-primary
         .box-header.with-border
           %h3.box-title 
-            = @payment_batch.created_at.strftime("%B %-d, %Y")
+            = @payment_batch.created_at.in_time_zone(current_user.time_zone).strftime("%B %-d, %Y")
           - unless @payment_batch.processed? or @payment_batch.check?
             - if current_user.admin?
               .pull-right

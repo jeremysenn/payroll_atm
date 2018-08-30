@@ -255,7 +255,7 @@
                         - @processed_payment_batches.each do |payment_batch|
                           - payment_batch.payments.each do |payment|
                             %tr{class: "#{payment.customer.blank? ? 'table-danger' : ''}"}
-                              %td= payment_batch.created_at.strftime("%B %-d, %Y")
+                              %td= payment_batch.created_at.in_time_zone(current_user.time_zone).strftime("%B %-d, %Y")
                               %td
                                 - unless payment.customer.blank?
                                   = payment.customer.first_name
