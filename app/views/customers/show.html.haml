@@ -1,270 +1,278 @@
 .content-wrapper
-  .container
-    / Content Header (Page header)
-    %section.content-header
-      = render 'shared/flash_messages'
-      - if current_user.admin?
-        %h1
-          %i.fa.fa-male
-          Payee Profile
-          %small= link_to 'Edit', edit_customer_path(@customer), class: 'btn btn-default'
-      - else
-        %h1
-          %i.fa.fa-male
-          = @customer.full_name
-        %p.text-muted
-          Balance
-          = number_to_currency(@account.balance)
-    / Main content
-    %section.content
-      / Default box
-      .row
-        -# unless browser.device.mobile? and current_user.payee?
-        .col-md-3
-          / Profile Image
-          .box.box-primary
-            .box-body.box-profile
+  -# .container
+  / Content Header (Page header)
+  %section.content-header
+    = render 'shared/flash_messages'
+    - if current_user.admin?
+      %h1
+        %i.fa.fa-male
+        Payee Profile
+        %small
+          %a{href: edit_customer_path(@customer), class: 'btn btn-default'}
+            %i.fa.fa-edit
+            Edit
+    - else
+      %h1
+        %i.fa.fa-male
+        = @customer.full_name
+      %p.text-muted
+        Balance
+        = number_to_currency(@account.balance)
+  / Main content
+  %section.content
+    / Default box
+    .row
+      -# unless browser.device.mobile? and current_user.payee?
+      .col-md-3
+        / Profile Image
+        .box.box-primary
+          .box-body.box-profile
+            .text-center
               -#
                 %img.profile-user-img.img-responsive.img-circle{:alt => "User profile picture", :src => "../../dist/img/user4-128x128.jpg"}/
-              %h3.profile-username.text-center= @customer.full_name
-              %p.text-muted.text-center
-                = "Created #{@customer.CreateDate.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')}"
-                %br
-                Balance
-                = number_to_currency(@account.balance)
+              - unless @customer.avatar.blank?
+                = image_tag(asset_path(@customer.avatar.url), class: 'center image profile-user-img img-responsive img-circle')
+              - else
+                = image_tag(asset_path('avatar_holder_image.png'), class: 'profile-user-img img-responsive img-circle')
+            %h3.profile-username.text-center= @customer.full_name
+            %p.text-muted.text-center
+              = "Created #{@customer.CreateDate.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')}"
+              %br
+              Balance
+              = number_to_currency(@account.balance)
 
-              %ul.list-group.list-group-unbordered
-                %li.list-group-item
+            %ul.list-group.list-group-unbordered
+              %li.list-group-item
+                %b 
+                  %i.fa.fa-dollar.margin-r-5
+                  Payments
+                %a.pull-right= "#{@payment_transactions.blank? ? 0 : @payment_transactions.count}"
+              %li.list-group-item
+                %b 
+                  %i.fa.fa-money.margin-r-5
+                  Withdrawals
+                %a.pull-right= "#{@withdrawal_transactions.blank? ? 0 : @withdrawal_transactions.count}"
+              %li.list-group-item
+                %b 
+                  %i.fa.fa-comments.margin-r-5
+                  Messages
+                %a.pull-right= "#{@sms_messages.blank? ? 0 : @sms_messages.count}"
+            - if @account.balance > 0 and not @customer.phone.blank?
+              -# %a.btn.btn-success.btn-block{href: send_barcode_link_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Link"}}
+              %a.btn.btn-success.btn-block{href: send_barcode_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Code"}}
+                %b 
+                  %i.fa.fa-money
+                  Send Payment Code
+            - if current_user.admin?
+              -#
+              %a.btn.btn-default.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
+                %b 
+                  %i.fa.fa-dollar
+                  One Time Payment
+              - unless @customer.phone.blank?
+                %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
                   %b 
-                    %i.fa.fa-dollar.margin-r-5
-                    Payments
-                  %a.pull-right= "#{@payment_transactions.blank? ? 0 : @payment_transactions.count}"
-                %li.list-group-item
-                  %b 
-                    %i.fa.fa-money.margin-r-5
-                    Withdrawals
-                  %a.pull-right= "#{@withdrawal_transactions.blank? ? 0 : @withdrawal_transactions.count}"
-                %li.list-group-item
-                  %b 
-                    %i.fa.fa-comments.margin-r-5
-                    Messages
-                  %a.pull-right= "#{@sms_messages.blank? ? 0 : @sms_messages.count}"
-              - if @account.balance > 0 and not @customer.phone.blank?
-                -# %a.btn.btn-success.btn-block{href: send_barcode_link_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Link"}}
-                %a.btn.btn-success.btn-block{href: send_barcode_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Code"}}
+                    %i.fa.fa-comment
+                    Send Message
+              - if @account.balance > 0 and not @barcode_access_string.blank?
+                %a.btn.btn-info.btn-block{href: barcode_customer_path(@barcode_access_string)}
                   %b 
                     %i.fa.fa-money
-                    Send Payment Code
-              - if current_user.admin?
-                -#
-                %a.btn.btn-default.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
+                    ATM Barcode
+              = render 'one_time_payment'
+              = render 'sms_message'
+            -#
+              - if current_user.payee? and @account.balance > 0
+                %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
                   %b 
                     %i.fa.fa-dollar
-                    One Time Payment
-                - unless @customer.phone.blank?
-                  %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
-                    %b 
-                      %i.fa.fa-comment
-                      Send Message
-                - if @account.balance > 0 and not @barcode_access_string.blank?
-                  %a.btn.btn-info.btn-block{href: barcode_customer_path(@barcode_access_string)}
-                    %b 
-                      %i.fa.fa-money
-                      ATM Barcode
-                = render 'one_time_payment'
-                = render 'sms_message'
-              -#
-                - if current_user.payee? and @account.balance > 0
-                  %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#barcode"}
-                    %b 
-                      %i.fa.fa-dollar
-                      Get Paid at ATM!
-                  = render 'barcode'
-                - if current_user.payee? and @account.balance > 0 and not @barcode_access_string.blank?
-                  %a.btn.btn-success.btn-block{href: barcode_customer_path(@barcode_access_string)}
-                    %b 
-                      %i.fa.fa-money
-                      Get Paid at ATM!
-                
-            / /.box-body
-          / /.box
-          - unless browser.device.mobile?
-            / Details Box
-            .box.box-primary
-              .box-header.with-border
-                %h3.box-title Details
-              / /.box-header
-              .box-body
-                %strong
-                  %i.fa.fa-envelope.margin-r-5
-                  Email
-                %p.text-muted
-                  - unless @customer.email.blank?
-                    - if current_user.admin?
-                      = mail_to(@customer.email)
-                    - else
-                      = @customer.email
+                    Get Paid at ATM!
+                = render 'barcode'
+              - if current_user.payee? and @account.balance > 0 and not @barcode_access_string.blank?
+                %a.btn.btn-success.btn-block{href: barcode_customer_path(@barcode_access_string)}
+                  %b 
+                    %i.fa.fa-money
+                    Get Paid at ATM!
+
+          / /.box-body
+        / /.box
+        - unless browser.device.mobile?
+          / Details Box
+          .box.box-primary
+            .box-header.with-border
+              %h3.box-title Details
+            / /.box-header
+            .box-body
+              %strong
+                %i.fa.fa-envelope.margin-r-5
+                Email
+              %p.text-muted
+                - unless @customer.email.blank?
+                  - if current_user.admin?
+                    = mail_to(@customer.email)
                   - else
-                    None
-                %hr/
-                %strong
-                  %i.fa.fa-mobile.margin-r-5
-                  Phone
-                %p.text-muted
-                  - unless @customer.phone.blank?
-                    - if current_user.admin?
-                      %a{href: "tel:#{@customer.phone}"}
-                        = @customer.phone
-                    - else
+                    = @customer.email
+                - else
+                  None
+              %hr/
+              %strong
+                %i.fa.fa-mobile.margin-r-5
+                Phone
+              %p.text-muted
+                - unless @customer.phone.blank?
+                  - if current_user.admin?
+                    %a{href: "tel:#{@customer.phone}"}
                       = @customer.phone
                   - else
-                    None
-                - if current_user.admin?
-                  %hr/
-                  %strong
-                    %i.fa.fa-user.margin-r-5
-                    User Portal
-                  %p.text-muted
-                    - unless @customer.user.blank?
-                      - if @customer.user.confirmed?
-                        Sign In Count:
-                        = @customer.user.sign_in_count
-                        %br
-                        Current Sign In At:
-                        = @customer.user.current_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
-                        %br
-                        Last Sign In At:
-                        = @customer.user.last_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
-                        %br
-                        Current Sign In IP:
-                        = @customer.user.current_sign_in_ip
-                        %br
-                        Last Sign In IP:
-                        = @customer.user.last_sign_in_ip
-                      - else
-                        .text-danger Waiting for user to confirm account
+                    = @customer.phone
+                - else
+                  None
+              - if current_user.admin?
+                %hr/
+                %strong
+                  %i.fa.fa-user.margin-r-5
+                  User Portal
+                %p.text-muted
+                  - unless @customer.user.blank?
+                    - if @customer.user.confirmed?
+                      Sign In Count:
+                      = @customer.user.sign_in_count
+                      %br
+                      Current Sign In At:
+                      = @customer.user.current_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
+                      %br
+                      Last Sign In At:
+                      = @customer.user.last_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
+                      %br
+                      Current Sign In IP:
+                      = @customer.user.current_sign_in_ip
+                      %br
+                      Last Sign In IP:
+                      = @customer.user.last_sign_in_ip
                     - else
-                      Portal user has not been created
-                      = form_for(@customer) do |f|
-                        = f.hidden_field :create_payee_user_flag, :value => true
-                        %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Invite"}}
-                          %i.fa.fa-comment
-                          Send Invite
-                  %hr/
-                  %strong
-                    %i.fa.fa-file-text-o.margin-r-5
-                    Notes
-                  %p.text-muted
-                    = "EZcash ID: #{@customer.id}"
-                    %br
-                    = "Payee ID: #{@customer.Registration_Source}"
-              / /.box-body
-            / /.box
-        .col-md-9
-          .box.box-primary
-            .box-body
-              %ul#myTab.nav.nav-tabs.nav-fill{:role => "tablist"}
-                %li.nav-item
-                  %a#payments-tab.nav-link.active{"aria-controls" => "payments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#payments", :role => "tab"} 
-                    %i.fa.fa-dollar
-                    = "Payments" unless browser.device.mobile?
-                %li.nav-item
-                  %a#checks-tab.nav-link{"aria-controls" => "checks", "aria-selected" => "false", "data-toggle" => "tab", :href => "#checks", :role => "tab"} 
-                    %i.fa.fa-bank
-                    = "Checks" unless browser.device.mobile?
-                %li.nav-item
-                  %a#withdrawals-tab.nav-link{"aria-controls" => "withdrawals", "aria-selected" => "false", "data-toggle" => "tab", :href => "#withdrawals", :role => "tab"} 
-                    %i.fa.fa-money
-                    = "Withdrawals" unless browser.device.mobile?
-                %li.nav-item
-                  %a#messages-tab.nav-link{"aria-controls" => "messages", "aria-selected" => "false", "data-toggle" => "tab", :href => "#messages", :role => "tab"} 
-                    %i.fa.fa-comments
-                    = "Messages" unless browser.device.mobile?
-              #myTabContent.tab-content
-                #payments.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
-                  - unless @payment_transactions.blank?
-                    .table-responsive
-                      %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
-                        %thead
-                          %tr
-                            %th Date
-                            %th Description
-                            %th Note
-                            %th Amount
-                            %th
-                        %tbody
-                          - @payment_transactions.each do |payment_transaction|
-                            %tr{class: payment_transaction.reversed? ? 'table-danger' : ''}
-                              %td= payment_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
-                              %td= payment_transaction.Description
-                              %td= "#{payment_transaction.Note.blank? ? 'N/A' : payment_transaction.Note}"
-                              %td= number_to_currency(payment_transaction.amt_auth)
-                              %td= link_to "More", payment_transaction, class: 'btn btn-primary'
-                    .pull-right= paginate @payment_transactions, param_name: 'payments'
+                      .text-danger Waiting for user to confirm account
                   - else
-                    %p.text-center None
+                    Portal user has not been created
+                    = form_for(@customer) do |f|
+                      = f.hidden_field :create_payee_user_flag, :value => true
+                      %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Invite"}}
+                        %i.fa.fa-comment
+                        Send Invite
+                %hr/
+                %strong
+                  %i.fa.fa-file-text-o.margin-r-5
+                  Notes
+                %p.text-muted
+                  = "EZcash ID: #{@customer.id}"
+                  %br
+                  = "Payee ID: #{@customer.Registration_Source}"
+            / /.box-body
+          / /.box
+      .col-md-9
+        .box.box-primary
+          .box-body
+            %ul#myTab.nav.nav-tabs.nav-fill{:role => "tablist"}
+              %li.nav-item
+                %a#payments-tab.nav-link.active{"aria-controls" => "payments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#payments", :role => "tab"} 
+                  %i.fa.fa-dollar
+                  = "Payments" unless browser.device.mobile?
+              %li.nav-item
+                %a#checks-tab.nav-link{"aria-controls" => "checks", "aria-selected" => "false", "data-toggle" => "tab", :href => "#checks", :role => "tab"} 
+                  %i.fa.fa-bank
+                  = "Checks" unless browser.device.mobile?
+              %li.nav-item
+                %a#withdrawals-tab.nav-link{"aria-controls" => "withdrawals", "aria-selected" => "false", "data-toggle" => "tab", :href => "#withdrawals", :role => "tab"} 
+                  %i.fa.fa-money
+                  = "Withdrawals" unless browser.device.mobile?
+              %li.nav-item
+                %a#messages-tab.nav-link{"aria-controls" => "messages", "aria-selected" => "false", "data-toggle" => "tab", :href => "#messages", :role => "tab"} 
+                  %i.fa.fa-comments
+                  = "Messages" unless browser.device.mobile?
+            #myTabContent.tab-content
+              #payments.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                - unless @payment_transactions.blank?
+                  .table-responsive
+                    %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
+                      %thead
+                        %tr
+                          %th Date
+                          %th Description
+                          %th Note
+                          %th Amount
+                          %th
+                      %tbody
+                        - @payment_transactions.each do |payment_transaction|
+                          %tr{class: payment_transaction.reversed? ? 'table-danger' : ''}
+                            %td= payment_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
+                            %td= payment_transaction.Description
+                            %td= "#{payment_transaction.Note.blank? ? 'N/A' : payment_transaction.Note}"
+                            %td= number_to_currency(payment_transaction.amt_auth)
+                            %td= link_to "More", payment_transaction, class: 'btn btn-primary'
+                  .pull-right= paginate @payment_transactions, param_name: 'payments'
+                - else
+                  %p.text-center None
 
-                #checks.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"}
-                  - unless @check_transactions.blank?
-                    .table-responsive
-                      %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
-                        %thead
+              #checks.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"}
+                - unless @check_transactions.blank?
+                  .table-responsive
+                    %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
+                      %thead
+                        %tr
+                          %th Date
+                          %th Amount
+                          %th
+                      %tbody
+                        - @check_transactions.each do |check_transaction|
                           %tr
-                            %th Date
-                            %th Amount
-                            %th
-                        %tbody
-                          - @check_transactions.each do |check_transaction|
-                            %tr
-                              %td= check_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
-                              %td= number_to_currency(check_transaction.amt_auth)
-                              %td= link_to "More", check_transaction, class: 'btn btn-primary'
-                    .pull-right= paginate @check_transactions, param_name: 'checks'
-                  - else
-                    %p.text-center None 
+                            %td= check_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
+                            %td= number_to_currency(check_transaction.amt_auth)
+                            %td= link_to "More", check_transaction, class: 'btn btn-primary'
+                  .pull-right= paginate @check_transactions, param_name: 'checks'
+                - else
+                  %p.text-center None 
 
-                #withdrawals.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"}
-                  - unless @withdrawal_transactions.blank?
-                    .table-responsive
-                      %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
-                        %thead
+              #withdrawals.tab-pane.fade{"aria-labelledby" => "profile-tab", :role => "tabpanel"}
+                - unless @withdrawal_transactions.blank?
+                  .table-responsive
+                    %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
+                      %thead
+                        %tr
+                          %th Date
+                          %th Description
+                          %th Amount
+                          %th
+                      %tbody
+                        - @withdrawal_transactions.each do |withdrawal_transaction|
                           %tr
-                            %th Date
-                            %th Description
-                            %th Amount
-                            %th
-                        %tbody
-                          - @withdrawal_transactions.each do |withdrawal_transaction|
-                            %tr
-                              %td= withdrawal_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
-                              %td= withdrawal_transaction.Description
-                              %td= number_to_currency(withdrawal_transaction.amt_auth)
-                              %td= link_to "More", withdrawal_transaction, class: 'btn btn-primary'
-                    .pull-right= paginate @withdrawal_transactions, param_name: 'withdrawals'
-                  - else
-                    %p.text-center None 
+                            %td= withdrawal_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
+                            %td= withdrawal_transaction.Description
+                            %td= number_to_currency(withdrawal_transaction.amt_auth)
+                            %td= link_to "More", withdrawal_transaction, class: 'btn btn-primary'
+                  .pull-right= paginate @withdrawal_transactions, param_name: 'withdrawals'
+                - else
+                  %p.text-center None 
 
-                #messages.tab-pane.fade{"aria-labelledby" => "contact-tab", :role => "tabpanel"}
-                  - unless @sms_messages.blank?
-                    .table-responsive
-                      %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
-                        %thead
+              #messages.tab-pane.fade{"aria-labelledby" => "contact-tab", :role => "tabpanel"}
+                - unless @sms_messages.blank?
+                  .table-responsive
+                    %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
+                      %thead
+                        %tr
+                          %th Sent
+                          %th From
+                          %th Message Body
+                          %th
+                      %tbody
+                        - @sms_messages.each do |sms_message|
                           %tr
-                            %th Sent
-                            %th From
-                            %th Message Body
-                            %th
-                        %tbody
-                          - @sms_messages.each do |sms_message|
-                            %tr
-                              %td= sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
-                              %td
-                                - unless sms_message.user.blank?
-                                  = sms_message.user.full_name unless sms_message.user.blank?
-                                - else
-                                  = sms_message.company.name
-                              %td= sms_message.body
-                              %td= link_to "More", sms_message, class: 'btn btn-primary'
-                    .pull-right= paginate @sms_messages, param_name: 'messages'
-                  - else
-                    %p.text-center None
+                            %td= sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
+                            %td
+                              - unless sms_message.user.blank?
+                                = sms_message.user.full_name unless sms_message.user.blank?
+                              - else
+                                = sms_message.company.name
+                            %td= sms_message.body
+                            %td= link_to "More", sms_message, class: 'btn btn-primary'
+                  .pull-right= paginate @sms_messages, param_name: 'messages'
+                - else
+                  %p.text-center None

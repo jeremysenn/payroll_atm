@@ -2,7 +2,34 @@
   .box-body
     = simple_form_for(@customer) do |f|
       = f.error_notification
+      %a{:href => "#", "data-toggle" => "modal", "data-target" => "#avatar", class: 'thumbnail', title: 'Change'}
+        %span{"data-toggle" => "tooltip", :title => "Change"}
+          - unless @customer.avatar.blank?
+            = image_tag(@customer.avatar.url, id: 'profile_image', class: 'profile-user-img img-responsive')
+          - else
+            = image_tag('avatar_holder_image.png',  id: 'profile_image', class: 'profile-user-img img-responsive')
+      
       .form-inputs
+        #avatar.modal.fade.in
+          .modal-dialog.modal-sm{:role => "document"}
+            .modal-content
+              .modal-header
+                New Avatar
+                %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+                  %span{"aria-hidden" => "true"} ×
+              .modal-body
+                - unless browser.device.mobile?
+                  %button.btn.btn-default.btn-block{:type => "button"}
+                    %i.fa.fa-camera
+                    Take Photo with Camera
+                  %hr
+                = f.input :avatar, as: :file, input_html: {onchange: "PreviewImage();"}, label: false
+                = f.input :avatar_cache, as: :hidden
+              .modal-footer
+                %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Done
+            / /.modal-content
+          / /.modal-dialog
+        / /.modal
         - if current_user.admin?
           = f.input :CompanyNumber, :as => :hidden, :input_html => { :value => "#{@customer.new_record? ? current_user.company_id : @customer.CompanyNumber}" }
           = f.input :LangID, :as => :hidden, :input_html => { :value => 1 }
@@ -23,3 +50,15 @@
       .form-actions
         = link_to 'Cancel', :back, class: 'btn btn-default'
         = f.button :submit, 'Save'
+
+:javascript
+  $('[data-toggle="tooltip"]').tooltip()
+
+  function PreviewImage() {
+    var oFReader = new FileReader();
+    oFReader.readAsDataURL(document.getElementById("customer_avatar").files[0]);
+
+    oFReader.onload = function (oFREvent) {
+      document.getElementById("profile_image").src = oFREvent.target.result;
+    };
+  };

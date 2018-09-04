@@ -4,6 +4,8 @@ class Customer < ActiveRecord::Base
   
   establish_connection :ez_cash
   
+  mount_uploader :avatar, AvatarUploader
+  
   belongs_to :company, :foreign_key => "CompanyNumber"
   has_many :sms_messages
   

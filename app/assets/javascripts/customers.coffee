@@ -13,3 +13,17 @@ jQuery ->
     if lastTab
       $('a[href="' + lastTab + '"]').click()
     return
+
+    $('input[name=file]').change ->
+      alert $(this).val()
+      return
+
+    ### Start Avatar Upload ###
+    # drop just the filename in the display field
+    $('#customer_avatar').change ->
+      alert 'new one!'
+      #$('#file-display').val $(@).val().replace(/^.*[\\\/]/, '')
+    # trigger the real input field click to bring up the file selection dialog
+    #$('#upload-btn').click ->
+    #  $('#customer_avatar').click()
+    ### End Avatar Upload ###
