@@ -3,7 +3,7 @@
     = simple_form_for(@customer) do |f|
       = f.error_notification
       %a{:href => "#", "data-toggle" => "modal", "data-target" => "#avatar", class: 'thumbnail', title: 'Change'}
-        %span{"data-toggle" => "tooltip", :title => "Change"}
+        %span{"data-toggle" => browser.device.mobile? ? "" : "tooltip", :title => "Change"}
           - unless @customer.avatar.blank?
             = image_tag(@customer.avatar.url, id: 'profile_image', class: 'profile-user-img img-responsive')
           - else
