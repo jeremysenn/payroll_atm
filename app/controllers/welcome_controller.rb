@@ -13,7 +13,7 @@ class WelcomeController < ApplicationController
           unless current_user.customer.blank?
             redirect_to current_user.customer
           else
-            redirect_to current_user
+            redirect_to users_admin_path(current_user)
           end
         end
       end
