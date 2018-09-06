@@ -83,7 +83,7 @@ class WelcomeController < ApplicationController
         end
         
 #        @payees_count = current_user.company.customers.count
-        @payees_count = @transfers.group_by{ |t| t.to_acct_id}.count
+#        @payees_count = @transfers.group_by{ |t| t.to_acct_id}.count
         
 #        @week_of_dates_data = (1.week.ago.to_date..Date.today).map{ |date| date.strftime('%-m/%-d') }
         @week_of_dates_data = (@start_date.to_date..@end_date.to_date).map{ |date| date.strftime('%-m/%-d') }

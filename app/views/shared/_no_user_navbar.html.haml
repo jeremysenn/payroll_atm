@@ -2,16 +2,17 @@
   %a.navbar-brand{:href => "#"} 
     -# <b>Payment</b>ATM
     = image_tag(image_path("tranact_logo_30.png"))
-  %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarSupportedContent", "data-toggle" => "collapse", :type => "button"}
-    %span.navbar-toggler-icon
-  #navbarSupportedContent.collapse.navbar-collapse
-    %ul.navbar-nav.mr-auto
-      %li.nav-item.active
-        %a.nav-link{:href => "#"}
-          Home
-          %span.sr-only (current)
-    %form.form-inline.my-2.my-lg-0
-      -#
-        .my-2.my-sm-0= link_to 'Sign up', new_user_registration_path, class: 'btn btn-primary'
-      &nbsp;
-      .my-2.my-sm-0= link_to 'Log in', new_user_session_path, class: 'btn btn-success'
+  -#
+    %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarSupportedContent", "data-toggle" => "collapse", :type => "button"}
+      %span.navbar-toggler-icon
+    #navbarSupportedContent.collapse.navbar-collapse
+      %ul.navbar-nav.mr-auto
+        %li.nav-item.active
+          %a.nav-link{:href => "#"}
+            Home
+            %span.sr-only (current)
+      %form.form-inline.my-2.my-lg-0
+        -#
+          .my-2.my-sm-0= link_to 'Sign up', new_user_registration_path, class: 'btn btn-primary'
+        &nbsp;
+        .my-2.my-sm-0= link_to 'Log in', new_user_session_path, class: 'btn btn-success'
