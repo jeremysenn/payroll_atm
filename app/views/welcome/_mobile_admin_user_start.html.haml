@@ -136,14 +136,15 @@
                 .row
                   .col-md-12
                     .box.box-success
-                      .box-header.with_border
-                        .box-tools.pull-right
-                          %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
-                            %i.fa.fa-minus
-                          %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
-                            %i.fa.fa-times
-                        .box-title
-                          ATM
+                      -#
+                        .box-header.with_border
+                          .box-tools.pull-right
+                            %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
+                              %i.fa.fa-minus
+                            %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
+                              %i.fa.fa-times
+                          .box-title
+                            ATM
                       .box-body
                         = render partial: "dev_statuses/index"
               #cuts.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
@@ -202,8 +203,10 @@
     / Info boxes
     - unless @transfers.blank? and @withdrawals.blank?
       .row
-        .col-md-6.col-sm-6.col-xs-6
+        .col-xs-6
           .info-box
+            %span.info-box-icon.bg-blue
+              %i.fa.fa-dollar.fa-lg
             .info-box-content
               %span.info-box-text TRANSFERS / AMOUNT
               %span.info-box-number= "#{@transfers_count} / #{number_to_currency(@transfers_amount)}"
@@ -212,8 +215,10 @@
         / /.col
         / fix for small devices only
         .clearfix.visible-sm-block
-        .col-md-6.col-sm-6.col-xs-6
+        .col-xs-6
           .info-box
+            %span.info-box-icon.bg-green
+              %i.fa.fa-money.fa-lg
             .info-box-content
               %span.info-box-text WITHDRAWALS / AMOUNT
               %span.info-box-number= "#{@withdrawals_count} / #{number_to_currency(@withdrawals_amount)}"

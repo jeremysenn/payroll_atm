@@ -96,78 +96,81 @@
 
           / /.box-body
         / /.box
-        - unless browser.device.mobile?
-          / Details Box
-          .box.box-primary
-            .box-header.with-border
-              %h3.box-title Details
-            / /.box-header
-            .box-body
-              %strong
-                %i.fa.fa-envelope.margin-r-5
-                Email
-              %p.text-muted
-                - unless @customer.email.blank?
-                  - if current_user.admin?
-                    = mail_to(@customer.email)
-                  - else
-                    = @customer.email
+        
+        / Details Box
+        .box.box-primary.collapsed-box
+          .box-header.with-border
+            %h3.box-title More
+            .box-tools.pull-right
+              %button.btn.btn-box-tool{"data-widget" => "collapse", :type => "button"}
+                %i.fa.fa-plus
+          / /.box-header
+          .box-body
+            %strong
+              %i.fa.fa-envelope.margin-r-5
+              Email
+            %p.text-muted
+              - unless @customer.email.blank?
+                - if current_user.admin?
+                  = mail_to(@customer.email)
                 - else
-                  None
-              %hr/
-              %strong
-                %i.fa.fa-mobile.margin-r-5
-                Phone
-              %p.text-muted
-                - unless @customer.phone.blank?
-                  - if current_user.admin?
-                    %a{href: "tel:#{@customer.phone}"}
-                      = @customer.phone
-                  - else
+                  = @customer.email
+              - else
+                None
+            %hr/
+            %strong
+              %i.fa.fa-mobile.margin-r-5
+              Phone
+            %p.text-muted
+              - unless @customer.phone.blank?
+                - if current_user.admin?
+                  %a{href: "tel:#{@customer.phone}"}
                     = @customer.phone
                 - else
-                  None
-              - if current_user.admin?
-                %hr/
-                %strong
-                  %i.fa.fa-user.margin-r-5
-                  User Portal
-                %p.text-muted
-                  - unless @customer.user.blank?
-                    - if @customer.user.confirmed?
-                      Sign In Count:
-                      = @customer.user.sign_in_count
-                      %br
-                      Current Sign In At:
-                      = @customer.user.current_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
-                      %br
-                      Last Sign In At:
-                      = @customer.user.last_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
-                      %br
-                      Current Sign In IP:
-                      = @customer.user.current_sign_in_ip
-                      %br
-                      Last Sign In IP:
-                      = @customer.user.last_sign_in_ip
-                    - else
-                      .text-danger Waiting for user to confirm account
+                  = @customer.phone
+              - else
+                None
+            - if current_user.admin?
+              %hr/
+              %strong
+                %i.fa.fa-user.margin-r-5
+                User Portal
+              %p.text-muted
+                - unless @customer.user.blank?
+                  - if @customer.user.confirmed?
+                    Sign In Count:
+                    = @customer.user.sign_in_count
+                    %br
+                    Current Sign In At:
+                    = @customer.user.current_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
+                    %br
+                    Last Sign In At:
+                    = @customer.user.last_sign_in_at.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')
+                    %br
+                    Current Sign In IP:
+                    = @customer.user.current_sign_in_ip
+                    %br
+                    Last Sign In IP:
+                    = @customer.user.last_sign_in_ip
                   - else
-                    Portal user has not been created
-                    = form_for(@customer) do |f|
-                      = f.hidden_field :create_payee_user_flag, :value => true
-                      %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Invite"}}
-                        %i.fa.fa-comment
-                        Send Invite
-                %hr/
-                %strong
-                  %i.fa.fa-file-text-o.margin-r-5
-                  Notes
-                %p.text-muted
-                  = "EZcash ID: #{@customer.id}"
-                  %br
-                  = "Payee ID: #{@customer.Registration_Source}"
-            / /.box-body
-          / /.box
+                    .text-danger Waiting for user to confirm account
+                - else
+                  Portal user has not been created
+                  = form_for(@customer) do |f|
+                    = f.hidden_field :create_payee_user_flag, :value => true
+                    %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Invite"}}
+                      %i.fa.fa-comment
+                      Send Invite
+              %hr/
+              %strong
+                %i.fa.fa-file-text-o.margin-r-5
+                Notes
+              %p.text-muted
+                = "EZcash ID: #{@customer.id}"
+                %br
+                = "Payee ID: #{@customer.Registration_Source}"
+          / /.box-body
+        / /.box
       .col-md-9
         .box.box-primary
           .box-body

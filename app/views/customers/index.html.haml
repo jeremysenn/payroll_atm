@@ -21,48 +21,44 @@
       .box.box-primary
         .box-header.with-border
           %h3.box-title 
-            Active
-            %a{href: customers_path(format: "csv", q: params[:q]), class: 'btn btn-info btn-sm'}
-              %i.fa.fa-download
-              Download CSV
-          .box-tools
-            -#
-              .input-group.mb-3
-                %input.form-control{"aria-describedby" => "basic-addon2", "aria-label" => "Recipient's username", :placeholder => "Recipient's username", :type => "text"}/
-                .input-group-append
-                  %button.btn.btn-outline-secondary{:type => "button"} Button
-            = form_tag customers_path, id: 'customers_search_form', method: 'get', class: 'form-inline' do |f|
-              .input-group.input-group-sm
-                = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
-                -#%input.form-control.pull-right{:name => "table_search", :placeholder => "Search", :type => "text"}/
-                .input-group-append
-                  %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
-                    %i.fa.fa-search
+            - unless browser.device.mobile?
+              %a{href: customers_path(format: "csv", q: params[:q]), class: 'btn btn-info btn-sm'}
+                %i.fa.fa-download
+                Download CSV
+            - else
+              = form_tag customers_path, id: 'customers_search_form', method: 'get', class: 'form-inline' do |f|
+                .input-group
+                  = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true, style: 'width: 75%'
+                  .input-group-append
+                    %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                      %i.fa.fa-search
+          - unless browser.device.mobile?
+            .box-tools
+              = form_tag customers_path, id: 'customers_search_form', method: 'get', class: 'form-inline' do |f|
+                .input-group
+                  = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
+                  .input-group-append
+                    %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
+                      %i.fa.fa-search
 
         .box-body.no-padding
           .table-responsive
             %table.table.table-striped.table-condensed
               %thead
                 %tr
-                  %th{:scope => "col"}= customers_sort_link 'customer.PhoneMobile', "Phone", params[:q]
                   %th{:scope => "col"}= customers_sort_link 'customer.NameF', "First", params[:q]
                   %th{:scope => "col"}= customers_sort_link 'customer.NameL', "Last", params[:q]
+                  %th{:scope => "col"}= customers_sort_link 'customer.PhoneMobile', "Phone", params[:q]
                   %th{:scope => "col"}= customers_sort_link 'accounts.Balance', "Balance", params[:q]
-                  -# %th{:scope => "col"} ID
-                  %th
               %tbody
                 - @customers.each do |customer|
                   %tr
-                    %th{:scope => "row"}= customer.phone
-                    %td= customer.first_name
-                    %td= customer.last_name
-                    %td= number_to_currency(customer.balance)
-                    -# %td= customer.id
+                    %td= link_to customer.first_name, customer
+                    %td= link_to customer.last_name, customer
                     %td
-                      = link_to 'More', customer, class: 'btn btn-primary btn-sm'
-                      -# unless customer.user.blank?
-                      %a.btn.btn-secondary.btn-sm{"data-content" => "#{render partial: 'user_details', locals: {customer: customer}}", "data-placement" => 'left', "data-html" => "true", "data-toggle" => "popover", "data-trigger" => "focus", :role => "button", :tabindex => "0", title: "Portal User Details"}
-                        %i.fa.fa-user
+                      %a{href: "tel:#{customer.phone}"}
+                        = customer.phone
+                    %td= number_to_currency(customer.balance)
         .box-footer
           .pull-right= paginate @customers, param_name: 'result1'
 
