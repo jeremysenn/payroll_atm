@@ -118,11 +118,16 @@
                         %table.table.table-condensed.table-bordered
                           %thead
                             %tr
-                              - @device.denoms.each do |denom|
-                                - unless denom.denomination.zero?
-                                  %th{:scope => "col"}= number_to_currency(denom.denomination, strip_insignificant_zeros: true)
+                              %th{:scope => "col"} Bin
+                              %th{:scope => "col"} Amount
+                              %th{:scope => "col"} Status
                           %tbody
-                            = render partial: "devices/bin_details", locals: {device: @device}
+                            - @device.denoms.each_with_index do |denom, index|
+                              - unless denom.denomination.zero?
+                                %tr
+                                  %td= number_to_currency(denom.denomination, strip_insignificant_zeros: true)
+                                  %td= @device.bin_count(index + 1)
+                                  %td= @device.bill_count(index + 1).status_description
                     - else
                       &nbsp;
                       None

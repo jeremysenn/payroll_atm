@@ -11,27 +11,57 @@
             %i.fa.fa-minus
           %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
             %i.fa.fa-times
-      .box-body.no-padding
-        .table-responsive
-          %table.table.table-striped.table-hover.table_condensed
-            %thead
-              %tr
-                %th Start
-                %th Added
-                %th Dispensed
-                %th Remaining
-              %tr
-                %td= number_to_currency(BillHist.new_start_total(bill_hist.cut_dt))
-                %td= number_to_currency(BillHist.added(bill_hist.cut_dt))
+      - unless browser.device.mobile?
+        .box-body.no-padding
+          .table-responsive
+            %table.table.table-striped.table-hover.table_condensed
+              %thead
+                %tr
+                  %th Start
+                  %th Added
+                  %th Dispensed
+                  %th Remaining
+                %tr
+                  %td= number_to_currency(BillHist.new_start_total(bill_hist.cut_dt))
+                  %td= number_to_currency(BillHist.added(bill_hist.cut_dt))
+                  - unless index == 0
+                    %td= number_to_currency(BillHist.device_host_bill_dispensed(@device.id, @bill_hists[index - 1].cut_dt))
+                  - else
+                    %td= number_to_currency(@device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S"), Date.today))
+                  %td
+                    - unless (index + 1) > @bill_hists.count
+                      - unless index == 0
+                        = number_to_currency(BillHist.device_old_start_total(@device.id, @bill_hists[index - 1].cut_dt) - @device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S"), @bill_hists[index - 1].cut_dt))
+                      - else
+                        = number_to_currency(@device.remaining)
+      - else
+        .box-body
+          %ul.list-group.list-group-unbordered
+            %li.list-group-item
+              %b 
+                Start
+              .pull-right= number_to_currency(BillHist.new_start_total(bill_hist.cut_dt))
+            %li.list-group-item
+              %b 
+                Added
+              .pull-right
+                = number_to_currency(BillHist.added(bill_hist.cut_dt))
+            %li.list-group-item
+              %b 
+                Dispensed
+              .pull-right
                 - unless index == 0
-                  %td= number_to_currency(BillHist.device_host_bill_dispensed(@device.id, @bill_hists[index - 1].cut_dt))
+                  = number_to_currency(BillHist.device_host_bill_dispensed(@device.id, @bill_hists[index - 1].cut_dt))
                 - else
-                  %td= number_to_currency(@device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S"), Date.today))
-                %td
-                  - unless (index + 1) > @bill_hists.count
-                    - unless index == 0
-                      = number_to_currency(BillHist.device_old_start_total(@device.id, @bill_hists[index - 1].cut_dt) - @device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S"), @bill_hists[index - 1].cut_dt))
-                    - else
-                      = number_to_currency(@device.remaining)
+                  = number_to_currency(@device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S"), Date.today))
+            %li.list-group-item
+              %b 
+                Remaining
+              .pull-right
+                - unless (index + 1) > @bill_hists.count
+                  - unless index == 0
+                    = number_to_currency(BillHist.device_old_start_total(@device.id, @bill_hists[index - 1].cut_dt) - @device.transactions_total_amount_authorized_date_span((@bill_hists[index].cut_dt).in_time_zone(current_user.time_zone).strftime("%Y-%m-%d %H:%M:%S"), @bill_hists[index - 1].cut_dt))
+                  - else
+                    = number_to_currency(@device.remaining)
 - else
   %p None

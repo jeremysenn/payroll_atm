@@ -172,6 +172,32 @@ class Device < ActiveRecord::Base
   def bill_count_a # Previously cassette 99
     BillCount.find_by_dev_id_and_cassette_id(id, "A")
   end
+  
+  def bill_count(cassette_id)
+    case cassette_id
+    when 1
+      bill_count_1
+    when 2
+      bill_count_2
+    when 3
+      bill_count_3
+    when 4
+      bill_count_4
+    when 5
+      bill_count_5
+    when 6
+      bill_count_6
+    when 7
+      bill_count_7
+    when 8
+      bill_count_8
+    when a
+      bill_count_a
+    else
+      nil
+    end
+  end
+  
   ### End - bill_count records ###
   
   def bin_1_count
@@ -243,6 +269,29 @@ class Device < ActiveRecord::Base
       bill_count_a.host_start_count - bill_count_a.host_cycle_count
     else
       return nil
+    end
+  end
+  
+  def bin_count(bin_number)
+    case bin_number
+    when 1
+      bin_1_count
+    when 2
+      bin_2_count
+    when 3
+      bin_3_count
+    when 4
+      bin_4_count
+    when 5
+      bin_5_count
+    when 6
+      bin_6_count
+    when 7
+      bin_7_count
+    when 8
+      bin_8_count
+    else
+      0
     end
   end
   
