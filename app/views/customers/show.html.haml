@@ -266,7 +266,7 @@
                               - else
                                 = link_to sms_message.company.name, sms_message
                               %br
-                              = "#{sms_message.body.blank? ? 'N/A' : truncate(sms_message.body, length: 15)}"
+                              = "#{sms_message.body.blank? ? 'N/A' : truncate(sms_message.body, length: 35)}"
                             %td= sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%^b %d")
                   .pull-right= paginate @sms_messages, param_name: 'messages'
                 - else
