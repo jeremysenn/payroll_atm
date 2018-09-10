@@ -1,12 +1,13 @@
 .content-wrapper
-  .container
-    / Content Header (Page header)
+  -#.container
+  / Content Header (Page header)
+  - unless browser.device.mobile?
     %section.content-header
       %h1
         %i.fa.fa-male
         Edit Payee
-    / Main content
-    %section.content
-      .row
-        .col-md-6
-          = render 'form'
+  / Main content
+  %section.content
+    .row
+      .col-md-6
+        = render 'form'

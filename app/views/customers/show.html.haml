@@ -3,21 +3,22 @@
   / Content Header (Page header)
   %section.content-header
     = render 'shared/flash_messages'
-    - if current_user.admin?
-      %h1
-        %i.fa.fa-male
-        Payee Profile
-        %small
-          %a{href: edit_customer_path(@customer), class: 'btn btn-default'}
-            %i.fa.fa-edit
-            Edit
-    - else
-      %h1
-        %i.fa.fa-male
-        = @customer.full_name
-      %p.text-muted
-        Balance
-        = number_to_currency(@account.balance)
+    - unless browser.device.mobile?
+      - if current_user.admin? or current_user.payee?
+        %h1
+          %i.fa.fa-male
+          Payee Profile
+          %small
+            %a{href: edit_customer_path(@customer), class: 'btn btn-default'}
+              %i.fa.fa-edit
+              Edit
+      - else
+        %h1
+          %i.fa.fa-male
+          = @customer.full_name
+        %p.text-muted
+          Balance
+          = number_to_currency(@account.balance)
   / Main content
   %section.content
     / Default box
@@ -26,6 +27,9 @@
       .col-md-3
         / Profile Image
         .box.box-primary
+          .box-tools.pull-right
+            %a.btn.btn-box-tool{href: edit_customer_path(@customer), :type => "button"}
+              %i.fa.fa-edit.fa-lg
           .box-body.box-profile
             .text-center
               -#
@@ -200,17 +204,13 @@
                         %tr
                           %th Date
                           %th Description
-                          %th Note
                           %th Amount
-                          %th
                       %tbody
                         - @payment_transactions.each do |payment_transaction|
                           %tr{class: payment_transaction.reversed? ? 'table-danger' : ''}
-                            %td= payment_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
-                            %td= payment_transaction.Description
-                            %td= "#{payment_transaction.Note.blank? ? 'N/A' : payment_transaction.Note}"
+                            %td= link_to payment_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d"), payment_transaction
+                            %td= "#{payment_transaction.Description.blank? ? 'N/A' : truncate(payment_transaction.Description, length: 8, omission: '')}"
                             %td= number_to_currency(payment_transaction.amt_auth)
-                            %td= link_to "More", payment_transaction, class: 'btn btn-primary'
                   .pull-right= paginate @payment_transactions, param_name: 'payments'
                 - else
                   %p.text-center None
@@ -222,14 +222,14 @@
                       %thead
                         %tr
                           %th Date
+                          %td Description
                           %th Amount
-                          %th
                       %tbody
                         - @check_transactions.each do |check_transaction|
                           %tr
-                            %td= check_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
+                            %td= link_to check_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d"), check_transaction
+                            %td Check
                             %td= number_to_currency(check_transaction.amt_auth)
-                            %td= link_to "More", check_transaction, class: 'btn btn-primary'
                   .pull-right= paginate @check_transactions, param_name: 'checks'
                 - else
                   %p.text-center None 
@@ -243,14 +243,12 @@
                           %th Date
                           %th Description
                           %th Amount
-                          %th
                       %tbody
                         - @withdrawal_transactions.each do |withdrawal_transaction|
                           %tr
-                            %td= withdrawal_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d")
-                            %td= withdrawal_transaction.Description
+                            %td= link_to withdrawal_transaction.date_time.in_time_zone(current_user.time_zone).strftime("%^b %d"), withdrawal_transaction
+                            %td= "#{withdrawal_transaction.Description.blank? ? 'N/A' : truncate(withdrawal_transaction.Description, length: 8, omission: '')}"
                             %td= number_to_currency(withdrawal_transaction.amt_auth)
-                            %td= link_to "More", withdrawal_transaction, class: 'btn btn-primary'
                   .pull-right= paginate @withdrawal_transactions, param_name: 'withdrawals'
                 - else
                   %p.text-center None 
