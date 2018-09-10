@@ -262,7 +262,7 @@
                           %tr
                             %td
                               - unless sms_message.user.blank?
-                                = link_to sms_message.user.full_name unless sms_message.user.blank?, sms_message
+                                = link_to sms_message.user.full_name, sms_message
                               - else
                                 = link_to sms_message.company.name, sms_message
                               %br
