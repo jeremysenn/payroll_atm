@@ -102,12 +102,13 @@
         / /.box
         
         / Details Box
-        .box.box-primary.collapsed-box
+        .box.box-primary
           .box-header.with-border
-            %h3.box-title More
-            .box-tools.pull-right
-              %button.btn.btn-box-tool{"data-widget" => "collapse", :type => "button"}
-                %i.fa.fa-plus
+            %h3.box-title Info
+            -#
+              .box-tools.pull-right
+                %button.btn.btn-box-tool{"data-widget" => "collapse", :type => "button"}
+                  %i.fa.fa-minus
           / /.box-header
           .box-body
             %strong
