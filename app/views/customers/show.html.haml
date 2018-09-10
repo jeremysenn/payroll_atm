@@ -257,23 +257,17 @@
                 - unless @sms_messages.blank?
                   .table-responsive
                     %table.table.table-striped{class: "#{browser.device.mobile? ? 'table-sm' : ''}"}
-                      %thead
-                        %tr
-                          %th Sent
-                          %th From
-                          %th Message Body
-                          %th
                       %tbody
                         - @sms_messages.each do |sms_message|
                           %tr
-                            %td= sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
                             %td
                               - unless sms_message.user.blank?
-                                = sms_message.user.full_name unless sms_message.user.blank?
+                                = link_to sms_message.user.full_name unless sms_message.user.blank?, sms_message
                               - else
-                                = sms_message.company.name
-                            %td= sms_message.body
-                            %td= link_to "More", sms_message, class: 'btn btn-primary'
+                                = link_to sms_message.company.name, sms_message
+                              %br
+                              = "#{sms_message.body.blank? ? 'N/A' : truncate(sms_message.body, length: 15)}"
+                            %td= sms_message.created_at.in_time_zone(current_user.time_zone).strftime("%^b %d")
                   .pull-right= paginate @sms_messages, param_name: 'messages'
                 - else
                   %p.text-center None
