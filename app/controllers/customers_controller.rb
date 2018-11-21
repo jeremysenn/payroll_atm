@@ -41,7 +41,12 @@ class CustomersController < ApplicationController
     @sms_messages = @customer.sms_messages.order("created_at DESC").page(params[:messages]).per(10)
     @account = @customer.accounts.first
 #    @base64_barcode_string = @customer.barcode_png
-    @barcode_access_string = @customer.barcode_access_string
+    unless @customer.barcode_access_string.blank?
+      @barcode_access_string = @customer.barcode_access_string
+    else
+      @customer.generate_barcode_access_string
+      @barcode_access_string = @customer.barcode_access_string
+    end
     if @customer.user.blank?
 #      @temporary_password = Devise.friendly_token.first(10)
 #      @temporary_password = SecureRandom.hex.first(6)
