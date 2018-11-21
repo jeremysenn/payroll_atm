@@ -61,28 +61,29 @@
                   %i.fa.fa-comments.margin-r-5
                   Messages
                 %a.pull-right= "#{@sms_messages.blank? ? 0 : @sms_messages.count}"
-            - if @account.balance > 0 and not @customer.phone.blank?
-              -# %a.btn.btn-success.btn-block{href: send_barcode_link_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Link"}}
-              %a.btn.btn-success.btn-block{href: send_barcode_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Code"}}
-                %b 
-                  %i.fa.fa-money
-                  Send Payment Code
+            
             - if current_user.admin?
-              -#
-              %a.btn.btn-default.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
+              %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
                 %b 
                   %i.fa.fa-dollar
                   One Time Payment
+              - if @account.balance > 0 and not @customer.phone.blank?
+                -# %a.btn.btn-success.btn-block{href: send_barcode_link_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Link"}}
+                %a.btn.btn-default.btn-block{href: send_barcode_sms_message_customer_path(@customer), data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Payment Code"}}
+                  %b 
+                    %i.fa.fa-money
+                    Send Payment Code
               - unless @customer.phone.blank?
                 %a.btn.bg-orange.btn-block{:href => "#", "data-toggle" => "modal", "data-target" => "#sms_message"}
                   %b 
                     %i.fa.fa-comment
                     Send Message
-              - if @account.balance > 0 and not @barcode_access_string.blank?
-                %a.btn.btn-info.btn-block{href: barcode_customer_path(@barcode_access_string)}
-                  %b 
-                    %i.fa.fa-money
-                    ATM Barcode
+              -#
+                - if @account.balance > 0 and not @barcode_access_string.blank?
+                  %a.btn.btn-info.btn-block{href: barcode_customer_path(@barcode_access_string), target: '_blank'}
+                    %b 
+                      %i.fa.fa-money
+                      ATM Barcode
               = render 'one_time_payment'
               = render 'sms_message'
             -#

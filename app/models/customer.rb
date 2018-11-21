@@ -507,19 +507,23 @@ class Customer < ActiveRecord::Base
     if response.success?
       unless response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0
         unless phone.blank?
-#          client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
-#          host = Rails.application.routes.default_url_options[:host]
-#          if user.blank?
-#            message_body = "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host} for details."
-#            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
-#          else
-#            message_body = "You just received a payment of #{ActiveSupport::NumberHelper.number_to_currency(amount)} from #{company.name}. Go to #{host}/customers/#{id} for an ATM withdrawal."
-#            client.call(:send_sms, message: { Phone: phone, Msg: message_body})
-#          end
-#          SmsMessage.create(to: phone, customer_id: self.id, company_id: self.CompanyNumber, body: message_body)
-#          send_barcode_sms_message
           send_barcode_sms_message_with_info("You've just been paid #{ActiveSupport::NumberHelper.number_to_currency(amount)} by #{company.name}! Your current balance is #{ActiveSupport::NumberHelper.number_to_currency(balance)}. Get your cash from the PaymentATM. More information at www.tranact.com")
         end
+        return response.body[:ez_cash_txn_response]
+      else
+        return response.body[:ez_cash_txn_response]
+      end
+    else
+      return nil
+    end
+  end
+  
+  def one_time_payment_with_no_text_message(amount, note, receipt_number)
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:ez_cash_txn, message: { FromActID: company.transaction_account.id, ToActID: account.id, Amount: amount, Fee: 0, FeeActId: company.fee_account.id, Note: note, ReceiptNbr: receipt_number})
+    Rails.logger.debug "************** ezcash_payment_transaction_web_service_call response body: #{response.body}"
+    if response.success?
+      unless response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0
         return response.body[:ez_cash_txn_response]
       else
         return response.body[:ez_cash_txn_response]

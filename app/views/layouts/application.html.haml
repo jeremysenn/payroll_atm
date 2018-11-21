@@ -19,16 +19,21 @@
       - unless user_signed_in?
         = render 'shared/no_user_navbar'
       - else
-        = render 'shared/admin_user_navbar' if current_user.admin?
-        = render 'shared/basic_user_navbar' if current_user.basic?
-        = render 'shared/customer_user_navbar' if current_user.payee?
+        - if current_user.admin?
+          - unless (params[:controller] == "customers" and params[:action] == "barcode")
+            = render 'shared/admin_user_navbar' 
+        - elsif current_user.basic?
+          = render 'shared/basic_user_navbar' 
+        - elsif current_user.payee?
+          = render 'shared/customer_user_navbar' 
       = yield
-      %footer.main-footer
-        %strong= "Copyright © #{Date.today.year}"
-        = link_to "https://www.tranact.com", target: '_blank' do
-          = "Transact Payment Systems"
-        = "All rights reserved."
-        .pull-right
-          = link_to "Terms of Service", '#'
-          •
-          = link_to "Privacy Policy", '#'
+      - unless (params[:controller] == "customers" and params[:action] == "barcode")
+        %footer.main-footer
+          %strong= "Copyright © #{Date.today.year}"
+          = link_to "https://www.tranact.com", target: '_blank' do
+            = "Transact Payment Systems"
+          = "All rights reserved."
+          .pull-right
+            = link_to "Terms of Service", '#'
+            •
+            = link_to "Privacy Policy", '#'

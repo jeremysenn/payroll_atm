@@ -41,7 +41,7 @@ class CustomersController < ApplicationController
     @sms_messages = @customer.sms_messages.order("created_at DESC").page(params[:messages]).per(10)
     @account = @customer.accounts.first
 #    @base64_barcode_string = @customer.barcode_png
-#    @barcode_access_string = @customer.barcode_access_string
+    @barcode_access_string = @customer.barcode_access_string
     if @customer.user.blank?
 #      @temporary_password = Devise.friendly_token.first(10)
 #      @temporary_password = SecureRandom.hex.first(6)
@@ -103,12 +103,17 @@ class CustomersController < ApplicationController
     amount = params[:amount].to_f.abs unless params[:amount].blank?
     note = params[:note]
     receipt_number = params[:receipt_number]
-    response = @customer.one_time_payment(amount, note, receipt_number)
+    if params[:pay_and_text]
+      response = @customer.one_time_payment(amount, note, receipt_number)
+    else
+      response = @customer.one_time_payment_with_no_text_message(amount, note, receipt_number)
+    end
 #    transaction_id = @customer.one_time_payment(amount, note)
     response_code = response[:return]
     unless response_code.to_i > 0
       transaction_id = response[:tran_id]
       @customer.generate_barcode_access_string
+      
     else
       error_code = response_code
     end
