@@ -20,7 +20,7 @@
 
           .modal-footer
             -# %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Cancel
-            %button.btn.btn-secondary{id: 'one_time_payment_pay_and_print_button', name: "pay_and_print", :type => "submit", onclick: "window.open(barcode_url, '_blank')", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Pay & Print"}} 
+            %button.btn.btn-secondary{id: 'one_time_payment_pay_and_print_button', name: "pay_and_print", :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Pay & Print"}} 
               %i.fa.fa-print
               Pay & Print
             %button.btn.btn-primary{id: 'one_time_payment_pay_and_text_button', name: "pay_and_text", :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Pay & Text"}} 
@@ -33,11 +33,23 @@
   });
 
   $('#one_time_payment_pay_and_print_button').click(function() {
-    $('#one_time_payment_pay_and_text_button').hide();
-    var url = "#{barcode_customer_url(@barcode_access_string)}";
-    window.open(url, '_blank');
+    var payment_amount = $('#amount' ).val();
+    if (payment_amount > 0) {
+      $('#one_time_payment_pay_and_text_button').hide();
+      var url = "#{barcode_customer_url(@barcode_access_string)}";
+      window.open(url, '_blank');
+      }
+    else {
+      alert('Please enter amount');
+    }
   });
 
   $('#one_time_payment_pay_and_text_button').click(function() {
-    $('#one_time_payment_pay_and_print_button').hide();
+    var payment_amount = $('#amount' ).val();
+    if (payment_amount > 0) {
+      $('#one_time_payment_pay_and_print_button').hide();
+      }
+    else {
+      alert('Please enter amount');
+    }
   });
