@@ -25,6 +25,9 @@ Rails.application.routes.draw do
     member do
       get 'reverse'
     end
+    collection do
+      post 'quick_pay'
+    end
   end
   resources :sms_messages
   resources :payment_batches do

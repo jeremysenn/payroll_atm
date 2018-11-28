@@ -118,6 +118,29 @@ class TransactionsController < ApplicationController
       redirect_back fallback_location: root_path, alert: 'There was a problem reversing the transaction.'
     end
   end
+  
+  def quick_pay
+    @amount = params[:amount]
+    @receipt_number = params[:receipt_number]
+    @note = params[:note]
+    @device_id = params[:device_id]
+    @customer = Customer.create(CompanyNumber: current_user.company_id, LangID: 1, Active: 1, GroupID: 15)
+    @account = Account.create(CustomerID: @customer.id, CompanyNumber: current_user.company_id, Balance: 0, MinBalance: 0, ActTypeID: 6)
+    response = @customer.one_time_payment_with_no_text_message(@amount, @note, @receipt_number)
+    response_code = response[:return]
+    unless response_code.to_i > 0
+      transaction_id = response[:tran_id]
+    else
+      error_code = response_code
+    end
+    unless transaction_id.blank?
+#      redirect_back fallback_location: root_path, notice: 'Quick Pay submitted.'
+      redirect_to barcode_customer_path(@customer), notice: 'Quick Pay submitted.'
+    else
+      redirect_back fallback_location: root_path, alert: "There was a problem creating the Quick Pay. Error code: #{error_code}"
+    end
+#    Transaction.ezcash_quick_pay_web_service_call(@amount, @receipt_number, @device_id)
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

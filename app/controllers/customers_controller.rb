@@ -1,8 +1,8 @@
 class CustomersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_customer, only: [:show, :edit, :update, :destroy, :one_time_payment, :send_barcode_link_sms_message]
+  before_action :set_customer, only: [:show, :edit, :update, :destroy, :one_time_payment, :send_barcode_link_sms_message, :barcode]
   load_and_authorize_resource
-  skip_load_resource only: :barcode
+#  skip_load_resource only: :barcode
   
   helper_method :customers_sort_column, :customers_sort_direction
   
@@ -41,12 +41,12 @@ class CustomersController < ApplicationController
     @sms_messages = @customer.sms_messages.order("created_at DESC").page(params[:messages]).per(10)
     @account = @customer.accounts.first
 #    @base64_barcode_string = @customer.barcode_png
-    unless @customer.barcode_access_string.blank?
-      @barcode_access_string = @customer.barcode_access_string
-    else
-      @customer.generate_barcode_access_string
-      @barcode_access_string = @customer.barcode_access_string
-    end
+#    unless @customer.barcode_access_string.blank?
+#      @barcode_access_string = @customer.barcode_access_string
+#    else
+#      @customer.generate_barcode_access_string
+#      @barcode_access_string = @customer.barcode_access_string
+#    end
     if @customer.user.blank?
 #      @temporary_password = Devise.friendly_token.first(10)
 #      @temporary_password = SecureRandom.hex.first(6)
@@ -117,8 +117,7 @@ class CustomersController < ApplicationController
     response_code = response[:return]
     unless response_code.to_i > 0
       transaction_id = response[:tran_id]
-      @customer.generate_barcode_access_string
-      
+#      @customer.generate_barcode_access_string
     else
       error_code = response_code
     end
@@ -144,7 +143,7 @@ class CustomersController < ApplicationController
   end
   
   def barcode
-    @customer = Customer.find_by(barcode_access_string: params[:id]) # ID is random and unique urlsafe_base64 string
+#    @customer = Customer.find_by(barcode_access_string: params[:id]) # ID is random and unique urlsafe_base64 string
 #    if current_user.customer == @customer
 #      unless @customer.blank?
 #        @base64_barcode_string = Transaction.ezcash_get_barcode_png_web_service_call(@customer.CustomerID, current_user.company_id, 5)

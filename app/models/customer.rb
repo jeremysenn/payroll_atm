@@ -25,11 +25,10 @@ class Customer < ActiveRecord::Base
   
   accepts_nested_attributes_for :accounts
   
-#  validates :NameF, :NameL, :user_name, :PhoneMobile, :Answer1, :Answer2, :Answer3, presence: true
-  validates :NameF, :NameL, presence: true
-  validates :PhoneMobile, uniqueness: true, presence: true
+#  validates :NameF, :NameL, presence: true
+  validates :PhoneMobile, uniqueness: {allow_blank: true} #uniqueness: true, presence: true
   validates :Email, uniqueness: {allow_blank: true}
-  validates :Registration_Source, uniqueness: {allow_blank: true}#, presence: true
+  validates :Registration_Source, uniqueness: {allow_blank: true} #, presence: true
 #  validates :PhoneMobile, presence: true
 #  validates_uniqueness_of :Email
 #  validates_uniqueness_of :PhoneMobile
@@ -37,6 +36,7 @@ class Customer < ActiveRecord::Base
 #  validates :PhoneMobile, uniqueness: true
 
   after_commit :create_payee_user, on: [:create]
+#  after_commit :generate_barcode_access_string, on: [:create]
   after_update :create_payee_user, if: :need_to_create_payee_user?
   after_update :update_portal_user_phone, if: :phone_changed?, unless: Proc.new { |customer| customer.user.blank?}
       

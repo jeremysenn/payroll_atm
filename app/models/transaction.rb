@@ -379,6 +379,12 @@ class Transaction < ActiveRecord::Base
     end
   end
   
+  def self.ezcash_quick_pay_web_service_call(amount, reference_number, device_id)
+    client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
+    response = client.call(:encode, message: { Amount: amount, PaymentNbr: reference_number, DevID: device_id, Date: Date.today.strftime('%Y%m%d')})
+    Rails.logger.debug "ezcash_quick_pay_web_service_call response body: #{response.body}"
+  end
+  
   def self.to_csv
     require 'csv'
     attributes = %w{tranID date_time Description dev_id error_code tran_code sec_tran_code from_acct_nbr to_acct_nbr amt_req amt_auth ChpFee}
