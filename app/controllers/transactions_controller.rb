@@ -135,11 +135,11 @@ class TransactionsController < ApplicationController
     end
     unless transaction_id.blank?
 #      redirect_back fallback_location: root_path, notice: 'Quick Pay submitted.'
-      redirect_to barcode_customer_path(@customer), notice: 'Quick Pay submitted.'
+#      redirect_to barcode_customer_path(@customer), notice: 'Quick Pay submitted.'
+      redirect_to root_path(customer_id: @customer.id), notice: 'Quick Pay submitted.'
     else
       redirect_back fallback_location: root_path, alert: "There was a problem creating the Quick Pay. Error code: #{error_code}"
     end
-#    Transaction.ezcash_quick_pay_web_service_call(@amount, @receipt_number, @device_id)
   end
 
   private

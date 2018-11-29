@@ -8,7 +8,8 @@
           %th{:scope => "col"} Ref
           -#
             %th{:scope => "col"}= transactions_sort_link 'error_code', "Code", @start_date, @end_date, @type, @transaction_id_or_receipt_number
-          %th{:scope => "col"} Desc
+          -# %th{:scope => "col"} Desc
+          %th{:scope => "col"}= transactions_sort_link 'Description', "Desc", @start_date, @end_date, @type, @transaction_id_or_receipt_number
           -#
             %th{:scope => "col"} Note
           %th{:scope => "col"}= transactions_sort_link 'amt_auth', "Amt", @start_date, @end_date, @type, @transaction_id_or_receipt_number
