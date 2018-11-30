@@ -465,6 +465,10 @@ class Customer < ActiveRecord::Base
     self.GroupID == 14
   end
   
+  def anonymous?
+    self.GroupID == 15
+  end
+  
   def vendor_payables_with_balance
     vendor_payables.where("Balance > ?", 0)
   end
@@ -615,7 +619,7 @@ class Customer < ActiveRecord::Base
   def update_portal_user_phone
     user.update_attribute(:phone, phone)
   end
-  
+ 
   #############################
   #     Class Methods         #
   #############################

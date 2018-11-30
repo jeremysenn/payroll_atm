@@ -38,7 +38,10 @@
                 = image_tag(asset_path(@customer.avatar.url), class: 'center image profile-user-img img-responsive img-circle')
               - else
                 = image_tag(asset_path('avatar_holder_image.png'), class: 'profile-user-img img-responsive img-circle')
-            %h3.profile-username.text-center= @customer.full_name
+            %h3.profile-username.text-center
+              = @customer.full_name
+              - if @customer.anonymous?
+                .text-danger Anonymous Payee
             %p.text-muted.text-center
               = "Created #{@customer.CreateDate.in_time_zone(current_user.time_zone).strftime('%-m/%-d/%Y')}"
               %br
@@ -162,11 +165,12 @@
                       .text-danger Waiting for user to confirm account
                   - else
                     Portal user has not been created
-                    = form_for(@customer) do |f|
-                      = f.hidden_field :create_payee_user_flag, :value => true
-                      %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Invite"}}
-                        %i.fa.fa-comment
-                        Send Invite
+                    - unless @customer.phone.blank?
+                      = form_for(@customer) do |f|
+                        = f.hidden_field :create_payee_user_flag, :value => true
+                        %button.btn.btn-primary{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Send Invite"}}
+                          %i.fa.fa-comment
+                          Send Invite
                 %hr/
                 %strong
                   %i.fa.fa-file-text-o.margin-r-5
