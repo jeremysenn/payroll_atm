@@ -55,7 +55,7 @@ class WelcomeController < ApplicationController
           @withdrawals_count = @withdrawals.count
           @withdrawals_amount = 0
           @withdrawals.each do |withdrawal_transaction|
-            @withdrawals_amount = @withdrawals_amount + withdrawal_transaction.amt_auth
+            @withdrawals_amount = @withdrawals_amount + withdrawal_transaction.amt_auth unless withdrawal_transaction.amt_auth.blank?
           end
         end
         
