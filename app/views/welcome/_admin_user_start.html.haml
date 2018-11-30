@@ -204,125 +204,71 @@
                     %i.fa.fa-times
             .box-body
               %ul#myTab.nav.nav-tabs.nav-fill{:role => "tablist"}
+                -#
+                  %li.nav-item
+                    %a#transactions-tab.nav-link.active{"aria-controls" => "transactions", "aria-selected" => "false", "data-toggle" => "tab", :href => "#transactions", :role => "tab"} 
+                      %i.fa.fa-arrows-h
+                      Transactions
                 %li.nav-item
-                  %a#transactions-tab.nav-link.active{"aria-controls" => "transactions", "aria-selected" => "false", "data-toggle" => "tab", :href => "#transactions", :role => "tab"} 
-                    %i.fa.fa-arrows-h
-                    Transactions
-                %li.nav-item
-                  %a#chart-tab.nav-link{"aria-controls" => "chart", "aria-selected" => "true", "data-toggle" => "tab", :href => "#chart", :role => "tab"} 
+                  %a#chart-tab.nav-link.active{"aria-controls" => "chart", "aria-selected" => "true", "data-toggle" => "tab", :href => "#chart", :role => "tab"} 
                     %i.fa.fa-area-chart
                     Chart
               #myTabContent.tab-content
-                #transactions.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
-                  %br
-                  - unless @transactions.blank?
-                    %p
-                      %a{href: transactions_path(format: "csv", :type => 'All', 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date,), class: 'btn btn-info btn-sm'}
-                        %i.fa.fa-download
-                        Download CSV
-                  = render partial: "transactions/index"
-                #chart.tab-pane.fade.show{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                -#
+                  #transactions.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
+                    %br
+                    - unless @transactions.blank?
+                      %p
+                        %a{href: transactions_path(format: "csv", :type => 'All', 'transaction[start_date]' => @start_date, 'transaction[end_date]' => @end_date,), class: 'btn btn-info btn-sm'}
+                          %i.fa.fa-download
+                          Download CSV
+                    = render partial: "transactions/index"
+                #chart.tab-pane.fade.show.active{"aria-labelledby" => "home-tab", :role => "tabpanel"}
                   %br
                   .chart
                     %canvas#myChart{:style => "height: 180px; width: 763px;", :height => "360", :width => "1526"}
 
             / /.box-body
           / /.box
-
-          -#
-            .box.box-success{"data-widget" => "box-widget"}
-              .box-header.with-border
-                %h3.box-title
-                  %i.fa.fa-dollar
-                  Recent Payments
-                .box-tools.pull-right
-                  = form_tag payment_batches_path, id: 'payment_batches_search_form', method: 'get', class: 'form-inline' do |f|
-                    .input-group.input-group-sm
-                      = search_field_tag :q, params[:q], :placeholder => "Search", class: "form-control input-lg", autofocus: true
-                      .input-group-append
-                        %button.btn.btn-success{:type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}}
-                          %i.fa.fa-search
-                  -#
-                    %button.btn.btn-box-tool{id: 'box_tool_collapse', "data-toggle" => "tooltip", "data-widget" => "collapse", :title => "Collapse", :type => "button"}
-                      %i.fa.fa-minus
-                    %button.btn.btn-box-tool{id: 'box_tool_remove', "data-toggle" => "tooltip", "data-widget" => "remove", :title => "Remove", :type => "button"}
-                      %i.fa.fa-times
-              .box-body.no-padding
-                -# .text-success= payment_batch.processed_status
-                - unless @processed_payment_batches.blank?
-                  .table-responsive
-                    %table.table.table-condensed
-                      %thead
-                        %tr
-                          %th{:scope => "col"} Date
-                          %th{:scope => "col"} First
-                          %th{:scope => "col"} Last
-                          %th{:scope => "col"} Amt
-                          %th{:scope => "col"} Processed
-                          %th
-                      %tbody
-                        - @processed_payment_batches.each do |payment_batch|
-                          - payment_batch.payments.each do |payment|
-                            %tr{class: "#{payment.customer.blank? ? 'table-danger' : ''}"}
-                              %td= payment_batch.created_at.in_time_zone(current_user.time_zone).strftime("%B %-d, %Y")
-                              %td
-                                - unless payment.customer.blank?
-                                  = payment.customer.first_name
-                                - else
-                                  Not found
-                              %td
-                                - unless payment.customer.blank?
-                                  = payment.customer.last_name
-                                - else
-                                  Not found
-                              %td= number_to_currency(payment.PaymentAmt)
-                              %td= payment.Processed? ? 'Yes' : 'No'
-                              %td= link_to 'More', payment_batch, class: 'btn btn-primary btn-sm'
-                - else
-                  &nbsp;
-                  None
-              .box-footer
-                -#
-                  .pull-right= link_to 'More', payment_batch, class: 'btn btn-primary'
-
-      / Info boxes
-      - unless @transfers.blank? and @withdrawals.blank?
-        .row
-          -#
-            .col-md-4.col-sm-6.col-xs-12
+      -#
+        / Info boxes
+        - unless @transfers.blank? and @withdrawals.blank?
+          .row
+            -#
+              .col-md-4.col-sm-6.col-xs-12
+                .info-box
+                  %span.info-box-icon.bg-aqua
+                    %i.fa.fa-male.fa-lg
+                  .info-box-content
+                    %span.info-box-text PAYEES
+                    %span.info-box-number
+                      = @payees_count
+                  / /.info-box-content
+                / /.info-box
+              / /.col
+            .col-md-3.col-sm-6.col-xs-12
               .info-box
-                %span.info-box-icon.bg-aqua
-                  %i.fa.fa-male.fa-lg
+                %span.info-box-icon.bg-blue
+                  %i.fa.fa-dollar.fa-lg
                 .info-box-content
-                  %span.info-box-text PAYEES
-                  %span.info-box-number
-                    = @payees_count
+                  %span.info-box-text TRANSFERS / AMOUNT
+                  %span.info-box-number= "#{@transfers_count} / #{number_to_currency(@transfers_amount)}"
                 / /.info-box-content
               / /.info-box
             / /.col
-          .col-md-3.col-sm-6.col-xs-12
-            .info-box
-              %span.info-box-icon.bg-blue
-                %i.fa.fa-dollar.fa-lg
-              .info-box-content
-                %span.info-box-text TRANSFERS / AMOUNT
-                %span.info-box-number= "#{@transfers_count} / #{number_to_currency(@transfers_amount)}"
-              / /.info-box-content
-            / /.info-box
-          / /.col
-          / fix for small devices only
-          .clearfix.visible-sm-block
-          .col-md-3.col-sm-6.col-xs-12
-            .info-box
-              %span.info-box-icon.bg-green
-                %i.fa.fa-money.fa-lg
-              .info-box-content
-                %span.info-box-text WITHDRAWALS / AMOUNT
-                %span.info-box-number= "#{@withdrawals_count} / #{number_to_currency(@withdrawals_amount)}"
-              / /.info-box-content
-            / /.info-box
-          / /.col
-        / /.row
+            / fix for small devices only
+            .clearfix.visible-sm-block
+            .col-md-3.col-sm-6.col-xs-12
+              .info-box
+                %span.info-box-icon.bg-green
+                  %i.fa.fa-money.fa-lg
+                .info-box-content
+                  %span.info-box-text WITHDRAWALS / AMOUNT
+                  %span.info-box-number= "#{@withdrawals_count} / #{number_to_currency(@withdrawals_amount)}"
+                / /.info-box-content
+              / /.info-box
+            / /.col
+          / /.row
 
 - unless @customer_id.blank?
   :javascript

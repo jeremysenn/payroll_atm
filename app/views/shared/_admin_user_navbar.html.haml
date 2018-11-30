@@ -29,10 +29,17 @@
             Transfer
       %li.nav-item.bordered
         .text-center
-          %a.nav-link{:href => cards_path, :class => (params[:controller] == 'cards') ?  "text-light-blue" : ""}
-            %i.fa.fa-qrcode.fa-lg
+          %a.nav-link{:href => transactions_path, :class => (params[:controller] == 'transactions') ?  "text-light-blue" : ""}
+            %i.fa.fa-bolt.fa-lg
             %br
-            Barcodes
+            Transactions
+      -#
+        %li.nav-item.bordered
+          .text-center
+            %a.nav-link{:href => cards_path, :class => (params[:controller] == 'cards') ?  "text-light-blue" : ""}
+              %i.fa.fa-qrcode.fa-lg
+              %br
+              Barcodes
     %form.form-inline.my-2.my-lg-0
       .my-2.my-sm-0.dropdown
         %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
@@ -51,9 +58,10 @@
           %a.dropdown-item{:href => users_admin_index_path, :class => (params[:controller] == 'users') ?  "text-light-blue" : ""} 
             %i.fa.fa-users
             Users
-          %a.dropdown-item{:href => transactions_path, :class => (params[:controller] == 'transactions') ?  "text-light-blue" : ""}
-            %i.fa.fa-bolt
-            Transactions
+          -#
+            %a.dropdown-item{:href => transactions_path, :class => (params[:controller] == 'transactions') ?  "text-light-blue" : ""}
+              %i.fa.fa-bolt
+              Transactions
           %a.dropdown-item{:href => devices_path, :class => (params[:controller] == 'devices') ?  "text-light-blue" : ""}
             %i.fa.fa-money
             ATMs

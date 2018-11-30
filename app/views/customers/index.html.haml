@@ -13,6 +13,10 @@
             %i.fa.fa-comment
             Message
         = render 'group_sms_message'
+    %br
+    .btn-group
+      %a.btn{href: customers_path, class: "#{params[:anonymous].blank? ? 'btn-primary' : 'btn-default'}"} Regular
+      %a.btn{href: customers_path(anonymous: true), class: "#{params[:anonymous].blank? ? 'btn-default' : 'btn-primary'}"} Anonymous
 
 
   / Main content
@@ -46,19 +50,25 @@
           %table.table.table-striped.table-condensed
             %thead
               %tr
-                %th{:scope => "col"}= customers_sort_link 'customer.NameF', "First", params[:q]
-                %th{:scope => "col"}= customers_sort_link 'customer.NameL', "Last", params[:q]
-                %th{:scope => "col"}= customers_sort_link 'customer.PhoneMobile', "Phone", params[:q]
-                %th{:scope => "col"}= customers_sort_link 'accounts.Balance', "Balance", params[:q]
+                - if params[:anonymous].blank?
+                  %th{:scope => "col"}= customers_sort_link 'customer.NameF', "First", params[:q]
+                  %th{:scope => "col"}= customers_sort_link 'customer.NameL', "Last", params[:q]
+                  %th{:scope => "col"}= customers_sort_link 'customer.PhoneMobile', "Phone", params[:q]
+                  %th{:scope => "col"}= customers_sort_link 'accounts.Balance', "Balance", params[:q]
+                - else
+                  %th{:scope => "col"} Time
             %tbody
               - @customers.each do |customer|
                 %tr
-                  %td= link_to customer.first_name, customer
-                  %td= link_to customer.last_name, customer
-                  %td
-                    %a{href: "tel:#{customer.phone}"}
-                      = customer.phone
-                  %td= number_to_currency(customer.balance)
+                  - if params[:anonymous].blank?
+                    %td= link_to customer.first_name, customer
+                    %td= link_to customer.last_name, customer
+                    %td
+                      %a{href: "tel:#{customer.phone}"}
+                        = customer.phone
+                    %td= number_to_currency(customer.balance)
+                  - else
+                    %td= link_to customer.CreateDate, customer
       .box-footer
         .pull-right= paginate @customers, param_name: 'result1'
 

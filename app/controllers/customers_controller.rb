@@ -12,15 +12,31 @@ class CustomersController < ApplicationController
     unless params[:q].blank?
       @query_string = "%#{params[:q]}%"
       if customers_sort_column == "accounts.Balance"
-        @all_customers = current_user.company.customers.payees.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
+        if params[:anonymous].blank?
+          @all_customers = current_user.company.customers.payees.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
+        else
+          @all_customers = current_user.company.customers.anonymous.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
+        end
       else
-        @all_customers = current_user.company.customers.payees.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).order("#{customers_sort_column} #{customers_sort_direction}") #.order("customer.NameL")
+        if params[:anonymous].blank?
+          @all_customers = current_user.company.customers.payees.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).order("#{customers_sort_column} #{customers_sort_direction}") #.order("customer.NameL")
+        else
+          @all_customers = current_user.company.customers.anonymous.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).order("#{customers_sort_column} #{customers_sort_direction}") #.order("customer.NameL")
+        end
       end
     else
       if customers_sort_column == "accounts.Balance"
-        @all_customers = current_user.company.customers.payees.joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
+        if params[:anonymous].blank?
+          @all_customers = current_user.company.customers.payees.joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
+        else
+          @all_customers = current_user.company.customers.anonymous.joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
+        end
       else
-        @all_customers = current_user.company.customers.payees.order("#{customers_sort_column} #{customers_sort_direction}")
+        if params[:anonymous].blank?
+          @all_customers = current_user.company.customers.payees.order("#{customers_sort_column} #{customers_sort_direction}")
+        else
+          @all_customers = current_user.company.customers.anonymous.order("#{customers_sort_column} #{customers_sort_direction}")
+        end
       end
     end
     @customers = @all_customers.page(params[:page]).per(20)

@@ -1,5 +1,5 @@
 .content-wrapper
-  .container
+  .container-fluid
     / Content Header (Page header)
     %section.content-header
       = render 'shared/flash_messages'
@@ -30,14 +30,23 @@
           .box.box-primary
             .box-body.box-profile
               %h3.profile-username.text-center  
-                %i.fa.fa-building
-                = current_user.company.CompanyName
+                Summary
               %ul.list-group.list-group-unbordered
-                - current_user.company.transaction_and_fee_accounts.each do |account|
+                %li.list-group-item
+                  %b 
+                    Total
+                  .pull-right= number_to_currency(@transactions_total)
+                - unless @type == 'Fee'
                   %li.list-group-item
                     %b 
-                      = account.description
-                    %a.pull-right= number_to_currency(account.Balance)
+                      Fees
+                    .pull-right= number_to_currency(@transactions_fee_total)
+                -#
+                  - current_user.company.transaction_and_fee_accounts.each do |account|
+                    %li.list-group-item
+                      %b 
+                        = account.description
+                      %a.pull-right= number_to_currency(account.Balance)
               %a.btn.btn-success.btn-block{href: transactions_path, data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something"}}
                 %b 
                   %i.fa.fa-check-circle

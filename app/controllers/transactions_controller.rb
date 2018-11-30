@@ -26,7 +26,8 @@ class TransactionsController < ApplicationController
       elsif @type == 'Check'
         @all_transactions = current_user.company.transactions.checks.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       else
-        @all_transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+#        @all_transactions = current_user.company.transactions.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
+        @all_transactions = current_user.company.transactions.not_fees.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day)
       end
     else
       @start_date = nil
@@ -38,9 +39,11 @@ class TransactionsController < ApplicationController
     respond_to do |format|
       format.html {
         @transactions_total = 0
+        @transactions_fee_total = 0
         @transactions_count = @all_transactions.count
         @all_transactions.each do |transaction|
           @transactions_total = @transactions_total + transaction.amt_auth unless transaction.amt_auth.blank?
+          @transactions_fee_total = @transactions_fee_total + transaction.ChpFee unless transaction.ChpFee.blank? or transaction.amt_auth.zero?
         end
         @transactions = @all_transactions.order("#{transactions_sort_column} #{transactions_sort_direction}").page(params[:transactions_page]).per(20)
       }
@@ -125,7 +128,7 @@ class TransactionsController < ApplicationController
     @note = params[:note]
     @device_id = params[:device_id]
     @customer = Customer.create(CompanyNumber: current_user.company_id, LangID: 1, Active: 1, GroupID: 15)
-    @account = Account.create(CustomerID: @customer.id, CompanyNumber: current_user.company_id, Balance: 0, MinBalance: 0, ActTypeID: 6)
+    @account = Account.create(CustomerID: @customer.id, CompanyNumber: current_user.company_id, ActNbr: @receipt_number, Balance: 0, MinBalance: 0, ActTypeID: 6)
     response = @customer.one_time_payment_with_no_text_message(@amount, @note, @receipt_number)
     response_code = response[:return]
     unless response_code.to_i > 0
