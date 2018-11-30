@@ -12,6 +12,7 @@
           %th{:scope => "col"}= transactions_sort_link 'Description', "Desc", @start_date, @end_date, @type, @transaction_id_or_receipt_number
           -#
             %th{:scope => "col"} Note
+          %th{:scope => "col"}= transactions_sort_link 'ChpFee', "Fee", @start_date, @end_date, @type, @transaction_id_or_receipt_number
           %th{:scope => "col"}= transactions_sort_link 'amt_auth', "Amt", @start_date, @end_date, @type, @transaction_id_or_receipt_number
       %tbody
         - @transactions.each do |transaction|
@@ -26,6 +27,7 @@
             %td= "#{transaction.Description.blank? ? 'N/A' : truncate(transaction.Description, length: 8, omission: '')}"
             -#
               %td= "#{transaction.Note.blank? ? 'N/A' : transaction.Note}"
+            %td= "#{transaction.ChpFee.blank? ? number_to_currency(0) : number_to_currency(transaction.ChpFee)}" 
             %td= "#{transaction.amt_auth.blank? ? number_to_currency(0) : number_to_currency(transaction.amt_auth)}" 
 - else
   &nbsp;
