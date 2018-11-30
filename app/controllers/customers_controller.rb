@@ -9,16 +9,17 @@ class CustomersController < ApplicationController
   # GET /customers
   # GET /customers.json
   def index
+    @type = params[:type] ||= 'Regular'
     unless params[:q].blank?
       @query_string = "%#{params[:q]}%"
       if customers_sort_column == "accounts.Balance"
-        if params[:anonymous].blank?
+        unless @type == "Anonymous"
           @all_customers = current_user.company.customers.payees.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
         else
           @all_customers = current_user.company.customers.anonymous.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
         end
       else
-        if params[:anonymous].blank?
+        unless @type == "Anonymous"
           @all_customers = current_user.company.customers.payees.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).order("#{customers_sort_column} #{customers_sort_direction}") #.order("customer.NameL")
         else
           @all_customers = current_user.company.customers.anonymous.where("NameF like ? OR NameL like ? OR PhoneMobile like ?", @query_string, @query_string, @query_string).order("#{customers_sort_column} #{customers_sort_direction}") #.order("customer.NameL")
@@ -26,13 +27,13 @@ class CustomersController < ApplicationController
       end
     else
       if customers_sort_column == "accounts.Balance"
-        if params[:anonymous].blank?
+        unless @type == "Anonymous"
           @all_customers = current_user.company.customers.payees.joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
         else
           @all_customers = current_user.company.customers.anonymous.joins(:accounts).order("#{customers_sort_column} #{customers_sort_direction}")
         end
       else
-        if params[:anonymous].blank?
+        unless @type == "Anonymous"
           @all_customers = current_user.company.customers.payees.order("#{customers_sort_column} #{customers_sort_direction}")
         else
           @all_customers = current_user.company.customers.anonymous.order("#{customers_sort_column} #{customers_sort_direction}")
@@ -210,7 +211,7 @@ class CustomersController < ApplicationController
 
     ### Secure the customers sort column name ###
     def customers_sort_column
-      ["customer.NameL", "customer.NameF", "customer.PhoneMobile", "accounts.Balance"].include?(params[:customers_column]) ? params[:customers_column] : "customer.NameF"
+      ["customer.NameL", "customer.NameF", "customer.PhoneMobile", "accounts.Balance", "customer.CreateDate"].include?(params[:customers_column]) ? params[:customers_column] : "customer.NameF"
     end
   
 end

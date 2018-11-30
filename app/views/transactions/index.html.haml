@@ -47,10 +47,11 @@
                       %b 
                         = account.description
                       %a.pull-right= number_to_currency(account.Balance)
-              %a.btn.btn-success.btn-block{href: transactions_path, data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something"}}
-                %b 
-                  %i.fa.fa-check-circle
-                  Do Something
+              -#
+                %a.btn.btn-success.btn-block{href: transactions_path, data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Do Something"}}
+                  %b 
+                    %i.fa.fa-check-circle
+                    Do Something
               
         .col-md-9
           .box.box-primary
