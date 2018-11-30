@@ -65,7 +65,7 @@
                   Messages
                 %a.pull-right= "#{@sms_messages.blank? ? 0 : @sms_messages.count}"
             
-            - if current_user.admin?
+            - if current_user.admin? and not @customer.anonymous?
               %a.btn.btn-success.btn-block{href: '#', "data-toggle" => "modal", "data-target" => "#one_time_payment"}
                 %b 
                   %i.fa.fa-dollar
