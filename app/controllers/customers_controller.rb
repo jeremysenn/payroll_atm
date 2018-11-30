@@ -206,12 +206,12 @@ class CustomersController < ApplicationController
     
     ### Secure the customeres sort direction ###
     def customers_sort_direction
-      %w[asc desc].include?(params[:customers_direction]) ?  params[:customers_direction] : "asc"
+      %w[asc desc].include?(params[:customers_direction]) ?  params[:customers_direction] : (params[:type] == 'Anonymous' ? "desc" :  "asc")
     end
 
     ### Secure the customers sort column name ###
     def customers_sort_column
-      ["customer.NameL", "customer.NameF", "customer.PhoneMobile", "accounts.Balance", "customer.CreateDate"].include?(params[:customers_column]) ? params[:customers_column] : "customer.NameF"
+      ["customer.NameL", "customer.NameF", "customer.PhoneMobile", "accounts.Balance", "customer.CreateDate"].include?(params[:customers_column]) ? params[:customers_column] : (params[:type] == 'Anonymous' ? "customer.CreateDate" : "customer.NameF")
     end
   
 end
