@@ -12,6 +12,8 @@
 //
 //= require jquery3
 //= require popper
+//= require Layout
+//= require adminlte
 //= require BoxWidget
 //= require bootstrap-sprockets
 //= require bootstrap-datepicker
