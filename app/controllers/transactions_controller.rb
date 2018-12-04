@@ -8,10 +8,10 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @type = params[:type] ||= 'Withdrawal'
+    @type = params[:type] ||= 'All'
 #    @start_date = transaction_params[:start_date] ||= Date.today.to_s
 #    @end_date = transaction_params[:end_date] ||= Date.today.to_s
-    @start_date = params[:start_date] ||= Date.today.to_s
+    @start_date = params[:start_date] ||= Date.today.last_week.to_s
     @end_date = params[:end_date] ||= Date.today.to_s
     @transaction_id_or_receipt_number = params[:transaction_id]
     if @transaction_id_or_receipt_number.blank?
