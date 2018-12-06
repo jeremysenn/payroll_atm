@@ -81,14 +81,15 @@
                         %td= number_to_currency(@device.remaining)
                         %td
                           =# link_to 'More', @device, class: 'btn btn-primary btn-sm'
-                          %a.btn.btn-default.btn-sm{:href => "#", "data-toggle" => "modal", "data-target" => "#video"}
-                            %i.fa.fa-video-camera
-                          #video.modal.fade
-                            .modal-dialog.modal-lg
-                              .modal-content
-                                .modal-body
-                                  .embed-responsive.embed-responsive-1by1
-                                    %iframe{:allow => "autoplay; encrypted-media", :allowfullscreen => "", :frameborder => "0", :height => "1200", :src => "http://192.168.11.54", :width => "854"}
+                          -#
+                            %a.btn.btn-default.btn-sm{:href => "#", "data-toggle" => "modal", "data-target" => "#video"}
+                              %i.fa.fa-video-camera
+                            #video.modal.fade
+                              .modal-dialog.modal-lg
+                                .modal-content
+                                  .modal-body
+                                    .embed-responsive.embed-responsive-1by1
+                                      %iframe{:allow => "autoplay; encrypted-media", :allowfullscreen => "", :frameborder => "0", :height => "1200", :src => "http://192.168.11.54", :width => "854"}
                           %a.btn.btn-primary.btn-sm{href: '#', "data-target" => "#commands-modal", "data-toggle" => "modal"}
                             %i.fa.fa-arrows-alt
                           #commands-modal.modal.fade
