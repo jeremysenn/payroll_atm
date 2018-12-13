@@ -525,7 +525,7 @@ class Customer < ActiveRecord::Base
   
   def one_time_payment_with_no_text_message(amount, note, receipt_number)
     client = Savon.client(wsdl: "#{ENV['EZCASH_WSDL_URL']}")
-    response = client.call(:ez_cash_txn, message: { FromActID: company.transaction_account.id, ToActID: account.id, Amount: amount, Fee: 0, FeeActId: company.fee_account.blank? ? nil : company.fee_account.id, Note: note, ReceiptNbr: receipt_number, dev_id: nil})
+    response = client.call(:ez_cash_txn, message: { FromActID: company.transaction_account.blank? ? nil : company.transaction_account.id, ToActID: account.id, Amount: amount, Fee: 0, FeeActId: company.fee_account.blank? ? nil : company.fee_account.id, Note: note, ReceiptNbr: receipt_number, dev_id: nil})
     Rails.logger.debug "************** ezcash_payment_transaction_web_service_call response body: #{response.body}"
     if response.success?
       unless response.body[:ez_cash_txn_response].blank? or response.body[:ez_cash_txn_response][:return].to_i > 0
