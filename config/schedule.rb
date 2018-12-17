@@ -4,7 +4,8 @@
 # http://en.wikipedia.org/wiki/Cron
 
 set :output, "#{path}/log/cron.log"
-set :environment, 'development'
+#set :environment, 'development'
+set :environment, 'production'
 
 # Example:
 #
@@ -24,7 +25,7 @@ set :environment, 'development'
 
 every :reboot do
   # CentOS VM
-  job_type :application, "cd /usr/local/Ruby/payment_atm && :task :output"
+  job_type :application, "cd /usr/local/Ruby/payroll_atm && :task :output"
   # Mac Mini
 #  job_type :application, "cd /Users/jeremy/Ruby/payment_atm && :task :output"
   
