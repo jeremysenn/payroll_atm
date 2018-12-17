@@ -29,6 +29,6 @@ every :reboot do
   # Mac Mini
 #  job_type :application, "cd /Users/jeremy/Ruby/payment_atm && :task :output"
   
-  application "rails server" # Start application server
+  application "rails server -e production" # Start application server
 #  application "bundle exec sidekiq -c 5" # Start background workers
 end
