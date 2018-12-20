@@ -32,43 +32,24 @@
             Company:
             = @transaction.company.CompanyName unless @transaction.company.blank?
           %p.lead
+            From Account:
+            - unless @from_customer.blank?
+              = link_to "#{@from_customer.full_name} (#{@transaction.from_acct_id})", @from_customer
+            - else
+              = @transaction.from_acct_id
+          %p.lead
+            Device ID:
+            = @transaction.dev_id
+          %p.lead
             Tran ID:
             = @transaction.id
           %p.lead
             Error Code:
             = @transaction.error_code
           %p.lead
-            Sec Tran Code:
-            = @transaction.sec_tran_code
-          %p.lead
-            Tran Code:
-            = @transaction.tran_code
-          %p.lead
-            Device ID:
-            = @transaction.dev_id
-          %p.lead
-            From Account:
-            - unless @from_customer.blank?
-              = link_to "#{@from_customer.full_name} (#{@transaction.from_acct_id})", @from_customer
-            - else
-              = @transaction.from_acct_id
-            =# @transaction.from_account_customer.full_name unless @transaction.from_account_customer.blank?
-            =# @transaction.from_acct_id
-          %p.lead
-            To Account:
-            - unless @to_customer.blank?
-              = link_to "#{@to_customer.full_name} (#{@transaction.to_acct_id})", @to_customer
-            - else
-              = @transaction.to_acct_id
-          %p.lead
-            DateTime:
-            = @transaction.date_time.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
-          %p.lead
             Code:
             = @transaction.error_code_long_description
-          %p.lead
-            Status:
-            = @transaction.status_long_description
+
           %p.lead
             Amount Requested:
             = number_to_currency(@transaction.amt_req)
@@ -79,14 +60,37 @@
             Fee:
             = number_to_currency(@transaction.ChpFee)
           %p.lead
-            Receipt Number:
-            = "#{@transaction.receipt_nbr.blank? ? 'N/A' : @transaction.receipt_nbr}"
-          %p.lead
-            Description:
-            = @transaction.Description
-          %p.lead
-            Note:
-            = @transaction.Note
+            Total:
+            = number_to_currency(@transaction.amt_auth + @transaction.ChpFee)
+
+          -#
+            %p.lead
+              Sec Tran Code:
+              = @transaction.sec_tran_code
+            %p.lead
+              Tran Code:
+              = @transaction.tran_code
+            %p.lead
+              To Account:
+              - unless @to_customer.blank?
+                = link_to "#{@to_customer.full_name} (#{@transaction.to_acct_id})", @to_customer
+              - else
+                = @transaction.to_acct_id
+            %p.lead
+              DateTime:
+              = @transaction.date_time.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y %l:%M %p")
+            %p.lead
+              Status:
+              = @transaction.status_long_description
+            %p.lead
+              Receipt Number:
+              = "#{@transaction.receipt_nbr.blank? ? 'N/A' : @transaction.receipt_nbr}"
+            %p.lead
+              Description:
+              = @transaction.Description
+            %p.lead
+              Note:
+              = @transaction.Note
           %p
             - @transaction.images.each do |image|
               .col-xs-12.col-sm-2.col-md-2
