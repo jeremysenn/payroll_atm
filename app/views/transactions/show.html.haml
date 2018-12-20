@@ -49,16 +49,15 @@
           %p.lead
             Code:
             = @transaction.error_code_long_description
-
           %p.lead
             Amount Requested:
-            = number_to_currency(@transaction.amt_req)
+            = "#{@transaction.amt_req.blank? ? 'N/A' : number_to_currency(@transaction.amt_req)}"
           %p.lead
             Amount Authorized:
-            = number_to_currency(@transaction.amt_auth)
+            = "#{@transaction.amt_auth.blank? ? 'N/A' : number_to_currency(@transaction.amt_auth)}"
           %p.lead
             Fee:
-            = number_to_currency(@transaction.ChpFee)
+            = "#{@transaction.ChpFee.blank? ? 'N/A' : number_to_currency(@transaction.ChpFee)}"
           - unless @transaction.amt_auth.blank? or @transaction.ChpFee.blank?
             %p.lead
               Total:
