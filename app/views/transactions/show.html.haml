@@ -59,9 +59,10 @@
           %p.lead
             Fee:
             = number_to_currency(@transaction.ChpFee)
-          %p.lead
-            Total:
-            = number_to_currency(@transaction.amt_auth + @transaction.ChpFee)
+          - unless @transaction.amt_auth.blank? or @transaction.ChpFee.blank?
+            %p.lead
+              Total:
+              = number_to_currency(@transaction.amt_auth + @transaction.ChpFee)
 
           -#
             %p.lead
