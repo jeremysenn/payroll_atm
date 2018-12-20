@@ -99,7 +99,12 @@
                       %img.img-fluid{:alt => image.id, :src => image.jpeg_image_data_uri}
         .box-footer
           = link_to 'Back', :back, class: 'btn btn-default'
+          - unless @to_customer.blank? or @to_customer.balance.blank? or @to_customer.balance.zero?
+            %a.btn.btn-default{href: barcode_customer_path(@to_customer.id), target: '_blank'}
+              %i.fa.fa-print
+              Print Barcode
           - if @reversal_transaction.blank? and not @transaction.reversal?
-            %a{href: reverse_transaction_path(@transaction), class: 'btn btn-danger', data: {confirm: 'Are you sure you want to reverse this transaction?', disable_with: "<i class='fa fa-spinner fa-spin'></i> Reverse"}}
-              %i.fa.fa-warning
-              Reverse
+            .pull-right
+              %a{href: reverse_transaction_path(@transaction), class: 'btn btn-danger btn-sm', data: {confirm: 'Are you sure you want to reverse this transaction?', disable_with: "<i class='fa fa-spinner fa-spin'></i> Reverse"}}
+                %i.fa.fa-warning
+                Reverse
