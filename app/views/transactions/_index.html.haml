@@ -14,8 +14,10 @@
             %th{:scope => "col"} Note
           %th{:scope => "col"}= transactions_sort_link 'ChpFee', "Fee", @start_date, @end_date, @type, @transaction_id_or_receipt_number
           %th{:scope => "col"}= transactions_sort_link 'amt_auth', "Amt", @start_date, @end_date, @type, @transaction_id_or_receipt_number
+          %th
       %tbody
         - @transactions.each do |transaction|
+          - to_customer = transaction.to_account_customer
           %tr{class: transaction.reversed? ? 'table-danger' : ''}
             %th{:scope => "row"}= link_to transaction.id, transaction
             %td= transaction.date_time.in_time_zone(current_user.time_zone).strftime("%-m/%-d/%y")
@@ -28,7 +30,12 @@
             -#
               %td= "#{transaction.Note.blank? ? 'N/A' : transaction.Note}"
             %td= "#{transaction.ChpFee.blank? ? number_to_currency(0) : number_to_currency(transaction.ChpFee)}" 
-            %td= "#{transaction.amt_auth.blank? ? number_to_currency(0) : number_to_currency(transaction.amt_auth)}" 
+            %td= "#{transaction.amt_auth.blank? ? number_to_currency(0) : number_to_currency(transaction.amt_auth)}"
+            %td
+              - unless to_customer.blank? or to_customer.balance.blank? or to_customer.balance.zero?
+                %a.btn.btn-default{href: barcode_customer_path(to_customer.id), target: '_blank'}
+                  %i.fa.fa-print
+            
 - else
   &nbsp;
   None
