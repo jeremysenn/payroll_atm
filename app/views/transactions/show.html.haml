@@ -31,12 +31,17 @@
           %p.lead
             Company:
             = @transaction.company.CompanyName unless @transaction.company.blank?
-          %p.lead
-            From Account:
-            - unless @from_customer.blank?
+          - unless @from_customer.blank?
+            %p.lead
+              From Account:
               = link_to "#{@from_customer.full_name} (#{@transaction.from_acct_id})", @from_customer
-            - else
-              = @transaction.from_acct_id
+          -#
+            %p.lead
+              From Account:
+              - unless @from_customer.blank?
+                = link_to "#{@from_customer.full_name} (#{@transaction.from_acct_id})", @from_customer
+              - else
+                = @transaction.from_acct_id
           %p.lead
             Device ID:
             = @transaction.dev_id
