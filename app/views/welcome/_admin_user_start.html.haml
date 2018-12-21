@@ -68,7 +68,7 @@
                         %td
                           - dev_status = @device.dev_statuses.order("date_time DESC").first
                           %a.btn.btn-sm.bg-green{"data-content" => "#{dev_status.status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0"} 
-                            = dev_status.status
+                            = dev_status.status unless dev_status.blank?
                           -#
                             - if @device.critical_status?
                               %a.btn.btn-xs.bg-red{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus", :tabindex => "0"} 
