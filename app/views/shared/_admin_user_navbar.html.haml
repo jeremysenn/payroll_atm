@@ -19,15 +19,16 @@
             %i.fa.fa-male.fa-lg
             %br
             Payees
-      %li.nav-item.bordered
-        .text-center
-          %a.nav-link{:href => payment_batches_path, :class => (params[:controller] == 'payment_batches') ?  "text-light-blue" : ""}
-            %i.fa.fa-dollar.fa-lg
-            -#
-              %i.fa.fa-arrow-right.fa-sm
-              %i.fa.fa-male.fa-lg
-            %br
-            Transfer
+      -#
+        %li.nav-item.bordered
+          .text-center
+            %a.nav-link{:href => payment_batches_path, :class => (params[:controller] == 'payment_batches') ?  "text-light-blue" : ""}
+              %i.fa.fa-dollar.fa-lg
+              -#
+                %i.fa.fa-arrow-right.fa-sm
+                %i.fa.fa-male.fa-lg
+              %br
+              Transfer
       %li.nav-item.bordered
         .text-center
           %a.nav-link{:href => transactions_path, :class => (params[:controller] == 'transactions') ?  "text-light-blue" : ""}
