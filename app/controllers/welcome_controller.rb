@@ -36,6 +36,8 @@ class WelcomeController < ApplicationController
           @bill_counts = @device.bill_counts
           @denoms = @device.denoms
           @bill_hists = @device.bill_hists.select(:cut_dt).distinct.order("cut_dt DESC").first(5)
+          @cut_transactions = @device.transactions.cuts.select(:date_time).distinct.order("date_time DESC")
+          @add_transactions = @device.transactions.adds
           
           # Withdrawals Info
           @withdrawals = @device.transactions.withdrawals.where(date_time: @start_date.to_date.beginning_of_day..@end_date.to_date.end_of_day).order("date_time DESC")

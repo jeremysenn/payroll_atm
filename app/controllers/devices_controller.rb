@@ -30,6 +30,8 @@ class DevicesController < ApplicationController
     @bill_counts = @device.bill_counts
     @denoms = @device.denoms
     @bill_hists = @device.bill_hists.select(:cut_dt).distinct.order("cut_dt DESC").first(5)
+    @cut_transactions = @device.transactions.cuts.select(:date_time).distinct.order("date_time DESC")
+    @add_transactions = @device.transactions.adds
   end
   
   def send_atm_command
