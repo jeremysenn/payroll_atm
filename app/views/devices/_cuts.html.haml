@@ -29,11 +29,10 @@
                   - @add_transactions.where(date_time: transaction.date_time..Time.now).each do |add_transaction|
                     Cash Add
                     = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
-                    = number_to_currency(add_transaction.amt_auth)
                     %br
                 - bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..Time.now).uniq { |bill_hist| bill_hist.cut_dt }.last
-                %td= number_to_currency(BillHist.new_start_total(bill_hist.cut_dt))
-                %td= number_to_currency(BillHist.added(bill_hist.cut_dt))
+                %td= number_to_currency(bill_hist.blank? ? 0 : BillHist.new_start_total(bill_hist.cut_dt))
+                %td= number_to_currency(bill_hist.blank? ? 0 : BillHist.added(bill_hist.cut_dt))
                 %td= number_to_currency(@device.withdrawal_transactions_total_amount_authorized_date_span(transaction.date_time, Date.today))
                 %td= number_to_currency(@device.remaining)
               - else
@@ -42,13 +41,13 @@
                     Cash Add
                     = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
                     %br
-                - last_bill_hist = @device.bill_hists.where("cut_dt >= ? AND cut_dt < ?", transaction.date_time, @cut_transactions[index - 1].date_time).uniq { |bill_hist| bill_hist.cut_dt }.last
+                - bill_hist = @device.bill_hists.where("cut_dt >= ? AND cut_dt < ?", transaction.date_time, @cut_transactions[index - 1].date_time).uniq { |bill_hist| bill_hist.cut_dt }.last
                 %td
                   = number_to_currency(BillHist.device_old_start_total(@device.id, @cut_transactions[index - 1].date_time))
                   =# number_to_currency(BillHist.new_start_total(first_bill_hist.cut_dt))
-                %td= number_to_currency(BillHist.added(last_bill_hist.cut_dt))
+                %td= number_to_currency(bill_hist.blank? ? 0 : BillHist.added(bill_hist.cut_dt))
                 %td= number_to_currency(BillHist.device_host_bill_dispensed(@device.id, @cut_transactions[index - 1].date_time))
-                %td= number_to_currency(BillHist.device_old_start_total(@device.id, @cut_transactions[index - 1].date_time) + BillHist.added(last_bill_hist.cut_dt) - @device.withdrawal_transactions_total_amount_authorized_date_span((transaction.date_time), @cut_transactions[index - 1].date_time))
+                %td= number_to_currency(BillHist.device_old_start_total(@device.id, @cut_transactions[index - 1].date_time) + (bill_hist.blank? ? 0 : BillHist.added(bill_hist.cut_dt)) - @device.withdrawal_transactions_total_amount_authorized_date_span((transaction.date_time), @cut_transactions[index - 1].date_time))
                     
 -#
   - unless @bill_hists.blank?
