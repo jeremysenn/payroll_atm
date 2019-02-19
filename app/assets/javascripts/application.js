@@ -20,4 +20,5 @@
 //= require rails-ujs
 //= require turbolinks
 //= require Chart.min
+//= require select2
 //= require_tree .

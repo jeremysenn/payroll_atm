@@ -46,6 +46,15 @@ class CustomersController < ApplicationController
       format.csv { 
         send_data @all_customers.to_csv, filename: "payees_#{Time.now}.csv" 
         }
+      format.json {
+        unless @all_customers.blank?
+          @customers = @all_customers.collect{ |customer| {id: customer.CustomerID, text: "#{customer.NameF} #{customer.NameL}"} }
+        else
+          @customers = nil
+        end
+        Rails.logger.info "results: {#{@customers}}"
+        render json: {results: @customers}
+      }
     end
   end
   

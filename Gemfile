@@ -72,6 +72,9 @@ gem 'kaminari'
 # Authorization
 gem 'cancancan'
 
+# Integrate Select2 javascript library with Rails asset pipeline https://github.com/argerim/select2-rails
+gem "select2-rails"
+
 # https://github.com/Nerian/bootstrap-datepicker-rails
 gem 'bootstrap-datepicker-rails'
 

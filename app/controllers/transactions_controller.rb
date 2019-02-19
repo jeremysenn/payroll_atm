@@ -127,8 +127,13 @@ class TransactionsController < ApplicationController
     @receipt_number = params[:receipt_number]
     @note = params[:note]
     @device_id = params[:device_id]
-    @customer = Customer.create(CompanyNumber: current_user.company_id, LangID: 1, Active: 1, GroupID: 15)
-    @account = Account.create(CustomerID: @customer.id, CompanyNumber: current_user.company_id, ActNbr: @receipt_number, Balance: 0, MinBalance: 0, ActTypeID: 6)
+    unless params[:customer_id].blank?
+      @customer = Customer.find(params[:customer_id])
+    end
+    if @customer.blank?
+      @customer = Customer.create(CompanyNumber: current_user.company_id, LangID: 1, Active: 1, GroupID: 15)
+      @account = Account.create(CustomerID: @customer.id, CompanyNumber: current_user.company_id, ActNbr: @receipt_number, Balance: 0, MinBalance: 0, ActTypeID: 6)
+    end
     response = @customer.one_time_payment_with_no_text_message(@amount, @note, @receipt_number)
     response_code = response[:return]
     unless response_code.to_i > 0

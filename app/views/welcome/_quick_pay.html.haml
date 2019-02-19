@@ -14,6 +14,10 @@
             .input-group-append
               %span.input-group-text .00
           .form-group
+            = select_tag :customer_id, options_from_collection_for_select(@payee_customers, "id", "full_name"), prompt: 'Choose a payee', class: 'form-control', style: "width: 100%;"
+            .text-muted Leave blank for Anonymous
+            =# select_tag "ticket[customer_id]", options_for_select([ ["#{@ticket['FirstName']} #{@ticket['LastName']}", @ticket['CustomerId']] ], @ticket['CustomerId']), prompt: 'Choose a customer', class: "", required: true
+          .form-group
             = text_field_tag :receipt_number, nil, :placeholder => "Reference Number", class: "form-control input-lg", style: "width: 100%;"
           .form-group
             = text_area_tag :note, nil, :placeholder => "Note", class: "form-control input-lg", style: "width: 100%;"
@@ -25,6 +29,17 @@
 :javascript
   $('.modal').on('shown.bs.modal', function() {
     $(this).find('[autofocus]').first().focus();
+  });
+
+  // Dropdown select for quick pay customer
+  $('#customer_id').select2({
+    theme: 'bootstrap',
+    minimumInputLength: 3,
+    ajax: {
+      url: '/customers',
+      dataType: 'json',
+      delay: 250
+    }
   });
 
 -#
