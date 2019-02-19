@@ -44,11 +44,12 @@
                           %a.btn.btn-xs.btn-warning{"data-content" => "#{@device.caution_status_description}", "data-toggle" => "popover", "data-trigger" => "focus",:tabindex => "0", :title => "#{@device.caution_status_description}"} 
                         - else
                           = @device.status_string
-                %li.list-group-item
-                  %b 
-                    %i.fa.fa-info-circle.margin-r-5
-                    Some Info
-                  %a.pull-right And more info
+                -#
+                  %li.list-group-item
+                    %b 
+                      %i.fa.fa-info-circle.margin-r-5
+                      Some Info
+                    %a.pull-right And more info
 
               %a.btn.btn-default.btn-block{"data-target" => "#commands-modal", "data-toggle" => "modal", :type => "button"}
                 %b
