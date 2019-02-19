@@ -4,6 +4,8 @@
       .modal-header
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
+        %i.fa.fa-money
+        Quick Pay
       .modal-body
         = form_tag quick_pay_transactions_path, id: 'quick_pay_form', method: 'post', class: 'form-horizontal' do |f|
           = hidden_field_tag :device_id, @device.id
@@ -14,9 +16,8 @@
             .input-group-append
               %span.input-group-text .00
           .form-group
-            = select_tag :customer_id, options_from_collection_for_select(@payee_customers, "id", "full_name"), prompt: 'Choose a payee', class: 'form-control', style: "width: 100%;"
+            = select_tag :customer_id, nil, prompt: 'Choose a payee', class: 'form-control', style: "width: 100%;"
             .text-muted Leave blank for Anonymous
-            =# select_tag "ticket[customer_id]", options_for_select([ ["#{@ticket['FirstName']} #{@ticket['LastName']}", @ticket['CustomerId']] ], @ticket['CustomerId']), prompt: 'Choose a customer', class: "", required: true
           .form-group
             = text_field_tag :receipt_number, nil, :placeholder => "Reference Number", class: "form-control input-lg", style: "width: 100%;"
           .form-group

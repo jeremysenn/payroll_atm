@@ -23,7 +23,6 @@ class WelcomeController < ApplicationController
         @end_date = params[:end_date] ||= Date.today.to_s
         @type = params[:type] ||= 'Transfer'
         @customer_id = params[:customer_id] if current_user.admin?
-        @payee_customers = current_user.company.customers.payees.order("NameF ASC")
         if params[:device_id].blank?
           @device = @devices.first
         else
