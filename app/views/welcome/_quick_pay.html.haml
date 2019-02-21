@@ -40,7 +40,10 @@
     ajax: {
       url: '/customers',
       dataType: 'json',
-      delay: 250
+      delay: 250,
+      success: function(data) {
+        alert("Success");
+      },
     }
   });
 

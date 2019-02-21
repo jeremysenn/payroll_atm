@@ -28,26 +28,27 @@
                 %td
                   - @add_transactions.where(date_time: transaction.date_time..Time.now).each do |add_transaction|
                     Cash Add
-                    = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
+                    %span.text-primary{"data-toggle" => "tooltip", :title => "#{number_to_currency(add_transaction.amt_auth)}", "data-placement" => "right"}
+                      = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
                     %br
-                - last_bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..Time.now).uniq { |bill_hist| bill_hist.cut_dt }.last
-                - first_bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..Time.now).uniq { |bill_hist| bill_hist.cut_dt }.first
-                %td= number_to_currency(last_bill_hist.blank? ? 0 : BillHist.new_start_total(last_bill_hist.cut_dt))
-                %td= number_to_currency(first_bill_hist.blank? ? 0 : BillHist.added(first_bill_hist.cut_dt))
+                - first_bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..Time.now).order("cut_dt ASC").uniq { |bill_hist| bill_hist.cut_dt }.first
+                - last_bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..Time.now).order("cut_dt ASC").uniq { |bill_hist| bill_hist.cut_dt }.last
+                %td= number_to_currency(BillHist.device_new_start_total(@device.id, first_bill_hist.cut_dt))
+                %td= number_to_currency(BillHist.device_added_in_date_span(@device.id, first_bill_hist.cut_dt, last_bill_hist.cut_dt))
                 %td= number_to_currency(@device.withdrawal_transactions_total_amount_authorized_date_span(transaction.date_time, Time.now))
                 %td= number_to_currency(@device.remaining)
               - else
                 %td
                   - @add_transactions.where(date_time: transaction.date_time..@cut_transactions[index - 1].date_time).each do |add_transaction|
                     Cash Add
-                    = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
+                    %span.text-primary{"data-toggle" => "tooltip", :title => "#{number_to_currency(add_transaction.amt_auth)}", "data-placement" => "right"}
+                      = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
                     %br
-                - last_bill_hist = @device.bill_hists.where("cut_dt >= ? AND cut_dt < ?", transaction.date_time, @cut_transactions[index - 1].date_time).uniq { |bill_hist| bill_hist.cut_dt }.last
-                %td
-                  = number_to_currency(BillHist.device_old_start_total(@device.id, @cut_transactions[index - 1].date_time))
-                  =# number_to_currency(BillHist.new_start_total(first_bill_hist.cut_dt))
-                %td= number_to_currency(last_bill_hist.blank? ? 0 : BillHist.added(last_bill_hist.cut_dt))
-                %td= number_to_currency(BillHist.device_host_bill_dispensed(@device.id, @cut_transactions[index - 1].date_time))
+                - first_bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..@cut_transactions[index - 1].date_time).order("cut_dt ASC").uniq { |bill_hist| bill_hist.cut_dt }.first
+                - last_bill_hist = @device.bill_hists.where("cut_dt >= ? AND cut_dt < ?", transaction.date_time, @cut_transactions[index - 1].date_time).order("cut_dt ASC").uniq { |bill_hist| bill_hist.cut_dt }.last
+                %td= number_to_currency(BillHist.device_new_start_total(@device.id, first_bill_hist.cut_dt))
+                %td= number_to_currency(last_bill_hist.blank? ? BillHist.device_added(@device.id, first_bill_hist.cut_dt) : BillHist.device_added_in_date_span(@device.id, first_bill_hist.cut_dt, last_bill_hist.cut_dt))
+                %td= number_to_currency(last_bill_hist.blank? ? BillHist.device_host_bill_dispensed(@device.id, first_bill_hist.cut_dt) : BillHist.device_host_bill_dispensed_in_date_span(@device.id, first_bill_hist.cut_dt, last_bill_hist.cut_dt))
                 %td= number_to_currency(BillHist.device_old_start_total(@device.id, @cut_transactions[index - 1].date_time) + (last_bill_hist.blank? ? 0 : BillHist.added(last_bill_hist.cut_dt)) - @device.withdrawal_transactions_total_amount_authorized_date_span((transaction.date_time), @cut_transactions[index - 1].date_time))
                     
 -#
@@ -117,3 +118,6 @@
                       = number_to_currency(@device.remaining)
   - else
     %p None
+
+:javascript
+  $('[data-toggle="tooltip"]').tooltip();
