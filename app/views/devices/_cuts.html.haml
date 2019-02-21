@@ -25,31 +25,48 @@
           %tbody
             %tr
               - if index == 0
-                %td
-                  - @add_transactions.where(date_time: transaction.date_time..Time.now).each do |add_transaction|
-                    Cash Add
-                    %span.text-primary{"data-toggle" => "tooltip", :title => "#{number_to_currency(add_transaction.amt_auth)}", "data-placement" => "right"}
-                      = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
-                    %br
+                - start_total = transaction.amt_auth unless transaction.amt_auth.blank?
+                - add_total = 0
+                - dispensed_total = @device.withdrawal_transactions_total_amount_authorized_date_span(transaction.date_time, Time.now)
                 - first_bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..Time.now).order("cut_dt ASC").uniq { |bill_hist| bill_hist.cut_dt }.first
                 - last_bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..Time.now).order("cut_dt ASC").uniq { |bill_hist| bill_hist.cut_dt }.last
-                %td= number_to_currency(BillHist.device_new_start_total(@device.id, first_bill_hist.cut_dt))
-                %td= number_to_currency(BillHist.device_added_in_date_span(@device.id, first_bill_hist.cut_dt, last_bill_hist.cut_dt))
-                %td= number_to_currency(@device.withdrawal_transactions_total_amount_authorized_date_span(transaction.date_time, Time.now))
-                %td= number_to_currency(@device.remaining)
-              - else
                 %td
-                  - @add_transactions.where(date_time: transaction.date_time..@cut_transactions[index - 1].date_time).each do |add_transaction|
+                  - @add_transactions.where(date_time: transaction.date_time..Time.now).each do |add_transaction|
+                    - add_total += add_transaction.amt_auth unless add_transaction.amt_auth.blank?
                     Cash Add
                     %span.text-primary{"data-toggle" => "tooltip", :title => "#{number_to_currency(add_transaction.amt_auth)}", "data-placement" => "right"}
                       = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
                     %br
+                %td= number_to_currency(transaction.amt_auth.blank? ? BillHist.device_new_start_total(@device.id, first_bill_hist.cut_dt) : transaction.amt_auth)
+                %td
+                  =# number_to_currency(BillHist.device_added_in_date_span(@device.id, first_bill_hist.cut_dt, last_bill_hist.cut_dt))
+                  = number_to_currency(add_total)
+                %td= number_to_currency(dispensed_total)
+                %td= number_to_currency(@device.remaining)
+              - else
+                - start_total = transaction.amt_auth unless transaction.amt_auth.blank?
+                - add_total = 0
                 - first_bill_hist = @device.bill_hists.where(cut_dt: transaction.date_time..@cut_transactions[index - 1].date_time).order("cut_dt ASC").uniq { |bill_hist| bill_hist.cut_dt }.first
                 - last_bill_hist = @device.bill_hists.where("cut_dt >= ? AND cut_dt < ?", transaction.date_time, @cut_transactions[index - 1].date_time).order("cut_dt ASC").uniq { |bill_hist| bill_hist.cut_dt }.last
-                %td= number_to_currency(BillHist.device_new_start_total(@device.id, first_bill_hist.cut_dt))
+                -# dispensed_total = @device.withdrawal_transactions_total_amount_authorized_date_span(transaction.date_time, last_bill_hist.cut_dt)
+                - dispensed_total = 0
+                %td
+                  - @add_transactions.where("date_time >= ? AND date_time < ?", transaction.date_time, @cut_transactions[index - 1].date_time).each do |add_transaction|
+                    - add_total += add_transaction.amt_auth unless add_transaction.amt_auth.blank?
+                    Cash Add
+                    %span.text-primary{"data-toggle" => "tooltip", :title => "#{number_to_currency(add_transaction.amt_auth)}", "data-placement" => "right"}
+                      = add_transaction.date_time.strftime('%-m/%-d/%y %H:%M:%S')
+                    %br
+                %td= number_to_currency(transaction.amt_auth.blank? ? BillHist.device_new_start_total(@device.id, first_bill_hist.cut_dt) : transaction.amt_auth)
                 %td= number_to_currency(last_bill_hist.blank? ? BillHist.device_added(@device.id, first_bill_hist.cut_dt) : BillHist.device_added_in_date_span(@device.id, first_bill_hist.cut_dt, last_bill_hist.cut_dt))
-                %td= number_to_currency(last_bill_hist.blank? ? BillHist.device_host_bill_dispensed(@device.id, first_bill_hist.cut_dt) : BillHist.device_host_bill_dispensed_in_date_span(@device.id, first_bill_hist.cut_dt, last_bill_hist.cut_dt))
-                %td= number_to_currency(BillHist.device_old_start_total(@device.id, @cut_transactions[index - 1].date_time) + (last_bill_hist.blank? ? 0 : BillHist.added(last_bill_hist.cut_dt)) - @device.withdrawal_transactions_total_amount_authorized_date_span((transaction.date_time), @cut_transactions[index - 1].date_time))
+                %td
+                  - @withdrawal_transactions.where("date_time >= ? AND date_time < ?", transaction.date_time, @cut_transactions[index - 1].date_time).each do |withdrawal_transaction|
+                    - dispensed_total += withdrawal_transaction.amt_auth unless withdrawal_transaction.amt_auth.blank?
+                  =# number_to_currency(last_bill_hist.blank? ? BillHist.device_host_bill_dispensed(@device.id, first_bill_hist.cut_dt) : BillHist.device_host_bill_dispensed_in_date_span(@device.id, first_bill_hist.cut_dt, last_bill_hist.cut_dt))
+                  = number_to_currency(dispensed_total)
+                %td
+                  =# number_to_currency(BillHist.device_old_start_total(@device.id, @cut_transactions[index - 1].date_time) + (last_bill_hist.blank? ? 0 : BillHist.added(last_bill_hist.cut_dt)) - dispensed_total)
+                  = number_to_currency(BillHist.device_old_start_total(@device.id, @cut_transactions[index - 1].date_time) + add_total - dispensed_total)
                     
 -#
   - unless @bill_hists.blank?
