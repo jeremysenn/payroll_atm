@@ -20,12 +20,12 @@
 
           .modal-footer
             -# %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Cancel
-            %button.btn.btn-secondary{id: 'one_time_payment_pay_and_print_button', name: "pay_and_print", :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Pay & Print"}} 
-              %i.fa.fa-print
-              Pay & Print
-            %button.btn.btn-primary{id: 'one_time_payment_pay_and_text_button', name: "pay_and_text", :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Pay & Text"}} 
+            %button.btn.btn-secondary{id: 'one_time_payment_pay_and_text_button', name: "pay_and_text", :type => "submit", data: {disable_with: "<i class='fa fa-comment'></i> Pay & Text"}} 
               %i.fa.fa-comment
               Pay & Text
+            %button.btn.btn-secondary{id: 'one_time_payment_pay_and_print_button', name: "pay_and_print", :type => "submit", data: {disable_with: "<i class='fa fa-print'></i> Pay & Print"}} 
+              %i.fa.fa-print
+              Pay & Print
 
 :javascript
   $('.modal').on('shown.bs.modal', function() {
