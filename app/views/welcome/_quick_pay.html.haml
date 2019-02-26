@@ -37,6 +37,9 @@
   });
 
   // Dropdown select for quick pay customer
+  if ($('#customer_id').data('select2') == undefined && $('#customer_id').next().hasClass('select2-container')) {
+    $('#customer_id').next().remove();
+  }
   $('#customer_id').select2({
     theme: 'bootstrap',
     minimumInputLength: 3,
