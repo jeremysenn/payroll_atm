@@ -360,6 +360,10 @@ class Transaction < ActiveRecord::Base
     reversal_transaction.present?
   end
   
+  def note
+    self.Note
+  end
+  
   #############################
   #     Class Methods         #
   #############################
