@@ -59,6 +59,9 @@
             - if not @to_customer.blank? and @to_customer.anonymous?
               = "#{@transaction.receipt_nbr.blank? ? 'N/A' : @transaction.receipt_nbr}"
           %p.lead
+            Note:
+            = @transaction.note
+          %p.lead
             Amount Requested:
             = "#{@transaction.amt_req.blank? ? 'N/A' : number_to_currency(@transaction.amt_req)}"
           %p.lead
