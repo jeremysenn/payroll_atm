@@ -127,9 +127,18 @@ class TransactionsController < ApplicationController
     @receipt_number = params[:receipt_number]
     @note = params[:note]
     @device_id = params[:device_id]
-    @customer = Customer.create(CompanyNumber: current_user.company_id, LangID: 1, Active: 1, GroupID: 15)
-    @account = Account.create(CustomerID: @customer.id, CompanyNumber: current_user.company_id, ActNbr: @receipt_number, Balance: 0, MinBalance: 0, ActTypeID: 6)
-    response = @customer.one_time_payment_with_no_text_message(@amount, @note, @receipt_number)
+    unless params[:customer_id].blank?
+      @customer = Customer.find(params[:customer_id])
+    end
+    if @customer.blank?
+      @customer = Customer.create(CompanyNumber: current_user.company_id, LangID: 1, Active: 1, GroupID: 15)
+      @account = Account.create(CustomerID: @customer.id, CompanyNumber: current_user.company_id, ActNbr: @receipt_number, Balance: 0, MinBalance: 0, ActTypeID: 6)
+    end
+    if params[:pay_and_text]
+      response = @customer.one_time_payment(@amount, @note, @receipt_number)
+    else
+      response = @customer.one_time_payment_with_no_text_message(@amount, @note, @receipt_number)
+    end
     response_code = response[:return]
     unless response_code.to_i > 0
       transaction_id = response[:tran_id]
@@ -139,7 +148,11 @@ class TransactionsController < ApplicationController
     unless transaction_id.blank?
 #      redirect_back fallback_location: root_path, notice: 'Quick Pay submitted.'
 #      redirect_to barcode_customer_path(@customer), notice: 'Quick Pay submitted.'
-      redirect_to root_path(customer_id: @customer.id), notice: 'Quick Pay submitted.'
+      unless params[:pay_and_text].blank?
+        redirect_to root_path, notice: 'Quick Pay submitted.'
+      else
+        redirect_to root_path(customer_id: @customer.id), notice: 'Quick Pay submitted.'
+      end
     else
       redirect_back fallback_location: root_path, alert: "There was a problem creating the Quick Pay. Error code: #{error_code}"
     end

@@ -40,6 +40,15 @@ class BillHist < ActiveRecord::Base
     return new_start_total
   end
   
+  def self.device_new_start_total(device_id, cut_date)
+    new_start_total = 0
+    bill_hists = BillHist.where(dev_id: device_id, cut_dt: cut_date)
+    bill_hists.each do |bill_hist|
+      new_start_total += (bill_hist.new_start * bill_hist.denomination)
+    end
+    return new_start_total
+  end
+  
   def self.terminal_bill_dispensed(cut_date)
     terminal_bill_dispensed = 0
     bill_hists = BillHist.where(cut_dt: cut_date)
@@ -67,9 +76,36 @@ class BillHist < ActiveRecord::Base
     return host_bill_dispensed
   end
   
+  def self.device_host_bill_dispensed_in_date_span(device_id, start_date, end_date)
+    host_bill_dispensed = 0
+    bill_hists = BillHist.where(dev_id: device_id, cut_dt: start_date..end_date)
+    bill_hists.each do |bill_hist|
+      host_bill_dispensed += (bill_hist.old_host_cyc * bill_hist.denomination)
+    end
+    return host_bill_dispensed
+  end
+  
   def self.added(cut_date)
     added = 0
     bill_hists = BillHist.where(cut_dt: cut_date)
+    bill_hists.each do |bill_hist|
+      added += (bill_hist.added * bill_hist.denomination)
+    end
+    return added
+  end
+  
+  def self.device_added(device_id, cut_date)
+    added = 0
+    bill_hists = BillHist.where(dev_id: device_id, cut_dt: cut_date)
+    bill_hists.each do |bill_hist|
+      added += (bill_hist.added * bill_hist.denomination)
+    end
+    return added
+  end
+  
+  def self.device_added_in_date_span(device_id, start_date, end_date)
+    added = 0
+    bill_hists = BillHist.where(dev_id: device_id, cut_dt: start_date..end_date)
     bill_hists.each do |bill_hist|
       added += (bill_hist.added * bill_hist.denomination)
     end

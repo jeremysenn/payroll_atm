@@ -2,6 +2,9 @@
   .modal-dialog.modal-sm
     .modal-content
       .modal-header
+        %h5
+          %i.fa.fa-dollar
+          Quick Pay
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
       .modal-body
@@ -14,17 +17,61 @@
             .input-group-append
               %span.input-group-text .00
           .form-group
+            = select_tag :customer_id, nil, prompt: 'Choose a payee', class: 'form-control', style: "width: 100%;"
+            .text-muted Leave blank for Anonymous
+          .form-group
             = text_field_tag :receipt_number, nil, :placeholder => "Reference Number", class: "form-control input-lg", style: "width: 100%;"
           .form-group
             = text_area_tag :note, nil, :placeholder => "Note", class: "form-control input-lg", style: "width: 100%;"
           .modal-footer
-            %button.btn.btn-primary{id: 'quick_pay_button', :type => "submit", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Pay & Print"}} 
+            %button.btn.btn-secondary{style: 'display:none;', id: 'quick_pay_and_text_button', name: "pay_and_text", :type => "submit", data: {disable_with: "<i class='fa fa-comment'></i> Pay & Text"}} 
+              %i.fa.fa-comment
+              Pay & Text
+            %button.btn.btn-primary{id: 'quick_pay_and_print_button', :type => "submit", data: {disable_with: "<i class='fa fa-dollar'></i> Pay & Print"}} 
               %i.fa.fa-dollar
               Pay & Print
 
 :javascript
   $('.modal').on('shown.bs.modal', function() {
     $(this).find('[autofocus]').first().focus();
+  });
+
+  // Dropdown select for quick pay customer
+  $('#customer_id').select2({
+    theme: 'bootstrap',
+    minimumInputLength: 3,
+    ajax: {
+      url: '/customers',
+      dataType: 'json',
+      delay: 250,
+      success: function(data) {
+        // alert("Success");
+      },
+    }
+  });
+
+  $('#customer_id').on('select2:select', function (e) {
+    $('#quick_pay_and_text_button').show();
+  });
+
+  $('#customer_id').on('select2:unselect', function (e) {
+    $('#quick_pay_and_text_button').hide();
+  });
+
+  $('#quick_pay_and_print_button').click(function(e) {
+    var payment_amount = $('#amount' ).val();
+    if (!payment_amount > 0) {
+      e.preventDefault();
+      alert('Please enter amount');
+      }
+  });
+
+  $('#quick_pay_and_text_button').click(function(e) {
+    var payment_amount = $('#amount' ).val();
+    if (!payment_amount > 0) {
+      e.preventDefault();
+      alert('Please enter amount');
+      }
   });
 
 -#
