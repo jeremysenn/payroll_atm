@@ -148,7 +148,7 @@ class TransactionsController < ApplicationController
     unless transaction_id.blank?
 #      redirect_back fallback_location: root_path, notice: 'Quick Pay submitted.'
 #      redirect_to barcode_customer_path(@customer), notice: 'Quick Pay submitted.'
-      unless params[:pay_and_text].blank?
+      if params[:pay_and_text]
         redirect_to root_path, notice: 'Quick Pay submitted.'
       else
         redirect_to root_path(customer_id: @customer.id), notice: 'Quick Pay submitted.'
